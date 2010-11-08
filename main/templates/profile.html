@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: Your Profile{% endblock %}
+
+{% block onready %}
+{% endblock %}
+
+{% block content %}
+	<h1><a href="/">VoteFinder</a>: Profile: {{ player.name|safe }}</h1>
+	(<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{player.uid}}">jump to live profile</a>)
+	<hr>
+	
+	<p><table border="0" cellpadding="3" cellspacing="2">
+	<tr>
+		<td>Registered:</td>
+		<td>{{profile.registered}}</td>
+	</tr>
+	<tr>
+		<td>Change Password:</td>
+		<td><a href="/auth/password_change">Click here</a></td>
+	</tr>
+	</table></p>
+	
+	<hr>
+	
+	<p>Playing in games:
+	<ol>
+	{% for g in games %}
+		<li>{{g.state}} in <a href="{{g.game.get_absolute_url}}">{{g.game|safe}}</a></li>
+	{% endfor %}
+	</ol></p>
+{% endblock %}

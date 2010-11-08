@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: Register Account, Step 2{% endblock %}
+
+{% block onready %}
+	$('#submitButton').button().click(function(){
+		$('#submitButton').attr("disabled", "disabled");
+		$('#createUserForm').submit();
+	});
+{% endblock %}
+
+{% block content %}
+	<h1><a href="/">VoteFinder</a>: Create Account: Step 2</h1><hr>
+	<p>Now, enter the login information you'd like to use for the VoteFinder site.
+		<strong>Your username must match your SA username!</strong>  Your password should not match!
+	</p>
+	<p>Your e-mail address will only be used if you forget your password.</p>
+	<p>
+		<form id="createUserForm" action="/auth/create/done/" method="post">{% csrf_token %}
+			<table border="0" cellpadding="3" cellspacing="2">
+			<tr class="fieldWrapper">
+				<td><label for="id_login">SA Username:</label></td>
+				<td>{{ form.login }}</td>
+				<td>{{ form.login.errors|safe }}</td>
+			</tr>
+			<tr class="fieldWrapper">
+				<td><label for="id_email">Email Address:</label></td>
+				<td>{{ form.email }}</td>
+				<td>{{ form.email.errors }}</td>
+			</tr>		
+			<tr class="fieldWrapper">
+				<td><label for="id_password">New Password:</label></td>
+				<td>{{ form.password }}</td>
+				<td>{{ form.password.errors }}</td>
+			</tr>		
+			<tr class="fieldWrapper">
+				<td><label for="id_confirm">Confirm Password:</label></td>
+				<td>{{ form.confirm }}</td>
+				<td>{{ form.confirm.errors }}</td>
+			</tr>		
+    		</table>
+    		<p><input id="submitButton" type="Submit" value="Complete &raquo;"/></p>
+		</form>
+	</p>
+
+{% endblock %}

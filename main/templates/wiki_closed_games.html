@@ -1,0 +1,7 @@
+{% spaceless %}
+  <ol>
+  {% for g in game_list %}
+    <li><a href="http://forums.somethingawful.com/showthread.php?threadid={{g.threadId}}">{{g.name}}</a>, hosted by {{g.moderator}}.  Last post {{g.last_post|timesince}} ago.</li>
+  {% endfor %}
+  </ol>
+{% endspaceless %}

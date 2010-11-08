@@ -1,0 +1,18 @@
+{% spaceless %}
+{% if big_games %}
+  <b>Big Games:</b>
+  <ol>
+  {% for g in big_games %}
+    <li><a href="http://forums.somethingawful.com/showthread.php?threadid={{g.threadId}}">{{g.name}}</a> - Day {{g.day}} ({{g.alive}}{% if style == "verbose" %}/{{g.size}}{% endif %} alive){% if style == "verbose" %}.  Hosted by {{g.moderator}}.{% endif %}</li>
+  {% endfor %}
+  </ol><p>
+{% endif %}
+{% if mini_games %}
+  <b>Mini Games:</b>
+  <ol>
+  {% for g in mini_games %}
+    <li><a href="http://forums.somethingawful.com/showthread.php?threadid={{g.threadId}}">{{g.name}}</a> - Day {{g.day}} ({{g.alive}}{% if style == "verbose" %}/{{g.size}}{% endif %} alive){% if style == "verbose" %}.  Hosted by {{g.moderator}}.{% endif %}</li>
+  {% endfor %}
+  </ol>
+{% endif %}
+{% endspaceless %}
