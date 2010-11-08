@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: My Templates{% endblock %}
+
+{% block onready %}
+	$('.button').button();
+{% endblock %}
+
+{% block content %}
+	<h1><a href="/">VoteFinder</a>: My Templates</h1><hr>
+	
+	{% if templates %}
+		<p>You have created the following templates:</p>
+
+		<ul>		
+		{% for t in templates %}
+			<li>
+				<a href="/template/{{t.id}}">{{t.name}}</a>
+				{% if t.shared %}<i>(shared)</i>{% endif %}
+			</li>
+		{% endfor %}
+		</ul>
+		
+	{% else %}
+		<p>You have not created any templates.</p>
+	{% endif %}
+	
+	<p><a href="/create_template" class="button">Create New Template</a></p>
+	
+{% endblock %}

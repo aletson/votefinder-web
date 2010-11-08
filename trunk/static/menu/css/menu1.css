@@ -1,0 +1,119 @@
+.mbmenu{
+  display:none;
+}
+.rootVoices{
+	padding:5px;
+	padding-bottom:0;
+}
+.menuText {
+	padding-top: 8px;
+	padding-bottom: 8px;
+}
+.rootVoices td.rootVoice {
+	vertical-align:middle;
+	background-color:transparent;
+	font-family:Cambria, Georgia, serif;
+	color: gray;
+	line-height:18px;
+	padding:8px;
+	cursor: pointer;
+}
+
+.rootVoices td.rootVoice.selected{
+	background: orangered url("/static/menu/images/bgnd_sel_4.png");
+	padding:8px;
+	color:#ffffff;
+	cursor: pointer;
+  -moz-box-shadow:#999 2px 2px 10px;
+  -webkit-box-shadow:#999 2px 2px 10px;
+}
+
+
+
+.rootVoices.vertical {
+	width:140px;
+}
+.rootVoices.vertical td.rootVoice{
+	-moz-border-radius:8px 0px 0 8px;
+	-webkit-border-top-right-radius:0px;
+	-webkit-border-top-left-radius:8px;
+	-webkit-border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:8px;
+}
+
+.menuShadow{
+	padding:2px;
+	padding-bottom:0px;
+	left:-2px;
+	top:1px;
+}
+
+/**/
+
+.menuContainer{
+  overflow:hidden;
+  position:absolute;
+	background-color:gray;
+	padding:0;
+  -moz-box-shadow:#999 2px 2px 10px;
+  -webkit-box-shadow:#999 2px 2px 10px;
+  -moz-border-radius:8px;
+  -webkit-border-radius:8px;
+}
+.menuContainer .line{
+	background-color:transparent;
+	width:100%;
+}
+.menuContainer .line.title {
+	background-color:#B23305;
+	border-bottom:1px solid darkred;
+}
+.menuContainer .line.title a{
+}
+.menuContainer td a{
+	text-decoration:none;
+	color: #f3f3f3;
+}
+.menuContainer td.voice{
+	padding:7px;
+}
+.menuContainer .separator{
+	background-color:#999;
+	height:1px;
+}
+.menuContainer td.img{
+	text-align:center;
+	font-size:12px;
+	color: #c3c3c3;
+	background-color:transparent;
+	width:24px;
+	padding:5px;
+}
+.menuContainer td.img img{
+	width:20px;
+}
+.menuContainer .textBox{
+	padding: 10px;
+	color: #c3c3c3;
+}
+.menuContainer .selected td{
+	background-color:#f3f3f3;
+	background-image:url("/static/menu/images/bgnd_sel_2.jpg")
+}
+.menuContainer .selected td a{
+	color:#000;
+  display:block;  
+}
+.menuContainer .disabled td, .menuContainer .disabled td a {
+	color: #cccccc;
+}
+.menuContainer .subMenuOpener{
+	background-image:url("/static/menu/images/menuArrow_w.gif");
+	background-repeat:no-repeat;
+	background-position:right;
+}
+.menuContainer .selected .subMenuOpener{
+	background-image:url("/static/menu/images/menuArrow.gif");
+	background-repeat:no-repeat;
+	background-position:right;
+}

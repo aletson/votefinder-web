@@ -1,0 +1,115 @@
+<!DOCTYPE html> 
+<html> 
+	<head>
+    	<link type="text/css" rel="stylesheet" media="all" href="/static/style.css" /> 
+		<link type="text/css" href="/static/jquery-ui-1.8.1.custom.css" rel="Stylesheet" />	
+		
+		<script type="text/javascript" src="/static/jquery.js"></script>
+		<script type="text/javascript" src="/static/jquery-ui.min.js"></script>
+		
+		<script type="text/javascript" src="/static/menu/inc/jquery.metadata.js"></script> 
+  		<script type="text/javascript" src="/static/menu/inc/jquery.hoverIntent.js"></script> 
+		<script type="text/javascript" src="/static/menu/inc/mbMenu.min.js"></script>
+		<link type="text/css" rel="stylesheet" media="all" href="/static/menu/css/menu1.css" />
+		
+		{% block header %}{% endblock %}
+		<title>{% block title %}VoteFinder{% endblock %}</title>
+		<script type="text/javascript">{% block script %}{% endblock %}</script>
+		<script type="text/javascript">
+			$(document).ready(function(){ {% block onready %}{% endblock %}	{% if messages %}if ($('hr').length > 0) { $('hr:first').after(messages); } else if ($('h1').length > 0) { $('h1:first').after(messages); } else { $('body').prepend(messages); }$('.messages').hide().show('slide');{% endif %}
+				$(".myMenu").buildMenu({
+					menuSelector: ".menuContainer",
+					iconPath:"/static/menu/ico/",
+					hasImages:false, fadeInTime: 200, hoverIntent:0, submenuHoverIntent: 100,
+					shadow:true,
+				});
+			});
+     		{% if messages %}var messages = '{% spaceless %}
+     			<div class="messages">
+     				{% for message in messages %}
+     					{% if message.tags == 'error' %}
+							<div class="ui-widget"> 
+								<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"> 
+									<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>{{ message|safe|addslashes }}</p> 
+								</div> 
+							</div> 
+     					{% else %}
+		     				<div class="ui-widget"> 
+								<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;"> 
+									<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>{{ message|safe|addslashes }}</p> 
+								</div> 
+							</div> 
+     					{% endif %}
+     				{% endfor %}
+     			</div><p/>{% endspaceless %}';{% endif %}
+		</script>
+	</head>
+	<body>
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-16642219-1']);
+	  _gaq.push(['_trackPageview']);
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>{% spaceless %}
+		<div id="topMenu">
+			<div class="myMenu"><table class="rootVoices" cellspacing='0' cellpadding='0' border='0'><tr>
+				<td menu="menu_navigation">VF</td>
+				<td rel="text" class="menuText">&raquo;</td>
+				<td menu="menu_user">{% firstof user.username 'Anonymous' %}</td>
+				</tr></table>
+			</div>
+			<div id="menu_navigation" class="mbmenu">
+				<a href="/">Home</a>
+				<a href="/faq">Frequently Asked Questions</a>
+				<a menu="menu_sa">Forums Links</a>
+			</div>
+			<div id="menu_user" class="mbmenu">
+				{% if user.is_authenticated %}
+					<a menu="menu_my_games">My Games</a>
+					<a href="/templates">My Templates</a>
+	   				<a href="/profile">My Profile</a>
+	   				<a href="/auth/password_change">Change Password</a>
+   					<a href="/auth/logout">Log Out</a>
+				{% else %}
+    				<a href="/auth/login">Log In</a>
+    				<a href="/auth/create">Create Account</a>
+				{% endif %}
+			</div>
+			{% if user.is_authenticated %}
+			<div id="menu_my_games" class="mbmenu">
+				{% for g in user.get_profile.player.current_games %}
+					<a href="{{g.game.get_absolute_url}}">{{g.game.name|safe}}</a>
+				{% empty %}
+					<a rel="text">No games</a>
+				{% endfor %}
+			</div>
+			{% endif %}
+			<div id="menu_sa" class="mbmenu">
+				<a target="_blank" href="http://forums.somethingawful.com/forumdisplay.php?forumid=103">Traditional Games</a>
+				<a rel="separator"></a>
+				<a target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid=3235429">Discussion Thread</a>
+				<a target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid=2894586">New Game Announcement Thead</a>
+				<a target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid=3069667">Game Setup Thread</a>
+			</div>
+		</div>
+
+		{% endspaceless %}<div id="mainContainer">
+			{% block content %}{% endblock %}
+		</div>
+		<div id="belowContainer">
+			<div id="belowText">
+				&copy; 2010 <a href="mailto:admin@votefinder.org">David Goeke</a>.
+				Powered by <a href="http://python.org/">Python</a>, <a href="http://www.djangoproject.com/">Django</a>, and <a href="http://jquery.com/">jQuery</a>.
+				Hosted by <a href="http://slicehost.com/">Slicehost</a>.
+			</div>
+			<div id="belowIcons">
+				<a href="/atom"><img src="/static/feed-icon-14x14.png" border="0" alt="RSS Feed"/></a>
+				<a href="http://fusion.google.com/add?source=atgs&amp;feedurl=http%3A//votefinder.org/atom"><img src="http://gmodules.com/ig/images/plus_google.gif" border="0" alt="Add to Google"></a>
+			</div>
+		</div>
+	</body>
+</html>

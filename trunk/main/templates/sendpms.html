@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: Send PMs{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block onready %}
+
+function togglePMBody(pm) {
+	var checkbox = $('.player-enabled-check', pm);
+	var body = $('.player-pm-body', pm);
+	var name = $('.player-pm-name', pm);
+	var preview = $('.player-pm-preview', pm);
+
+	if (checkbox.attr('checked')) {
+		checkbox.attr('checked', false);
+		body.hide('slow');
+		name.removeClass('player-pm-name-enabled');
+		name.addClass('player-pm-name-disabled');
+	} else {
+		checkbox.attr('checked', true);
+		body.show('slow');
+		name.removeClass('player-pm-name-disabled');
+		name.addClass('player-pm-name-enabled');
+	}
+}
+
+$('.player-pm-name').click(function() {
+	togglePMBody($(this).parent());	
+});
+
+$('.player-enabled-check').click(function() {
+	togglePMBody($(this).parent().parent());	
+});
+
+$('.player-pm-save').click(function() {
+	var body = $(this).parent().parent();
+	$('.player-pm-text', body).hide('slow');
+	$('.player-pm-preview', body).show('slow');
+});
+
+$('.player-pm-edit').click(function() {
+	var body = $(this).parent().parent();
+	$('.player-pm-preview', body).hide('slow');
+	$('.player-pm-text', body).show('slow');
+});
+
+$('.button').button();
+
+{% endblock %}
+
+{% block content %}
+	<h1><a href="/">VoteFinder</a>: Send PMs</h1><hr>
+
+	Please choose which players should receive PMs, then enter the text of each.  Press the "save" button when
+	you are satisfied and a preview will appear.  Nothing will be sent yet, and the "continue" button at the bottom 
+	will take you to a confirmation page.<p>
+
+	{% for p in game.living_players %}
+
+		<div class="player-pm">
+			<div class="player-pm-name player-pm-name-disabled">
+				<input type="checkbox" class="player-enabled-check" name="enabled"> 
+				{{p.player.name}}
+			</div>
+			<div class="player-pm-body" style="display: none;">
+				<div class="player-pm-text">
+					<textarea></textarea><p></p>
+					<input type="button" class="player-pm-save button" name="save" value="Save">
+				</div>
+				<div class="player-pm-preview" style="display: none;">
+					(preview)<p></p>
+					<input type="button" class="player-pm-edit button" name="edit" value="Edit">
+				</div>
+			</div>
+		</div>
+
+	{% endfor %}
+
+	<div style="width: 100%; text-align: center;">
+		<input type="button" class="button" name="continue" value="Continue &raquo;">
+	</div>
+
+{% endblock %}

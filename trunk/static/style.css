@@ -1,0 +1,428 @@
+body {
+	background: #eeeeee;
+	font-family: Cambria, Georgia, serif;
+}
+
+body h1 {
+    font-weight: normal;
+    font-size: 2em;
+}
+
+h1 a {
+	text-decoration: none;
+	color: black;	
+}
+
+body h2 {
+    font-weight: normal;
+    font-size: 1.2em;
+}
+
+#aboveContainer { 
+	text-align: right;
+	padding: 0.2em;
+	margin-top: 2em;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+#belowContainer { 
+	padding: 0.2em;
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+#belowText {
+	color: #888;
+	float: left;
+	font-size: small;
+}
+
+#belowText a {
+	text-decoration: none;
+	color: #88A;
+}
+
+#belowText a:hover {
+	text-decoration: underline;
+}
+
+#belowIcons {
+	vertical-align: middle;
+	float: right;
+}
+
+#aboveContainer a {
+	text-decoration: none;
+}
+
+#mainContainer {
+	background: white;
+	border: 2px solid black;
+	padding: 1em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 80%;
+}
+
+#mainContainer hr {
+	color: black;
+	background-color: #ddd;
+	height: 2px;
+	border: none;
+}
+
+.blogPost {
+	margin-top: 1em;
+	padding: 0.5em;
+}
+
+.blogPostTitle {
+	font-size: 1.4em;
+	/*font-weight: bold;*/
+}
+
+.blogPostBody {
+	margin: 1em;
+}
+
+.invisible {
+	display: none;
+	visible: false;
+}
+
+.visible {
+	display: block;
+	visible: true;
+}
+
+#loading {
+	margin: 1em;
+	padding: 0.5em; 
+}
+
+.loadingImg {
+	margin-right: 1em;
+}
+
+.addGameResult {
+	font-size: 1.2em;
+}
+
+#closeWindow {
+	width: 100%;
+	text-align: right;
+}
+
+.grayed {
+	color: #aaa;
+	font-style: italic;
+}
+
+.postList {
+	padding-left: 2em;
+	padding-right: 2em;
+}
+
+.playerList {
+	background: red;
+
+	border: 2px solid #ddd;
+	padding: 0.5em;
+	margin: 0.5em;
+	width: 25%;
+	vertical-align: top;
+	
+}
+
+.player {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+.player a {
+	text-decoration: none;
+	display: block;
+}
+
+.player a:hover {
+	color: white;
+}
+
+.player:hover {
+	background-color: #8888ff;
+}
+
+#mod {
+	background-color: #ffffdd;
+}
+
+#alive {
+	background-color: #ddffdd;
+}
+
+#dead {
+	background-color: #ffddaa;
+}
+
+#spectator {
+	background-color: #f5f5f5;
+}
+
+.blackOutline {
+	border: 1px solid black;
+}
+
+.creator {
+	font-style: italic;
+}
+
+.ui-tabs .ui-tabs-hide {
+     display: none;
+}
+
+.postsTable {
+	width: 100%;
+}
+
+.postRowEven {
+	background: #e8e8e8;
+}
+
+.postRowOdd {
+	background: #f4f4f4;
+}
+
+#postList {
+	width: 100%;
+	height: 30em;
+	overflow: auto;
+}
+
+#disabled-navigation {
+	align: center;
+	border: 1px solid #888;
+	background: white;
+	padding: 0.5em;
+	display: inline;
+ 	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.post {
+	border: 1px solid #888;
+	padding: 0.5em;
+	margin: 0.5em;
+ 	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.comment-poster {
+	font-weight: bold;
+	font-size: 1.1em;
+}
+
+.messages {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#topMenu {
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	padding: 0;
+}
+
+#deadlineHour, #deadlineMinute { width: 2em; }
+
+#votecount-results {
+	padding: 0.5em;
+    
+    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+    background: -webkit-gradient(linear,
+                left top, left bottom, from(#EEDEAD), to(#FEEEBD));
+    filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0);
+ 	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+.middle { vertical-align: top; }
+
+#bbcode {
+	width: 100%;
+	height: 100%;
+}
+
+.template-form {
+	border: 0;
+	width: 95%;
+	border-spacing: 0;
+x
+}
+
+.template-form tr td {
+	padding: 0.33em;
+	margin: 0;
+}
+
+.template-form tr td input[type="text"], .template-form tr td textarea {
+	width: 100%;
+}
+
+td.label {
+	text-align: right;
+	margin-right: 1em;
+}
+
+tr.row-highlight {
+	background-color: #e5e5e5;
+}
+
+tr.instructions {
+	display: none;
+	font-size: smaller;
+	color: #777;
+}
+
+tr.instructions td.text {
+	background: #ffffcc;
+	vertical-align: top;
+}
+
+.game {
+	display: block;
+	float: left;
+	border: 1px solid #bbb;
+	padding: 0.5em 1em 0.5em 1em;
+	margin: 0.2em;
+	width: 40%;
+ 	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+.mini {
+	background: #feb;
+        background: -moz-linear-gradient(top, #fEeEbD, #ffffd6);
+        background: -webkit-gradient(linear, left top, left bottom, from(#fEeEbD), to(#ffffd6));
+        filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#fEeEbD', EndColorStr='#ffffd6', GradientType=0);
+}
+
+.big {
+	background: #ff5;
+	background: -moz-linear-gradient(top, #ffff44, #ffffd6);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffff44), color-stop(1, #ffffd6));
+	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#ffff44', EndColorStr='#ffffd6', GradientType=0);
+}
+
+.game:hover {
+	border: 1px solid black;
+	cursor: pointer;
+}
+
+.game-title {
+	text-decoration: none;
+	font-size: 1.2em;
+	color: black;
+}
+
+.game-updated {
+}
+
+.second-line, .game-mod {
+	font-style: italic;
+	filter:alpha(opacity=60);
+	opacity:0.6;
+	font-size: 0.9em;
+}
+
+.game-mod {
+	float: right;
+}
+
+.game-mod a {
+	text-decoration: none;
+}
+
+table.game-list {
+        border: 0;
+        width: 95%;
+        border-spacing: 0;
+}
+
+table.game-list tbody tr td {
+	padding: 0.2em;
+	margin: 0px;
+}
+
+.game-list a {
+	text-decoration: none;
+}
+
+table.game-list thead tr {
+	cursor: pointer;
+	font-size: 1.2em;
+	text-decoration: underline;
+}
+
+.even { 
+	background: #f8f8f8; 
+}
+
+.asc {
+	padding-left: 11px;
+	background: url('/static/up-arrow.png') no-repeat left center;
+}
+
+.desc {
+	padding-left: 11px;
+	background: url('/static/down-arrow.png') no-repeat left center;
+}
+
+.player-pm {
+	border: 1px solid #ccc;
+	padding: 0.5em;
+	margin-bottom: 1em;
+	width: 90%;
+    
+    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+    background: -webkit-gradient(linear,
+                left top, left bottom, from(#FFEFBE), to(#FEEEBD));
+    filter: progid:DXImageTransform.Microsoft.Gradient(
+                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0);
+ 	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+.player-pm-name-disabled {
+	font-weight: normal;
+	font-style: italic;
+	margin-bottom: 0;
+}
+
+.player-pm-name-enabled {
+	font-weight: bold;
+	margin-bottom: 1em;
+}
+
+.player-pm-body {
+	padding-left: 2em;
+}
+
+.player-pm-body textarea {
+	width: 95%;
+	height: 10em;
+}

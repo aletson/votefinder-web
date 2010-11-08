@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: Add Game{% endblock %}
+
+{% block onready %}
+	function dataReceived(data) {
+		$('#loading').hide();
+		var str = "";
+		$.each(data, function(i, game) {
+			if (game.tracked == true) {
+				str = '<span class="grayed">' + game.name + '</span>';
+			} else {
+				str = '<a href="' + game.url + '">' + game.name + '</a>';	
+			}
+			$('#gameList>ul').append('<li>' + str + '</li>');
+		});
+		$('#gameListContainer').show('slow');
+		$('#gameList>ul>li>a').click(function (event) { 
+			doAddGame(event.target.getAttribute("href"));
+			event.preventDefault();
+		});
+	}
+	
+	$('#addButton').button();
+	$('#dialog').dialog({modal: true, autoOpen: false});
+	$('#gameListContainer').hide();
+	$.getJSON('/game_list/1', dataReceived);
+	$.getJSON('/game_list/2', dataReceived);
+	$('#addButton').click(function() { doAddGame($('#textUrl').val()); });
+	
+	function doAddGame(url) {
+		var thread = url.replace(/threadid=(\d+)/);
+		var result = RegExp.$1;
+		if (result) {
+			$("#message").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
+			$("#dialog").dialog("option", "buttons", {} );
+			$('#dialog').dialog("open");
+			$.getJSON( '/add_game/' + result, function(data) {
+				if (data.success == true) {
+					location.href = data.url;
+				} else {
+					$("#message").html(data.message);
+					$("#dialog").dialog("option", "buttons", { "Ok": function() { $(this).dialog("close"); } } )
+				}	
+			});
+		} else {
+			alert("That doesn't look like a good thread URL.");
+		}
+	}
+{% endblock %}
+
+{% block content %}
+	<h1><a href="/">VoteFinder</a>: Add a Game</h1><hr>
+	
+	Enter the full url of the forum thread to be added: 
+	<input id="textUrl" type="text" name="textUrl" value="{{ defaultUrl }}" maxlength="256" />
+	<button type="button" id="addButton">Add</button><p/> 
+	
+	<div id="loading">
+		<img src="/static/loading.gif" class="loadingImg">Loading games list from forum...
+	</div>
+	
+	<div id="gameListContainer">
+		Or select the game from the list:
+		<div id="gameList">
+			<ul></ul>
+		</div>
+	</div>
+
+	<div id="dialog" title="Adding Game">
+		<div id="message"></div>
+	</div>
+{% endblock %}
