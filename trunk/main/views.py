@@ -822,3 +822,7 @@ def sendpms(request, slug):
 	return render_to_response("sendpms.html", { 'game': game },
 							  context_instance=RequestContext(request))
 
+def post_histories(request, gameid):
+	game = get_object_or_404(Game, id=gameid)
+	return render_to_response("post_histories.html", { 'game': game },  context_instance=RequestContext(request))
+

@@ -104,6 +104,7 @@
   {% if moderator %}
   	$('#modActions').accordion({autoHeight: false});
   {% endif %}
+  $('#toolsActions').accordion({autoHeight: false});
   $('#pageJump').live('change', function(obj) {
   	loadPage($(this).val());
   });
@@ -125,6 +126,13 @@
 	show: function(event,ui) { 
 		if (ui.panel.id == "votecount") { $('#votecount_contents').load('/votecount/{{game.id}}'); }
 		else if ( ui.panel.id == "posts") { loadPage({{game.currentPage}});	}
+	},
+	select: function(event,ui) {
+		if ( ui.panel.id == "tools") {
+			$.get('/post_histories/{{game.id}}', function(data) { 
+				$('#playerPostHistories').html(data); 
+			});
+		}
 	}
   });
   $('#refreshbutton').button();
@@ -175,6 +183,7 @@
 			<li><a href="#players">Players</a></li>
 			<li><a href="#posts">Posts</a></li>
 			<li><a href="#updates">Game Updates</a></li>
+			<li><a href="#tools">Tools</a></li>
 		</ul>
 	{% if moderator %}
 	
@@ -413,6 +422,15 @@
 		</table>
 	</div>
 
+	<div id="tools">
+		<div id="toolsActions">
+			<h3><a href="#">Create Player List</a></h3>
+			<div>
+				Below is a list of all living players with links to their post histories that can be put
+				into an OP:<p/>
+				<textarea style="width:90%; height: 10em;" id="playerPostHistories"></textarea>
+			</div>			
+		</div>
 	</div>
 	
 	<div id="dialog" title="Updating Game"></div> 
