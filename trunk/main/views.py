@@ -781,7 +781,7 @@ def players(request):
 	return players_page(request, 1)
 
 def players_page(request, page):
-	items_per_page = 300
+	items_per_page = 3000
 	page = int(page)
 
 	if page < 1:
