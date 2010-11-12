@@ -6,7 +6,6 @@ from django.template.defaultfilters import slugify
 import re
 from datetime import datetime, timedelta
 import thread
-
 from oauth import oauth
 from oauthtwitter import OAuthApi
 
@@ -100,6 +99,7 @@ class Game(models.Model):
 	template	= models.ForeignKey(VotecountTemplate, null=True, blank=True)
 	added_by	= models.ForeignKey(User)
 	timezone	= models.CharField(max_length=128, default='US/Eastern')
+	post_lynches = models.BooleanField(default=True)
 
 	def status_update(self, message):
 		self.status_update_noncritical(message)

@@ -1,5 +1,7 @@
 from votefinder.main.models import *
 import math
+from ForumPageDownloader import ForumPageDownloader
+import thread
 
 class VoteCounter:
     def __init__(self):
@@ -57,6 +59,11 @@ class VoteCounter:
 
             if len(lynched) == 1:
                 game.status_update("%s was lynched on day %s!" % (lynched[0].name, gameday.dayNumber))
+                self.PostLynchedMessage(game.threadId, lynched[0].name)
+
+    def PostLynchedMessage(self, threadid, name):
+        dl = ForumPageDownloader()
+        dl.ReplyToThread(threadid, ":redhammer: Oh no!  I think %s is hammered now!" % name)
 
     def BuildResultList(self):
         list = []

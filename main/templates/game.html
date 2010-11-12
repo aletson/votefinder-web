@@ -239,6 +239,18 @@
 				<a href="/sendpms/{{game.slug}}">Click here to access the PM page.</a>
 			</div>
 			{% endif %}
+		
+			<h3><a href="#">Game Options</a></h3>
+			<div>
+				{% if game.post_lynches %}
+					Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch happen.  
+					<a href="/post_lynches/{{game.id}}/off">Click here to disable it</a>.
+				{% else %}
+					Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a lynch happen.  
+					<a href="/post_lynches/{{game.id}}/on">Click here to enable it</a>.
+				{% endif %}
+			</div>
+
 			<h3><a href="#">Change the Template</a></h3>
 			<div>
 				<p>To change the template this game is using, just select it from the dropdown box.</p>
@@ -250,6 +262,7 @@
 				</select>
 				<button type="button" id="submitTemplate" class="button">Change!</button> 
 			</div>
+
 			<h3><a href="#">Add a Votecount Comment</a></h3>
 			<div>
 				<p>If you add a comment here, it will be visible to anyone viewing the votecount

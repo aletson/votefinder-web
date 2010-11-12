@@ -49,4 +49,5 @@ urlpatterns = patterns('votefinder.main.views',
 	(r'^delete_alias/(?P<id>\d+)$',				'delete_alias'),
     (r'^sendpms/(?P<slug>[\w-]+)$',             'sendpms'),
 	(r'^post_histories/(?P<gameid>\d+)$',		'post_histories'),
+	(r'^post_lynches/(?P<gameid>\d+)/(?P<enabled>\w+)$', 'post_lynches'),
 )
