@@ -59,11 +59,14 @@ class VoteCounter:
 
             if len(lynched) == 1:
                 game.status_update("%s was lynched on day %s!" % (lynched[0].name, gameday.dayNumber))
-                self.PostLynchedMessage(game.threadId, lynched[0].name)
+                self.PostLynchedMessage(game, lynched[0].name)
 
-    def PostLynchedMessage(self, threadid, name):
+    def PostLynchedMessage(self, game, name):
+        if not game.post_lynches:
+            return
+
         dl = ForumPageDownloader()
-        dl.ReplyToThread(threadid, ":redhammer: Oh no!  I think %s is hammered now!" % name)
+        dl.ReplyToThread(game.threadId, ":redhammer: Oh no!  I think %s is hammered now!" % name)
 
     def BuildResultList(self):
         list = []
