@@ -826,3 +826,18 @@ def post_histories(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
 	return render_to_response("post_histories.html", { 'game': game },  context_instance=RequestContext(request))
 
+@login_required
+def post_lynches(request, gameid, enabled):
+	game = get_object_or_404(Game, id=gameid)
+	if not game.is_user_mod(request.user):
+		return HttpResponseForbidden
+
+	if enabled == "on":
+		game.post_lynches = True
+		messages.add_message(request, messages.SUCCESS, 'Posting of lynches for this game is now enabled!')
+	else:
+		game.post_lynches = False
+		messages.add_message(request, messages.SUCCESS, 'Posting of lynches for this game is now disabled!')
+
+	game.save()
+	return HttpResponseRedirect(game.get_absolute_url())
