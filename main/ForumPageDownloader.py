@@ -96,7 +96,7 @@ class ForumPageDownloader():
         for i in soup.findAll('input', { 'value': True }):
             inputs[i['name']] = i['value']
 	
-        inputs['disablesmilies'] = 'no'
+        del inputs['disablesmilies']
         del inputs['preview']
 
         datagen, headers = poster.encode.multipart_encode(inputs)
