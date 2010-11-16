@@ -44,6 +44,12 @@
     prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=http://votefinder.org{{game.get_absolute_url}}#votecount][img]http://votefinder.org/img/{{game.slug}}[/img][/url]");
   });
   {% if moderator and not game.closed %}
+	{% if post_vc_button %}
+		$('#post-vc-button').live('click', function() {
+			$('#post-vc-button').attr('disabled', 'disabled');
+			location.href = '/post_vc/{{game.id}}';
+		});
+	{% endif %}
   	$('.post-action').live('change', function(obj) {
   		var action = $(this).val();
   		var id = $(this).attr("id");
@@ -117,14 +123,18 @@
     	function(data) {
     		removing.parent().parent().remove();
     		if ($(".resolver").length == 0 || data.refresh == true) {
-    			$('#votecount_contents').load('/votecount/{{game.id}}');
+    			$('#votecount_contents').load('/votecount/{{game.id}}', function() { $('.button').button(); });
     		}
     	}
    );
   });
   $("#tabs").tabs({ 
 	show: function(event,ui) { 
-		if (ui.panel.id == "votecount") { $('#votecount_contents').load('/votecount/{{game.id}}'); }
+		if (ui.panel.id == "votecount") { 
+			$('#votecount_contents').load('/votecount/{{game.id}}', function() {
+				$('.button').button();
+			}); 
+		}
 		else if ( ui.panel.id == "posts") { loadPage({{game.currentPage}});	}
 	},
 	select: function(event,ui) {

@@ -48,6 +48,7 @@ class VoteCounter:
         return self.BuildResultList()
     
     def RunNotify(self, game, gameday):
+        gameday = GameDay.objects.get(id=gameday.id) #reload to prevent double posts from 2 threads updating at once
         if gameday.notified:
             return
 

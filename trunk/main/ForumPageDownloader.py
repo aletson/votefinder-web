@@ -102,5 +102,3 @@ class ForumPageDownloader():
         datagen, headers = poster.encode.multipart_encode(inputs)
         request = urllib2.Request(postUrl, datagen, headers)
         result = urllib2.urlopen(request).read()
-
-        print result

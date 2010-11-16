@@ -100,6 +100,7 @@ class Game(models.Model):
 	added_by	= models.ForeignKey(User)
 	timezone	= models.CharField(max_length=128, default='US/Eastern')
 	post_lynches = models.BooleanField(default=False)
+	last_vc_post = models.DateTimeField(null=True, blank=True)
 
 	def status_update(self, message):
 		self.status_update_noncritical(message)
