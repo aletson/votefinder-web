@@ -16,6 +16,7 @@ from django.core.cache import cache
 from pytz import timezone, common_timezones
 from math import ceil
 
+from ForumPageDownloader import ForumPageDownloader
 from PageParser import PageParser
 from GameListDownloader import GameListDownloader
 from VotecountFormatter import VotecountFormatter
@@ -100,9 +101,14 @@ def game(request, slug):
 		deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
 		tzone = game.timezone
 
+	if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60)):
+		post_vc_button = True
+	else:
+		post_vc_button = False
+
 	return render_to_response('game.html', 
 							{ 'game': game, 'players': players, 'moderator': moderator, 'form': form,
-								'comment_form': comment_form, 'gameday': gameday,
+								'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
 								'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
 								'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
 								'updates': updates }, 
@@ -241,9 +247,15 @@ def votecount(request, gameid):
 
 	v = VotecountFormatter(game)
 	v.go()
+
+	if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60)):
+		post_vc_button = True
+	else:
+		post_vc_button = False
 	
 	return render_to_response('votecount.html',
-							{ 'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount }, 
+							{ 'post_vc_button': post_vc_button, 
+							  'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount }, 
 							context_instance=RequestContext(request))
 	
 def resolve(request, voteid, resolution):
@@ -840,4 +852,27 @@ def post_lynches(request, gameid, enabled):
 		messages.add_message(request, messages.SUCCESS, 'Posting of lynches for this game is now disabled!')
 
 	game.save()
+	return HttpResponseRedirect(game.get_absolute_url())
+
+@login_required
+def post_vc(request, gameid):
+	game = get_object_or_404(Game, id=gameid)
+	if not game.is_user_mod(request.user):
+		return HttpResponseForbidden
+
+	if game.last_vc_post != None and datetime.now() - game.last_vc_post < timedelta(hours=1):
+		messages.add_message(request, messages.ERROR, 'Votefinder has posted too recently in that game.')
+	else:
+		game.last_vc_post = datetime.now()
+		game.save()
+
+		check_update_game(game)
+
+		v = VotecountFormatter(game)
+		v.go()
+
+		dl = ForumPageDownloader()
+		dl.ReplyToThread(game.threadId, v.bbcode_votecount)
+		messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
+
 	return HttpResponseRedirect(game.get_absolute_url())
