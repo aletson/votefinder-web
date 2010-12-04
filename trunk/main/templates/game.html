@@ -12,6 +12,7 @@
 {% block onready %}
   var curPage = {{game.currentPage}};
   var maxPages = {{game.maxPages}};
+  var pushed = false;
   $('#dialog').dialog({modal: true, autoOpen: false});
   $('#liveThread').button();
   $('#updateButton').button().click(function() {
@@ -46,8 +47,11 @@
   {% if moderator and not game.closed %}
 	{% if post_vc_button %}
 		$('#post-vc-button').live('click', function() {
-			$('#post-vc-button').attr('disabled', 'disabled');
-			location.href = '/post_vc/{{game.id}}';
+			if (pushed == false) {
+				pushed = true;
+				$('#post-vc-button').attr('disabled', 'disabled');
+				location.href = '/post_vc/{{game.id}}';
+			}
 		});
 	{% endif %}
   	$('.post-action').live('change', function(obj) {
