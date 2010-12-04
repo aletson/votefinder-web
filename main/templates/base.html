@@ -1,16 +1,16 @@
 <!DOCTYPE html> 
 <html> 
 	<head>
-    	<link type="text/css" rel="stylesheet" media="all" href="/static/style.css" /> 
-		<link type="text/css" href="/static/jquery-ui-1.8.1.custom.css" rel="Stylesheet" />	
+    	<link type="text/css" rel="stylesheet" media="all" href="http://media.votefinder.org/style.css" /> 
+		<link type="text/css" href="http://media.votefinder.org/jquery-ui-1.8.1.custom.css" rel="Stylesheet" />	
+		<link type="text/css" rel="stylesheet" media="all" href="http://media.votefinder.org/menu/css/menu1.css" />
 		
-		<script type="text/javascript" src="/static/jquery.js"></script>
-		<script type="text/javascript" src="/static/jquery-ui.min.js"></script>
-		
-		<script type="text/javascript" src="/static/menu/inc/jquery.metadata.js"></script> 
-  		<script type="text/javascript" src="/static/menu/inc/jquery.hoverIntent.js"></script> 
-		<script type="text/javascript" src="/static/menu/inc/mbMenu.min.js"></script>
-		<link type="text/css" rel="stylesheet" media="all" href="/static/menu/css/menu1.css" />
+		<script type="text/javascript" src="http://media.votefinder.org/jquery.js"></script>
+		<script type="text/javascript" src="http://media.votefinder.org/jquery-ui.min.js"></script>
+	
+		<script type="text/javascript" src="http://media.votefinder.org/menu/inc/jquery.metadata.js"></script> 
+  		<script type="text/javascript" src="http://media.votefinder.org/menu/inc/jquery.hoverIntent.js"></script> 
+		<script type="text/javascript" src="http://media.votefinder.org/menu/inc/mbMenu.min.js"></script>
 		
 		{% block header %}{% endblock %}
 		<title>{% block title %}VoteFinder{% endblock %}</title>
@@ -19,7 +19,7 @@
 			$(document).ready(function(){ {% block onready %}{% endblock %}	{% if messages %}if ($('hr').length > 0) { $('hr:first').after(messages); } else if ($('h1').length > 0) { $('h1:first').after(messages); } else { $('body').prepend(messages); }$('.messages').hide().show('slide');{% endif %}
 				$(".myMenu").buildMenu({
 					menuSelector: ".menuContainer",
-					iconPath:"/static/menu/ico/",
+					iconPath:"http://media.votefinder.org/menu/ico/",
 					hasImages:false, fadeInTime: 200, hoverIntent:0, submenuHoverIntent: 100,
 					shadow:true,
 				});
@@ -107,7 +107,7 @@
 				Hosted by <a href="http://slicehost.com/">Slicehost</a>.
 			</div>
 			<div id="belowIcons">
-				<a href="/atom"><img src="/static/feed-icon-14x14.png" border="0" alt="RSS Feed"/></a>
+				<a href="/atom"><img src="http://media.votefinder.org/feed-icon-14x14.png" border="0" alt="RSS Feed"/></a>
 				<a href="http://fusion.google.com/add?source=atgs&amp;feedurl=http%3A//votefinder.org/atom"><img src="http://gmodules.com/ig/images/plus_google.gif" border="0" alt="Add to Google"></a>
 			</div>
 		</div>

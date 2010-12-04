@@ -866,7 +866,7 @@ def post_vc(request, gameid):
 		game.last_vc_post = datetime.now()
 		game.save()
 
-		check_update_game(game)
+		game = check_update_game(game)
 
 		v = VotecountFormatter(game)
 		v.go()
