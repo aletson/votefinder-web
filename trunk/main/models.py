@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import thread
 from oauth import oauth
 from oauthtwitter import OAuthApi
+from djangoratings.fields import RatingField
 
 DETAIL_LEVEL_CHOICES = (
     ( 1, 'Brief' ),
@@ -29,6 +30,7 @@ class Player(models.Model):
 	name	= models.CharField(max_length=255, unique=True, db_index=True)
 	uid 	= models.IntegerField(unique=True, db_index=True)
 	slug	= models.SlugField()
+	rating = RatingField(range=5, can_change_vote=True)
 
 	def __unicode__(self):
 		return self.name
@@ -89,9 +91,9 @@ class Game(models.Model):
 	name 		= models.CharField(max_length=255) 
 	threadId 	= models.IntegerField(unique=True, db_index=True)
 	moderator 	= models.ForeignKey(Player, related_name='moderatingGames')
-	lastUpdated = models.DateTimeField(auto_now=True, auto_now_add=True)
+	lastUpdated 	= models.DateTimeField(auto_now=True, auto_now_add=True)
 	maxPages 	= models.IntegerField()
-	currentPage = models.IntegerField()
+	currentPage 	= models.IntegerField()
 	slug		= models.SlugField()
 	locked_at	= models.DateTimeField(null=True, blank=True)
 	closed		= models.BooleanField(default=False)
@@ -99,8 +101,9 @@ class Game(models.Model):
 	template	= models.ForeignKey(VotecountTemplate, null=True, blank=True)
 	added_by	= models.ForeignKey(User)
 	timezone	= models.CharField(max_length=128, default='US/Eastern')
-	post_lynches = models.BooleanField(default=False)
-	last_vc_post = models.DateTimeField(null=True, blank=True)
+	post_lynches 	= models.BooleanField(default=False)
+	last_vc_post 	= models.DateTimeField(null=True, blank=True)
+	rating 		= RatingField(range=5, can_change_vote=True)
 
 	def status_update(self, message):
 		self.status_update_noncritical(message)
