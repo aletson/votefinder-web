@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.core.cache import cache
 from pytz import timezone, common_timezones
 from math import ceil
+from django.conf import settings
 
 from ForumPageDownloader import ForumPageDownloader
 from PageParser import PageParser
@@ -710,8 +711,8 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
 
 def votecount_to_image(img, game, xpos = 0, ypos = 0, max_width = 600):
 	draw = ImageDraw(img)
-	regular_font = ImageFont.truetype('/home/soru/public_html/votefinder.org/votefinder/static/MyriadPro-Regular.otf', 15)
-	bold_font = ImageFont.truetype('/home/soru/public_html/votefinder.org/votefinder/static/MyriadPro-Bold.otf', 15)
+	regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
+	bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
 
 	game.template = VotecountTemplate.objects.get(id=11)
 	vc = VotecountFormatter(game)
