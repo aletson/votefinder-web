@@ -188,6 +188,20 @@
 		<td>Last updated:</td>
 		<td>{{game.lastUpdated|timesince}} ago</td>
 	</tr>	
+	{% if not user.is_anonymous %}<tr>
+		<td>Rate it:</td>
+		<td class="ratingBox">{% spaceless%}
+			<a href="/rate/{{game.id}}/1"><img border="0" src="http://media.votefinder.org/images/rate1.gif"></a>
+			<a href="/rate/{{game.id}}/2"><img border="0" src="http://media.votefinder.org/images/rate2.gif"></a>
+			<a href="/rate/{{game.id}}/3"><img border="0" src="http://media.votefinder.org/images/rate3.gif"></a>
+			<a href="/rate/{{game.id}}/4"><img border="0" src="http://media.votefinder.org/images/rate4.gif"></a>
+			<a href="/rate/{{game.id}}/5"><img border="0" src="http://media.votefinder.org/images/rate5.gif"></a>{% endspaceless %}
+		(Rating: {{game.rating.get_rating}}, {{game.rating.votes}} votes)
+		{% if user_rating %}
+			(You rated it {{user_rating}})
+		{% endif %}
+		</td>
+	</tr>{% endif %}
 	</table><p></p>
 			
 	<div id="tabs">
