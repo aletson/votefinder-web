@@ -51,5 +51,5 @@ urlpatterns = patterns('votefinder.main.views',
 	(r'^post_histories/(?P<gameid>\d+)$',		'post_histories'),
 	(r'^post_lynches/(?P<gameid>\d+)/(?P<enabled>\w+)$', 'post_lynches'),
 	(r'^post_vc/(?P<gameid>\d+)$',				'post_vc'),
-	(r'^rate/(?P<gameid>\d+)/(?P<score>[1-5])',		'rate'),
+	(r'^rate/(?P<gameid>\d+)/(?P<score>[1-5])',	'rate'),
 )

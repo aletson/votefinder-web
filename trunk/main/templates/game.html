@@ -119,6 +119,15 @@
   	loadPage($(this).val());
   });
  
+  function rate_game(rating) {
+    location.href = '/rate/{{game.id}}/' + rating;
+  }
+  $('.one-star').click(function() { rate_game(1); });
+  $('.two-stars').click(function() { rate_game(2); });
+  $('.three-stars').click(function() { rate_game(3); });
+  $('.four-stars').click(function() { rate_game(4); });
+  $('.five-stars').click(function() { rate_game(5); });
+
   $('.resolver').live('change', function(obj) {
     var resolution = $(this).val();
     var vote = $(this).attr('id');
@@ -188,20 +197,19 @@
 		<td>Last updated:</td>
 		<td>{{game.lastUpdated|timesince}} ago</td>
 	</tr>	
-	{% if not user.is_anonymous %}<tr>
-		<td>Rate it:</td>
+	<tr>
+		<td><span title="{{game.rating.votes}} votes, avg rating {{game.rating.get_rating}}">Rating:</span></td>
 		<td class="ratingBox">{% spaceless%}
-			<a href="/rate/{{game.id}}/1"><img border="0" src="http://media.votefinder.org/images/rate1.gif"></a>
-			<a href="/rate/{{game.id}}/2"><img border="0" src="http://media.votefinder.org/images/rate2.gif"></a>
-			<a href="/rate/{{game.id}}/3"><img border="0" src="http://media.votefinder.org/images/rate3.gif"></a>
-			<a href="/rate/{{game.id}}/4"><img border="0" src="http://media.votefinder.org/images/rate4.gif"></a>
-			<a href="/rate/{{game.id}}/5"><img border="0" src="http://media.votefinder.org/images/rate5.gif"></a>{% endspaceless %}
-		(Rating: {{game.rating.get_rating}}, {{game.rating.votes}} votes)
-		{% if user_rating %}
-			(You rated it {{user_rating}})
-		{% endif %}
+			<ul class='star-rating'>
+				<li class='current-rating' style='width:{{star_width}}px;'>Currently {{game.rating.get_rating}} stars</li>
+				<li><a href='#' title='1 star out of 5' class='one-star'>1</a></li>
+				<li><a href='#' title='2 stars out of 5' class='two-stars'>2</a></li>
+				<li><a href='#' title='3 stars out of 5' class='three-stars'>3</a></li>
+				<li><a href='#' title='4 stars out of 5' class='four-stars'>4</a></li>
+				<li><a href='#' title='5 stars out of 5' class='five-stars'>5</a></li>
+			</ul>{% endspaceless %}
 		</td>
-	</tr>{% endif %}
+	</tr>
 	</table><p></p>
 			
 	<div id="tabs">
