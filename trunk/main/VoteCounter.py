@@ -69,7 +69,7 @@ class VoteCounter:
 
         message = random.choice(LynchMessage.objects.all()).text
         dl = ForumPageDownloader()
-        dl.ReplyToThread(game.threadId, ":redhammer: " + (msg % name))
+        dl.ReplyToThread(game.threadId, ":redhammer: " + (message % name))
 
     def BuildResultList(self):
         list = []
