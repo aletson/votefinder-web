@@ -9,6 +9,7 @@ import thread
 from oauth import oauth
 from oauthtwitter import OAuthApi
 from djangoratings.fields import RatingField
+import random
 
 DETAIL_LEVEL_CHOICES = (
     ( 1, 'Brief' ),
@@ -319,3 +320,9 @@ class AddCommentForm(forms.Form):
 class VotecountTemplateForm(ModelForm):
 	class Meta:
 		model = VotecountTemplate
+
+class LynchMessage(models.Model):
+	text = models.CharField(max_length=512)
+
+	def __unicode__(self):
+		return self.text

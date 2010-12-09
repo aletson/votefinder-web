@@ -67,19 +67,9 @@ class VoteCounter:
         if not game.post_lynches:
             return
 
-        messages = [
-            'Oh no!  I think %s is hammered!',
-            "Hey, that's a hammer for %s!",
-            '%s :byewhore:',
-            'Oh god!  %s is hammered!',
-            'Noooooooooo, goodbye %s!',
-            '%s, we hardly knew ye :(',
-            'Good riddance, %s!',
-            'This game will be better without %s!',
-        ]
-
+        message = random.choice(LynchMessage.objects.all()).text
         dl = ForumPageDownloader()
-        dl.ReplyToThread(game.threadId, ":redhammer: " + (random.choice(messages) % name))
+        dl.ReplyToThread(game.threadId, ":redhammer: " + (msg % name))
 
     def BuildResultList(self):
         list = []

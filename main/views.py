@@ -93,6 +93,7 @@ def game(request, slug):
 
 	gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
 	manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
+	star_width = int(game.rating.get_rating() * 25)
 
 	if game.deadline:
 		tz = timezone(game.timezone)
@@ -114,7 +115,7 @@ def game(request, slug):
 					'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
 					'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
 					'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-					'updates': updates, 'user_rating': rating }, 
+					'updates': updates, 'star_width': star_width }, 
 				context_instance=RequestContext(request))
 
 def update(request, gameid):

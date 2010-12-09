@@ -13,6 +13,7 @@ admin.site.register(Comment)
 admin.site.register(GameDay)
 admin.site.register(CookieStore)
 admin.site.register(VotecountTemplate)
+admin.site.register(LynchMessage)
 
 class PostAdmin(admin.ModelAdmin):
 	list_display = ('author', 'timestamp', 'game', 'pagenumber')
