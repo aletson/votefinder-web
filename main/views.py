@@ -25,10 +25,10 @@ import re
 from django.db.models import Max
 
 def index(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name").extra(select={'size': "select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.spectator=0 and main_playerstate.moderator=0", 'day': 'select dayNumber from main_gameday where main_gameday.game_id=main_game.id order by dayNumber desc limit 1', 'alive': 'select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.alive=1'})
+	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
 
-	big_games = filter(lambda g: g.size > 15, game_list)
-	mini_games = filter(lambda g: g.size <= 15, game_list)
+	big_games = filter(lambda g: g.is_big == True, game_list)
+	mini_games = filter(lambda g: g.is_big == False, game_list)
 	
 	posts = BlogPost.objects.all().order_by("-timestamp")[:5]
 
@@ -191,6 +191,8 @@ def player_state(request, gameid, playerid, state):
 		return HttpResponseNotFound
 		
 	current_state.save()
+	current_state.game.save() #updated cached values
+
 	return HttpResponse(simplejson.dumps({ 'success': True }))
 
 def player_list(request):
@@ -217,6 +219,7 @@ def add_player(request, gameid):
 		if not current_state.moderator:
 			current_state.set_alive()
 			current_state.save()
+			game.save() #updated cached totals
 		if created:
 			messages.add_message(request, messages.SUCCESS, '<strong>%s</strong> was added to the game.' % form.player)
 		else:
@@ -234,7 +237,7 @@ def delete_spectators(request, gameid):
 
 	for p in game.spectators():
 		PlayerState.delete(p)
-		
+
 	messages.add_message(request, messages.SUCCESS, 'All spectators were deleted from the game.')
 	return HttpResponseRedirect(game.get_absolute_url())
 
@@ -571,26 +574,26 @@ def game_template(request, gameid, templateid):
 	return HttpResponseRedirect(game.get_absolute_url())
 
 def active_games(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name").extra(select={'size': "select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.spectator=0 and main_playerstate.moderator=0", 'day': 'select dayNumber from main_gameday where main_gameday.game_id=main_game.id order by dayNumber desc limit 1', 'alive': 'select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.alive=1'})
+	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
 
-	big_games = filter(lambda g: g.size > 15, game_list)
-	mini_games = filter(lambda g: g.size <= 15, game_list)
+	big_games = filter(lambda g: g.is_big == True, game_list)
+	mini_games = filter(lambda g: g.is_big == False, game_list)
 	
 	return render_to_response("wiki_games.html", 
 							{'big_games': big_games, 'mini_games': mini_games }, context_instance=RequestContext(request))
 
 def active_games_style(request, style):
 	if style == "default" or style == "verbose":
-		game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name").extra(select={'size': "select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.spectator=0 and main_playerstate.moderator=0", 'day': 'select dayNumber from main_gameday where main_gameday.game_id=main_game.id order by dayNumber desc limit 1', 'alive': 'select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.alive=1'})
+		game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
 
-		big_games = filter(lambda g: g.size > 15, game_list)
-		mini_games = filter(lambda g: g.size <= 15, game_list)
+		big_games = filter(lambda g: g.is_big == True, game_list)
+		mini_games = filter(lambda g: g.is_big == False, game_list)
 	
 		return render_to_response("wiki_games.html", 
 								{'big_games': big_games, 'mini_games': mini_games, 'style': style }, 
 								context_instance=RequestContext(request))
 	elif style == "closedmonthly":
-		game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'size': "select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.spectator=0 and main_playerstate.moderator=0", 'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by("-last_post")
+		game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by("-last_post")
 		game_list = filter(lambda g: datetime.now() - g.last_post < timedelta(days=31), game_list)
 
 		return render_to_response("wiki_closed_games.html", 
@@ -605,7 +608,7 @@ def active_games_json(request):
 	return HttpResponse(simplejson.dumps(gameList), mimetype='application/json')
 
 def closed_games(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'size': "select count(*) from main_playerstate where main_playerstate.game_id=main_game.id and main_playerstate.spectator=0 and main_playerstate.moderator=0", 'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
+	game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
 
 	return render_to_response("closed.html",
                                                         {'games': game_list,

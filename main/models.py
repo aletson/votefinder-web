@@ -105,6 +105,19 @@ class Game(models.Model):
 	post_lynches 	= models.BooleanField(default=False)
 	last_vc_post 	= models.DateTimeField(null=True, blank=True)
 	rating 		= RatingField(range=5, can_change_vote=True)
+	is_big		= models.BooleanField(default=False)
+	current_day	= models.IntegerField()
+	living_count	= models.IntegerField()
+	players_count	= models.IntegerField()
+
+	def update_counts(self):
+		self.players_count = self.count_players()
+		self.living_count = len(self.living_players())
+		self.is_big = True if self.players_count > 16 else False
+
+		days = self.days.order_by("-id")
+		if len(days) > 0:
+			self.current_day = days[0].dayNumber
 
 	def status_update(self, message):
 		self.status_update_noncritical(message)
@@ -136,6 +149,7 @@ class Game(models.Model):
 			filtered_name = filtered_name.replace("mini", "")
 			self.slug = SlugifyUniquely(filtered_name.strip(), self.__class__)
 		self.locked_at = None
+		self.update_counts()
 		super(Game, self).save(*args, **kwargs) 
 		
 	def get_absolute_url(self):
