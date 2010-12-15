@@ -38,7 +38,7 @@ class GameStatusRss(Feed):
         guid = '/'
 
         def items(self):
-                return GameStatusUpdate.objects.all().order_by("-timestamp")[:5]
+                return GameStatusUpdate.objects.all().order_by("-id")[:5]
 
         def item_title(self, item):
 		if item.game:
@@ -50,7 +50,7 @@ class GameStatusRss(Feed):
                 return item.message
 
         def item_link(self, item):
-                return "http://forums.somethingawful.com/showthread.php?threadid=%s" % item.game.threadId
+                return item.url
 
         def item_pubdate(self, item):
                 return item.timestamp

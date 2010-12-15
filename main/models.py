@@ -10,6 +10,12 @@ from oauth import oauth
 from oauthtwitter import OAuthApi
 from djangoratings.fields import RatingField
 import random
+from urllib2 import urlopen, Request, HTTPError
+from urllib import quote
+from simplejson import loads
+import bitly
+from staticgenerator import quick_delete
+from django.db.models import signals
 
 DETAIL_LEVEL_CHOICES = (
     ( 1, 'Brief' ),
@@ -279,10 +285,39 @@ class Vote(models.Model):
 		else:
 			return "%s votes %s" % (self.author, self.targetString)
 
+def shorten(url):
+	try:
+		api = bitly.Api(login='soru', apikey='R_7d78eb0cfe6994ee6084b35eba2f20c4')
+		return api.shorten(url)
+	except:
+		pass
+
+	try:
+		data = urlopen(Request('http://goo.gl/api/url', 'url=%s' % quote(url), {'User-Agent':'toolbar'}))
+		json = loads(data.read())
+		return json['short_url']
+	except:
+		pass
+
+	return None
+
 class GameStatusUpdate(models.Model):
 	timestamp	= models.DateTimeField(auto_now=True)
 	game		= models.ForeignKey(Game)
 	message		= models.CharField(max_length=1024)
+	url		= models.CharField(max_length=255)
+
+	def save(self, *args, **kwargs):
+		if not self.id:
+			postUrl = "http://forums.somethingawful.com/showthread.php?goto=post&postid=%s" % self.game.posts.all().order_by("-id")[0].postId
+			url = shorten(postUrl)
+			if url == None:
+				self.url = postUrl
+			else:
+				self.url = url
+
+		super(GameStatusUpdate, self).save(*args, **kwargs) 
+
 
 class BlogPost(models.Model):
 	author 		= models.ForeignKey(User)
@@ -340,3 +375,11 @@ class LynchMessage(models.Model):
 
 	def __unicode__(self):
 		return self.text
+
+def expire_game(sender, instance,  **kwargs):
+	quick_delete(instance, '/game/%s' % instance.slug)
+	quick_delete(instance, '/votecount/%s' % instance.id)
+	quick_delete(instance, '/')
+
+signals.post_delete.connect(expire_game, sender=Game)
+signals.post_save.connect(expire_game, sender=Game)
