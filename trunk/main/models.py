@@ -375,11 +375,3 @@ class LynchMessage(models.Model):
 
 	def __unicode__(self):
 		return self.text
-
-def expire_game(sender, instance,  **kwargs):
-	quick_delete(instance, '/game/%s' % instance.slug)
-	quick_delete(instance, '/votecount/%s' % instance.id)
-	quick_delete(instance, '/')
-
-signals.post_delete.connect(expire_game, sender=Game)
-signals.post_save.connect(expire_game, sender=Game)
