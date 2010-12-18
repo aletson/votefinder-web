@@ -112,9 +112,9 @@ class Game(models.Model):
 	last_vc_post 	= models.DateTimeField(null=True, blank=True)
 	rating 		= RatingField(range=5, can_change_vote=True)
 	is_big		= models.BooleanField(default=False)
-	current_day	= models.IntegerField()
-	living_count	= models.IntegerField()
-	players_count	= models.IntegerField()
+	current_day	= models.IntegerField(default=1)
+	living_count	= models.IntegerField(default=0)
+	players_count	= models.IntegerField(default=0)
 
 	def update_counts(self):
 		self.players_count = self.count_players()
