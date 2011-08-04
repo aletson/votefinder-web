@@ -153,7 +153,10 @@ class Game(models.Model):
 			filtered_name = filtered_name.replace("mini-mafia", "")
 			filtered_name = filtered_name.replace("mafia", "")
 			filtered_name = filtered_name.replace("mini", "")
-			self.slug = SlugifyUniquely(filtered_name.strip(), self.__class__)
+			if filtered_name.strip() == "":
+				self.slug = SlugifyUniquely(self.name.strip(), self.__class__)
+			else:
+				self.slug = SlugifyUniquely(filtered_name.strip(), self.__class__)
 		self.locked_at = None
 		self.update_counts()
 		super(Game, self).save(*args, **kwargs) 

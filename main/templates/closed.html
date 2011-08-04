@@ -48,8 +48,8 @@
         <tr>
           <td><a href="{{game.get_absolute_url}}">{{game.name|safe}}</a></td>
           <td><a href="{{game.moderator.get_absolute_url}}">{{game.moderator}}</a></td>
-          <td>{% if game.size > 15 %}Large{% else %}Mini{% endif %}</td>
-          <td>{{game.size}}</td>
+          <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
+          <td>{{game.players_count}}</td>
           <td>{{game.first_post|date}}</td>
           <td>{{game.last_post|date}}</td>
         </tr>

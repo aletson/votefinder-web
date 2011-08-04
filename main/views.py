@@ -16,7 +16,6 @@ from django.core.cache import cache
 from pytz import timezone, common_timezones
 from math import ceil
 from django.conf import settings
-
 from ForumPageDownloader import ForumPageDownloader
 from PageParser import PageParser
 from GameListDownloader import GameListDownloader
@@ -722,7 +721,7 @@ def votecount_to_image(img, game, xpos = 0, ypos = 0, max_width = 600):
 
 	game.template = VotecountTemplate.objects.get(id=11)
 	vc = VotecountFormatter(game)
-	vc.go()
+	vc.go(show_comment = False)
 
 	(header_text, footer_text) = re.compile("\[.*?\]").sub('', vc.bbcode_votecount).split("\r\n")
 	(header_x_size, header_y_size) = draw_wordwrap_text(draw, header_text, 0, 0, max_width, bold_font)
@@ -815,6 +814,12 @@ def players_page(request, page):
 
 	if len(players) == 0:
 		return HttpResponseRedirect('/players')
+
+	for p in players:
+		if p.total_games_played > 0:
+			p.posts_per_game = p.total_posts / (1.0 * p.total_games_played)
+		else:
+			p.posts_per_game = 0
 
 	return render_to_response("players.html", 
 							{'players': players, 'page': page, 'total_pages': total_pages },
