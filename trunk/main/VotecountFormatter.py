@@ -15,7 +15,7 @@ class VotecountFormatter:
         self.vc = VoteCounter()
         self.game = game
 
-    def go(self):
+    def go(self, show_comment = True):
         self.results = self.vc.run(self.game)
         
         game_template = self.game.template
@@ -38,7 +38,7 @@ class VotecountFormatter:
         detail_level = game_template.detail_level
         self.tick = game_template.full_tick
         self.empty_tick = game_template.empty_tick
-        comments = Comment.objects.filter(game=self.game).order_by('-timestamp')
+        comments = Comment.objects.filter(game=self.game).order_by('-timestamp') if show_comment else ""
         
         votecount_lines = []
         for item in self.results:

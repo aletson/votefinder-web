@@ -7,6 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     (r'^auth/',     include('votefinder.auth.urls')),
     (r'^admin/',    include(admin.site.urls)),
+    (r'^dominion/', include('votefinder.dominion.urls')),
     (r'',           include('votefinder.main.urls')),
 )
 

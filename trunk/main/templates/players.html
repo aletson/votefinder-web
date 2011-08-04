@@ -12,9 +12,9 @@
             0: { type: 'html' },
             1: { type: 'number' },
             2: { type: 'date' },
-			3: { type: 'number' },
-			4: { type: 'number' },
-			5: { type: 'number' }
+            3: { type: 'number' },
+            4: { type: 'number' },
+            5: { type: 'number' },
         },
         stripe: true,
         classes: {
@@ -38,7 +38,7 @@
 			<td>Last Post</td>
 			<td>Games Played</td>
 			<td>Games Run</td>
-			<td>Posts Made</td>
+			<td>Posts/Game</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -49,7 +49,7 @@
 			<td>{{p.last_post|date}}</td>
 			<td>{{p.total_games_played}}</td>
 			<td>{{p.total_games_run}}</td>
-			<td>{{p.total_posts}}</td>
+			<td>{{p.posts_per_game|floatformat}}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

@@ -75,7 +75,7 @@
 	   				<a href="/auth/password_change">Change Password</a>
    					<a href="/auth/logout">Log Out</a>
 				{% else %}
-    				<a href="/auth/login">Log In</a>
+    				<a href="/auth/login?next={{request.path}}">Log In</a>
     				<a href="/auth/create">Create Account</a>
 				{% endif %}
 			</div>
