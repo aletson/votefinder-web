@@ -20,7 +20,8 @@ from ForumPageDownloader import ForumPageDownloader
 from PageParser import PageParser
 from GameListDownloader import GameListDownloader
 from VotecountFormatter import VotecountFormatter
-import re
+from VoteCounter import VoteCounter
+import re, math
 from django.db.models import Max
 
 def index(request):
@@ -895,3 +896,39 @@ def rate(request, gameid, score):
 	game.rating.add(score=score, user=request.user, ip_address=request.META['REMOTE_ADDR'])
 	messages.add_message(request, messages.SUCCESS, 'You rated the game a %s!' % score)
 	return HttpResponseRedirect(game.get_absolute_url())
+
+def votechart_all(request, gameslug):
+    game = get_object_or_404(Game, slug=gameslug)
+    day = GameDay.objects.get(game=game, dayNumber=game.current_day)
+    toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
+    
+    vc = VoteCounter()
+    vc.run(game)
+    voteLog = vc.GetVoteLog()
+
+    return render_to_response("votechart.html", 
+                    { 'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
+                      'now': datetime.now(), 'toLynch': toLynch,
+                      'votes': voteLog, 'numVotes': len(voteLog),
+                      'players': map(lambda p: p.player.name, game.living_players()),
+                      'allPlayers': map(lambda p: p.player, game.living_players()) },
+                    context_instance=RequestContext(request))
+
+def votechart_player(request, gameslug, playerslug):
+    game = get_object_or_404(Game, slug=gameslug)
+    player = get_object_or_404(Player, slug=playerslug)
+    day = GameDay.objects.get(game=game, dayNumber=game.current_day)
+    toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
+
+    vc = VoteCounter()
+    vc.run(game)
+    voteLog = filter(lambda v: v['player'] == player.name, vc.GetVoteLog())
+
+    return render_to_response("votechart.html", 
+                    { 'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
+                      'now': datetime.now(), 'toLynch': toLynch,
+                      'votes': voteLog, 'numVotes': len(voteLog),
+                      'allPlayers': map(lambda p: p.player, game.living_players()),
+                      'selectedPlayer': player.name,
+                      'players': [ player.name ] },
+                    context_instance=RequestContext(request))

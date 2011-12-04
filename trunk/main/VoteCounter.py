@@ -10,7 +10,9 @@ class VoteCounter:
         self.currentVote = {}
         self.votesFound = False
         self.nolynch_player = None
-        
+        self.voteLog = []
+        self.show_only_active_votes = False
+
     def run(self, game):
         gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
 
@@ -18,11 +20,13 @@ class VoteCounter:
             votes = Vote.objects.select_related(depth=2).filter(game=game, ignored=False, manual=False, post__id__gte=gameday.startPost.id).order_by('id')
             manual_votes = Vote.objects.select_related(depth=2).filter(game=game, ignored=False, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
             self.votesFound = True
+            nextDay = None
         except Vote.DoesNotExist:
             return
         
         self.livingPlayers = Player.objects.select_related(depth=2).filter(games__in=game.living_players())
         self.game = game
+        self.voteLog = []
 
         for p in self.livingPlayers:
             self.results[p] = { 'count': 0, 'votes': [] }
@@ -46,6 +50,9 @@ class VoteCounter:
         self.RunNotify(game, gameday)
 
         return self.BuildResultList()
+
+    def GetVoteLog(self):
+        return self.voteLog
     
     def RunNotify(self, game, gameday):
         gameday = GameDay.objects.get(id=gameday.id) #reload to prevent double posts from 2 threads updating at once
@@ -94,15 +101,19 @@ class VoteCounter:
         if vote.nolynch:
             vote.target = self.nolynch_player
 
-        self.AddVoteToPlayer(vote.target, vote.author, False, vote.post.pageNumber, vote.post.postId)    
+        self.AddVoteToPlayer(vote.target, vote.author, False, vote.post.pageNumber, vote.post.postId, vote.post.timestamp)
         self.currentVote[vote.author] = vote.target
 
-    def AddVoteToPlayer(self, target, author, unvote, page, postid):
+    def AddVoteToPlayer(self, target, author, unvote, page, postid, timestamp):
         resultItem = self.results[target]
         if unvote:
             resultItem['count'] -= 1
+            text = '%s unvotes' % author
         else:
             resultItem['count'] += 1
+            text = '%s votes %s' % (author, target)
+
+        self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': resultItem['count'], 'text': text})
             
         resultItem['votes'].append({'unvote': unvote, 'enabled': True, 'author': author, 
                                     'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s#post%s' % (self.game.threadId, page, postid)})
@@ -111,7 +122,7 @@ class VoteCounter:
         currentVote = self.PlayerIsVoting(vote.author)
         if currentVote:
             self.DisableCurrentVote(vote.author, currentVote)
-            self.AddVoteToPlayer(currentVote, vote.author, True, vote.post.pageNumber, vote.post.postId)
+            self.AddVoteToPlayer(currentVote, vote.author, True, vote.post.pageNumber, vote.post.postId, vote.post.timestamp)
         self.currentVote[vote.author] = None
         
     def DisableCurrentVote(self, player, target):
