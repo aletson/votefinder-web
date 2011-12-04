@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}{{game.name|safe}} Vote Chart{% endblock %}
+
+{% block header %}
+  <script type='text/javascript' src='http://www.google.com/jsapi'></script>
+{% endblock %}
+
+{% block script %}
+	var players = new Array()
+	var i = 0;
+	var counter = 0;
+
+	{% for p in players %}
+		players['{{p}}'] = i++;
+	{% endfor %}
+
+      google.load('visualization', '1', {'packages':['annotatedtimeline']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Timestamp');
+           
+        {% for p in players %}
+            data.addColumn('number', '{{p}}');
+            data.addColumn('string', 'title1');
+            data.addColumn('string', 'text1');
+        {% endfor %}
+
+	    data.addRows({{numVotes}}); 
+	    {% for v in votes %}
+		    data.setValue(counter, 0, new Date('{{v.timestamp.date.isoformat}} {{v.timestamp.time.isoformat}}'));
+    		data.setValue(counter, (players['{{v.player}}'] * 3) + 1, {{v.count}});
+	    	{% if not showAllPlayers %}
+	    	data.setValue(counter, (players['{{v.player}}'] * 3) + 2, '{{v.text}}');
+	    	{% endif %}
+		    counter++;
+    	{% endfor %}
+
+        var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
+        chart.draw(data, {displayAnnotations: true, legendPosition: 'newRow', highlightDot: 'last',
+                          min: 0, max: {{toLynch}}, displayZoomButtons: false, displayLegendDots: false,
+                          displayLegendDots: false });
+      }
+{% endblock %}
+
+{% block onready %}
+  $('#selectPlayers').change(function() {
+    if ($('#selectPlayers').val() == "all") {
+      location.href = '/votechart/{{game.slug}}';
+    } else {
+      location.href = '/votechart/{{game.slug}}/' + $('#selectPlayers').val();
+    }
+  });
+{% endblock %}
+
+{% block content %}
+ <h1>{{game.name|safe}}</h1>
+
+  Showing: 
+    <select name="players" id="selectPlayers">
+      <option value="all" {% if showAllPlayers %}selected="selected"{% endif %}>All Players</option>
+      {% for p in allPlayers %}
+      <option value="{{p.slug}}" {% if selectedPlayer == p.name %}selected="selected"{% endif %}>{{p.name}}</option>
+      {% endfor %}
+    </select><p/>
+
+  <div id='chart_div' style='width: 800px; height: 600px;'></div>
+{% endblock %}
+
