@@ -22,7 +22,8 @@ from GameListDownloader import GameListDownloader
 from VotecountFormatter import VotecountFormatter
 from VoteCounter import VoteCounter
 import re, math
-from django.db.models import Max
+from django.db.models import Max, Min, Count
+from django.db import connections
 
 def index(request):
 	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
@@ -932,3 +933,31 @@ def votechart_player(request, gameslug, playerslug):
                       'selectedPlayer': player.name,
                       'players': [ player.name ] },
                     context_instance=RequestContext(request))
+
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+def gamechart(request):
+    cursor = connections['default'].cursor()
+    cursor.execute("select cast(timestamp as date) as date, count(1)/count(distinct(game_id)) as activity, count(distinct(author_Id)) as posters, count(distinct(game_id)) as games, count(1) as posts from main_post where timestamp > '2010-05-01' group by date order by date")
+    data = dictfetchall(cursor)
+
+    return render_to_response("gamechart.html", 
+                    { 'data': data, 'dataLen': len(data) },
+                    context_instance=RequestContext(request))
+
+def my_classes(c):
+    if c is None:
+        return False
+    if c.has_key('class') and c['class'] == 'category':
+        return True
+    if c.has_key('class') and c['class'] == 'forum':
+        return True
+    if c.parent is not None and c.parent.has_key('class') and c.parent['class'] == 'subforums' and c.has_key('href'):
+        return True
+    return False

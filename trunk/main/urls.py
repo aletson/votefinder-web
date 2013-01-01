@@ -55,5 +55,5 @@ urlpatterns = patterns('votefinder.main.views',
     (r'^rate/(?P<gameid>\d+)/(?P<score>[1-5])', 'rate'),
     (r'^votechart/(?P<gameslug>[\w-]+)$',       'votechart_all'),
     (r'^votechart/(?P<gameslug>[\w-]+)/(?P<playerslug>[\w-]+)$', 'votechart_player'),
-    
+    (r'^gamechart$',                            'gamechart')
 )

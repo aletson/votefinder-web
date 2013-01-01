@@ -120,7 +120,7 @@ class PageParser:
 			if newPost:
 				if not mod:
 					mod = newPost.author
-					
+
 				newPost.pageNumber = self.pageNumber
 				self.posts.append(newPost)
 	
@@ -163,20 +163,25 @@ class PageParser:
 		return game
 	
 	def FindPageNumber(self, soup):
-		curpage = soup.find("span", "curpage")
-		if curpage:
-			return curpage.text
-		else:
-			return "1"
+		pages = soup.find("div", "pages")
+		if pages:
+			curPage = pages.find(attrs={"selected":"selected"})
+			if curPage:
+				return curPage['value']
+			else:
+				return "1"
+
+		return "1"
 	
 	def FindMaxPages(self, soup):
-		pages = soup.find("div", "pages top")
+		pages = soup.find("div", "pages")
 		if pages:
-			matcher = re.compile(r"Pages \((?P<maxpages>\d+)\):").search(pages.text)
-			if matcher:
-				return matcher.group('maxpages')
-			else:
+			option_tags = pages.findAll("option")
+			total_pages = len(option_tags)
+			if total_pages == 0:
 				return 1
+			else:
+				return total_pages
 		else:
 			return 1
 	
