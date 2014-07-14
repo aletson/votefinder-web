@@ -36,6 +36,7 @@
   
   <p style="clear: left; padding-top: 1em;"><a class="add-button" href="/add">Add a Game</a> | <a href="/closed">Closed Games</a> | <a href="/players">View Players</a> | <a href="http://code.google.com/p/votefinder-web/issues/entry">Report a Bug</a></p>
   	    
+  {% comment %}
   {% if posts %}
     <hr>
    	{% for post in posts %}
@@ -46,5 +47,6 @@
    		</div>
   	{% endfor %}
   {% endif %}
-  
+  {% endcomment %}
+
 {% endblock %}
