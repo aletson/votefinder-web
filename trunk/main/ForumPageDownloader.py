@@ -1,11 +1,13 @@
 import urllib, urllib2, cookielib, re
 import cPickle as pickle
-from votefinder.main.models import CookieStore
+from votefinder.main.models import *
 from django.conf import settings
 from BeautifulSoup import BeautifulSoup
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 from poster import poster
+from datetime import datetime
+from pytz import timezone, common_timezones
 
 class ForumPageDownloader():
     def __init__(self):
@@ -14,6 +16,8 @@ class ForumPageDownloader():
         self.opener = poster.streaminghttp.register_openers()
         self.opener.add_handler(urllib2.HTTPCookieProcessor(self.cj))
         self.LoadCookies()
+
+        self.log = open("/tmp/download.log", "a")
 
     def download(self, page):
         data = self.PerformDownload(page)
@@ -32,12 +36,21 @@ class ForumPageDownloader():
         else:
             return None
 
+    def LogLoginAttempt(self):
+        with open("/tmp/logins.txt", "a") as f:
+            f.write("%s\n" % timezone('UTC').localize(datetime.now()).astimezone(timezone('US/Pacific')).ctime())
+
+        g = Game.objects.get(id=228)
+        g.status_update("Trying to re-login to forums.  PM soru if this happens a lot.")
+
     def LoginToForum(self):
         data = ""
 
+        self.LogLoginAttempt()
+
         try:
             usock = self.opener.open("http://forums.somethingawful.com/account.php",
-                                     urllib.urlencode(dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD)))
+                                     urllib.urlencode(dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD, secure_login="")))
             data = usock.read()
             usock.close()
         except URLError, e:
@@ -50,16 +63,16 @@ class ForumPageDownloader():
             return False
 
     def IsNeedToLogInPage(self, data):
-        if re.search(re.compile(r"A BRIEF OVERVIEW \(WHY DO WE CHARGE TO REGISTER\?\)"), data) == None:
+        if re.search(re.compile(r"Sorry, you must be a registered forums member to view this page"), data) == None:
             return False
         else:
             return True
 
     def IsLoggedInCorrectlyPage(self, data):
-        if re.search(re.compile(r"GLUE GLUEEEEE GLUUUUUUEEE,.*?GLUUUEEE GLUE GLLLUUUUUEEEEEE"), data) == None:
-            return False
-        else:
+        if re.search(re.compile(r"Login with username and password"), data) == None:
             return True
+        else:
+            return False
 
     def PerformDownload(self, page):
         try:
@@ -102,3 +115,7 @@ class ForumPageDownloader():
         datagen, headers = poster.encode.multipart_encode(inputs)
         request = urllib2.Request(postUrl, datagen, headers)
         result = urllib2.urlopen(request).read()
+
+if __name__ == "__main__":
+    dl = ForumPageDownloader()
+    result = dl.download("http://forums.somethingawful.com/showthread.php?threadid=3552086")
