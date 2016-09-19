@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     (r'^auth/',     include('votefinder.auth.urls')),
     (r'^admin/',    include(admin.site.urls)),
     (r'',           include('votefinder.main.urls')),
+    (r'^static/(?p<path>.*)$',   'django.views.static.serve', {'document_root':settings.STATIC_ROOT}),
 )
 
 if settings.DEBUG:
