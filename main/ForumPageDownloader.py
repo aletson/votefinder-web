@@ -14,6 +14,7 @@ class ForumPageDownloader():
         self.cj = cookielib.CookieJar()
         #self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         self.opener = poster.streaminghttp.register_openers()
+        self.opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
         self.opener.add_handler(urllib2.HTTPCookieProcessor(self.cj))
         self.LoadCookies()
 
