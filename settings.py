@@ -44,7 +44,7 @@ if DEBUG:
         EMAIL_PORT = 25
         EMAIL_HOST_USER = ''
         EMAIL_HOST_PASSWORD = ''
-        EMAIL_USE_TLS = False
+        EMAIL_USE_TLS = True
         DEFAULT_FROM_EMAIL = 'reset@votefinder.org'
 
 WEB_ROOT = '/home/ubuntu/vf-app/app/votefinder/'
@@ -64,6 +64,8 @@ TIME_ZONE = 'UTC'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
+# Site ID for this Django site. Properties of this site can be edited in
+# the admin section.
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
