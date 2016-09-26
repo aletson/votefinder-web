@@ -18,8 +18,6 @@ class ForumPageDownloader():
         self.opener.add_handler(urllib2.HTTPCookieProcessor(self.cj))
         self.LoadCookies()
 
-        self.log = open("/tmp/download.log", "a")
-
     def download(self, page):
         data = self.PerformDownload(page)
 
