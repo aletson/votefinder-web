@@ -776,7 +776,7 @@ def votecount_image(request, slug):
 		img = Image.new("RGBA", (800, 1024), color=(255, 255, 255, 0))
 		(w, h) = votecount_to_image(img, game, 0, 0, 800)
 		img = img.crop((0, 0, w, h))
-		cache.set(key, { "size": img.size, "data": img.tostring() }, 120)
+		cache.set(key, { "size": img.size, "data": img.tobytes() }, 120)
 	else:
 		img = Image.fromstring("RGBA", img_dict['size'], img_dict['data'])
 
