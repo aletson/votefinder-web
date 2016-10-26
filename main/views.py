@@ -21,7 +21,7 @@ from PageParser import PageParser
 from GameListDownloader import GameListDownloader
 from VotecountFormatter import VotecountFormatter
 from VoteCounter import VoteCounter
-import re, math
+import re, math, urllib
 from django.db.models import Max, Min, Count
 from django.db import connections
 
@@ -414,7 +414,7 @@ def replace(request, gameid, clear, outgoing, incoming):
 
 	playerOut = get_object_or_404(Player, id=outgoing)
 	try:
-		playerIn = Player.objects.get(name__iexact=incoming)
+		playerIn = Player.objects.get(name__iexact=urllib.unquote(incoming))
 	except Player.DoesNotExist:
 		messages.add_message(request, messages.ERROR, 'No player by the name <strong>%s</strong> was found!' % incoming)
 		return HttpResponseRedirect(game.get_absolute_url())
