@@ -873,6 +873,24 @@ def post_lynches(request, gameid, enabled):
 	game.save()
 	return HttpResponseRedirect(game.get_absolute_url())
 
+	
+@login_required
+def ecco_mode(request, gameid, enabled):
+	game = get_object_or_404(Game, id=gameid)
+	if not game.is_user_mod(request.user):
+		return HttpResponseForbidden
+	
+	if enabled == "on":
+		game.ecco_mode = True
+		messages.add_message(request, messages.SUCCESS, 'Ecco Mode has been enabled for this game!')
+	else:
+		game.ecco_mode = False
+		messages.add_message(request, messages.SUCCESS, 'Ecco Mode has been disabled for this game!')
+		
+	game.save()
+	return HttpResponseRedirect(game.get_absolute_url())
+	
+	
 @login_required
 def post_vc(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
