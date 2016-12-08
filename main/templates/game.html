@@ -288,6 +288,16 @@
 					<a href="/post_lynches/{{game.id}}/on">Click here to enable it</a>.
 				{% endif %}
 			</div>
+			
+			<div>
+				{% if game.ecco_mode %}
+					Ecco Mode is enabled. Votefinder will not process votes of players who are already voting.
+					<a href="/ecco_mode/{{game.id}}/off">Click here to disable it</a>.
+				{% else %}
+					Ecco Mode is disabled. Votefinder will automatically change votes of players already voting.
+					<a href="/ecco_mode/{{game.id}}/on">Click here to enable it</a>.
+				{% endif %}
+			</div>
 
 			<h3><a href="#">Change the Template</a></h3>
 			<div>
