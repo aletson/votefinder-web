@@ -100,6 +100,9 @@ class PageParser:
 					v.save()
 			except Game.DoesNotExist:
 				pass
+			except Vote.DoesNotExist: 
+				v.save() # No prior votes
+				pass
 				
 			match = pattern.search(line, match.end())
 	
