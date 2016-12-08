@@ -449,7 +449,7 @@ CREATE TABLE `main_game` (
   `added_by_id` int(11) NOT NULL,
   `timezone` varchar(128) NOT NULL,
   `post_lynches` tinyint(1) NOT NULL,
-  `ecco_mode` tinyint(1) NOT NULL,
+  `ecco_mode` tinyint(1) NOT NULL DEFAULT 0,
   `last_vc_post` datetime DEFAULT NULL,
   `rating_votes` int(10) unsigned NOT NULL,
   `rating_score` int(11) NOT NULL,
