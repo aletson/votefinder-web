@@ -96,7 +96,7 @@ class PageParser:
 				game = Game.objects.get(id=post.game)
 				playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
 				theLastGameDay = GameDay.objects.filter(game=post.game).last()
-				if game.ecco_mode == True and playersLastVote.unvote == False and playersLastVote.post > theLastGameDay.startPost:
+				if game.ecco_mode == False or (playersLastVote.unvote == False and playersLastVote.post > theLastGameDay.startPost):
 					v.save()
 			except Game.DoesNotExist:
 				pass
