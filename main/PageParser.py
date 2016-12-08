@@ -99,9 +99,13 @@ class PageParser:
 				if game.ecco_mode == False or (playersLastVote.unvote == False and playersLastVote.post > theLastGameDay.startPost) or (playersLastVote.unvote == True):
 					v.save()
 			except Game.DoesNotExist:
+				v.save()
 				pass
 			except Vote.DoesNotExist: 
 				v.save() # No prior votes
+				pass
+			except GameDay.DoesNotExist:
+				v.save()
 				pass
 				
 			match = pattern.search(line, match.end())
