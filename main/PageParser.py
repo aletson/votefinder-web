@@ -93,7 +93,7 @@ class PageParser:
 				if v.target == None and (v.targetString.lower() == "nolynch" or v.targetString.lower() == "no lynch"):
 					v.nolynch = True
 			try:
-				game = Game.objects.get(id=post.game)
+				game = Game.objects.get(id=post.game.id)
 				playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
 				theLastGameDay = GameDay.objects.filter(game=post.game).last()
 				if game.ecco_mode == False or (playersLastVote.unvote == False and playersLastVote.post > theLastGameDay.startPost) or (playersLastVote.unvote == True):
