@@ -131,7 +131,6 @@ class PageParser:
 		mod = None
 		for postNode in posts:
 			newPost = self.ReadPostValues(postNode)
-			print newPost
 			if newPost:
 				if not mod:
 					mod = newPost.author
