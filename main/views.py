@@ -7,7 +7,7 @@ from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from django.utils import simplejson
+import json as simplejson
 from django.core.context_processors import csrf
 from django.contrib import messages
 from datetime import timedelta, datetime
