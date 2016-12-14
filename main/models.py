@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 import thread
 from oauth import oauth
 from oauthtwitter import OAuthApi
-from djangoratings.fields import RatingField
 import random
 from urllib2 import urlopen, Request, HTTPError
 from urllib import quote
@@ -36,7 +35,6 @@ class Player(models.Model):
 	name	= models.CharField(max_length=255, unique=True, db_index=True)
 	uid 	= models.IntegerField(unique=True, db_index=True)
 	slug	= models.SlugField()
-	rating = RatingField(range=5, can_change_vote=True)
 
 	def __unicode__(self):
 		return self.name
@@ -109,7 +107,6 @@ class Game(models.Model):
 	timezone	= models.CharField(max_length=128, default='US/Eastern')
 	post_lynches 	= models.BooleanField(default=False)
 	last_vc_post 	= models.DateTimeField(null=True, blank=True)
-	rating 		= RatingField(range=5, can_change_vote=True)
 	is_big		= models.BooleanField(default=False)
 	current_day	= models.IntegerField(default=1)
 	living_count	= models.IntegerField(default=0)

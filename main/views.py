@@ -94,7 +94,6 @@ def game(request, slug):
 
 	gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
 	manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
-	star_width = int(game.rating.get_rating() * 25)
 
 	if game.deadline:
 		tz = timezone(game.timezone)
@@ -109,14 +108,13 @@ def game(request, slug):
 	else:
 		post_vc_button = False
 
-	rating = game.rating.get_rating_for_user(request.user) if not request.user.is_anonymous else None
 
 	return render_to_response('game.html', 
 				{ 'game': game, 'players': players, 'moderator': moderator, 'form': form,
 					'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
 					'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
 					'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-					'updates': updates, 'star_width': star_width }, 
+					'updates': updates }, 
 				context_instance=RequestContext(request))
 
 def update(request, gameid):
@@ -912,13 +910,6 @@ def post_vc(request, gameid):
 		dl.ReplyToThread(game.threadId, v.bbcode_votecount)
 		messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
-	return HttpResponseRedirect(game.get_absolute_url())
-
-@login_required
-def rate(request, gameid, score):
-	game = get_object_or_404(Game, id=gameid)
-	game.rating.add(score=score, user=request.user, ip_address=request.META['REMOTE_ADDR'])
-	messages.add_message(request, messages.SUCCESS, 'You rated the game a %s!' % score)
 	return HttpResponseRedirect(game.get_absolute_url())
 
 def votechart_all(request, gameslug):

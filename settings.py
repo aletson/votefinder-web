@@ -13,8 +13,12 @@ ADMINS = (
 )
 
 MANAGERS = ADMINS
-CACHE_BACKEND='memcached://127.0.0.1:11211'
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+	'LOCATION': 'memcached://127.0.0.1:11211'
+    }
+}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -127,5 +131,4 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     'votefinder.main',
     'votefinder.auth',
-    'djangoratings'
 )
