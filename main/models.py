@@ -14,7 +14,6 @@ from urllib2 import urlopen, Request, HTTPError
 from urllib import quote
 from simplejson import loads
 import bitly
-from staticgenerator import quick_delete
 from django.db.models import signals
 
 DETAIL_LEVEL_CHOICES = (
