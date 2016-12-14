@@ -1,6 +1,6 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from votefinder.main.feeds import *
-from django.views.generic.simple import direct_to_template
+from django.views.generic.base import TemplateView
 
 urlpatterns = patterns('votefinder.main.views',
     (r'^$',                                     'index'),
@@ -25,7 +25,7 @@ urlpatterns = patterns('votefinder.main.views',
     (r'^atom/*$',                               LatestAtom()),
     (r'^game_status/(?P<slug>[\w-]+)/*',        SpecificGameStatusAtom()),
     (r'^game_status/*$',                        GameStatusAtom()),
-    (r'^faq/*$',                                direct_to_template, {'template': 'faq.html' }),
+    (r'^faq/*$',                                TemplateView.as_view(template_name='faq.html')),
     (r'^deadline/(?P<gameid>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<year>[\d]+)/(?P<hour>[\d]+)/(?P<min>[\d]+)/(?P<ampm>[\w]+)/(?P<tzname>.+)$', 'deadline'),
     (r'^close_game/(?P<gameid>\d+)/*$',         'close_game'),
     (r'^reopen_game/(?P<gameid>\d+)/*$',        'reopen_game'),
