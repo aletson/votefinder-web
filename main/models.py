@@ -106,6 +106,7 @@ class Game(models.Model):
 	added_by	= models.ForeignKey(User)
 	timezone	= models.CharField(max_length=128, default='US/Eastern')
 	post_lynches 	= models.BooleanField(default=False)
+	ecco_mode	= models.BooleanField(default=False)
 	last_vc_post 	= models.DateTimeField(null=True, blank=True)
 	is_big		= models.BooleanField(default=False)
 	current_day	= models.IntegerField(default=1)
