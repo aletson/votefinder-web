@@ -56,7 +56,7 @@ class Player(models.Model):
 class VotecountTemplate(models.Model):
 	creator				= models.ForeignKey(Player, editable=False)
 	name				= models.CharField(max_length=256)
-	shared				= models.BooleanField()
+	shared				= models.BooleanField(default=False)
 	system_default		= models.BooleanField(editable=False)
 
 	overall				= models.TextField()
@@ -70,7 +70,7 @@ class VotecountTemplate(models.Model):
 	before_unvoted_vote = models.CharField(max_length=256, blank=True)
 	after_unvoted_vote	= models.CharField(max_length=256, blank=True)
 	detail_level		= models.IntegerField(choices=DETAIL_LEVEL_CHOICES, default=3)
-	hide_zero_votes		= models.BooleanField()
+	hide_zero_votes		= models.BooleanField(default=False)
 	full_tick			= models.CharField(max_length=256, default="http://media.votefinder.org/t.png")
 	empty_tick			= models.CharField(max_length=256, default="http://media.votefinder.org/te.png")
 
@@ -207,9 +207,9 @@ class Comment(models.Model):
 class PlayerState(models.Model):
 	game		= models.ForeignKey(Game, related_name='players')
 	player		= models.ForeignKey(Player, related_name='games')
-	spectator	= models.BooleanField()
-	alive		= models.BooleanField()
-	moderator	= models.BooleanField()
+	spectator	= models.BooleanField(default=False)
+	alive		= models.BooleanField(default=False)
+	moderator	= models.BooleanField(default=False)
 
 	def set_moderator(self):
 		(self.spectator, self.moderator, self.alive) = (False, True, False)
@@ -273,8 +273,8 @@ class Vote(models.Model):
 	author		= models.ForeignKey(Player, related_name='votes')
 	target 		= models.ForeignKey(Player, related_name='target_of_votes', null=True)
 	targetString = models.CharField(max_length=256)
-	unvote 		= models.BooleanField()
-	ignored		= models.BooleanField()
+	unvote 		= models.BooleanField(default=False)
+	ignored		= models.BooleanField(default=False)
 	manual		= models.BooleanField(default=False)
 	nolynch		= models.BooleanField(default=False)
 
