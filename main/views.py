@@ -138,11 +138,11 @@ def update(request, gameid):
 
 @login_required
 def profile(request):
-	player = request.user.get_profile().player
+	player = request.user.profile.player
 	games = player.games.select_related().all()
 
 	return render_to_response('profile.html', 
-							  { 'player': player, 'games': games, 'profile': request.user.get_profile(),
+							  { 'player': player, 'games': games, 'profile': request.user.profile,
 								'show_delete': True }, 
 							  context_instance=RequestContext(request))
 
@@ -159,7 +159,7 @@ def player(request, slug):
 		pass
 
 	show_delete = False
-	if request.user.is_superuser or (request.user.is_authenticated() and request.user.get_profile().player == player):
+	if request.user.is_superuser or (request.user.is_authenticated() and request.user.profile.player == player):
 		show_delete = True
 	
 	return render_to_response('player.html', 
@@ -323,9 +323,9 @@ def add_comment(request, gameid):
 			comments.delete()
 		
 		if len(form.cleaned_data['comment']) > 1:
-			comment = Comment(comment=form.cleaned_data['comment'], player=request.user.get_profile().player, game=game)
+			comment = Comment(comment=form.cleaned_data['comment'], player=request.user.profile.player, game=game)
 			comment.save()
-			game.status_update_noncritical("%s added a comment: %s" % (request.user.get_profile().player, form.cleaned_data['comment']))
+			game.status_update_noncritical("%s added a comment: %s" % (request.user.profile.player, form.cleaned_data['comment']))
 
 		messages.add_message(request, messages.SUCCESS, 'Your comment was added successfully.')
 	else:
@@ -478,7 +478,7 @@ def start_day(request, day, postid):
 
 @login_required
 def templates(request):
-	templates = VotecountTemplate.objects.filter(creator=request.user.get_profile().player)
+	templates = VotecountTemplate.objects.filter(creator=request.user.profile.player)
 	return render_to_response("templates.html", {'templates': templates }, context_instance=RequestContext(request))
 
 @login_required
@@ -497,7 +497,7 @@ def create_template(request):
 	form = VotecountTemplateForm(request.POST)
 	if form.is_valid():
 		new_temp = form.save(commit=False)
-		new_temp.creator = request.user.get_profile().player
+		new_temp.creator = request.user.profile.player
 		new_temp.save()
 
 		messages.add_message(request, messages.SUCCESS, 'Success! The template <strong>%s</strong> was saved.' % new_temp.name)
@@ -509,7 +509,7 @@ def create_template(request):
 @login_required
 def edit_template(request, templateid):
 	t = get_object_or_404(VotecountTemplate, id=templateid)
-	if not request.user.is_superuser and t.creator != request.user.get_profile().player:
+	if not request.user.is_superuser and t.creator != request.user.profile.player:
 		return HttpResponseNotFound
 	
 	if request.method == 'GET':
@@ -527,7 +527,7 @@ def edit_template(request, templateid):
 		new_temp.save()
 
 		if t.shared and not new_temp.shared:
-			player = request.user.get_profile().player
+			player = request.user.profile.player
 			for g in Game.objects.filter(template=new_temp):
 				if not g.is_player_mod(player):
 					g.template = None
@@ -542,7 +542,7 @@ def edit_template(request, templateid):
 @login_required
 def delete_template(request, templateid):
 	t = get_object_or_404(VotecountTemplate, id=templateid)
-	if not request.user.is_superuser and t.creator != request.user.get_profile().player:
+	if not request.user.is_superuser and t.creator != request.user.profile.player:
 		return HttpResponseNotFound
 
 	if t.system_default:
@@ -833,7 +833,7 @@ def players_page(request, page):
 @login_required
 def delete_alias(request, id):
 	alias = get_object_or_404(Alias, id=id)
-	if not request.user.is_superuser and not request.user.get_profile().player == alias.player:
+	if not request.user.is_superuser and not request.user.profile.player == alias.player:
 		return HttpResponseForbidden
 
 	messages.add_message(request, messages.SUCCESS, 'The alias <strong>%s</strong> was deleted.' % alias.alias)

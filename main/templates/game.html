@@ -281,7 +281,7 @@
 				
 				New template: <select name="template" id="templates">
 					{% for t in templates %}
-						<option value ="{{t.id}}"{% if game.template == t or game.template == None and t.system_default %} selected="selected"{% endif %}>{{t.name}}{% ifnotequal t.creator user.get_profile.player %} (shared by {{t.creator}}){% endifnotequal %}</div>
+						<option value ="{{t.id}}"{% if game.template == t or game.template == None and t.system_default %} selected="selected"{% endif %}>{{t.name}}{% ifnotequal t.creator user.profile.player %} (shared by {{t.creator}}){% endifnotequal %}</div>
 					{% endfor %}
 				</select>
 				<button type="button" id="submitTemplate" class="button">Change!</button> 

@@ -192,7 +192,7 @@ class Game(models.Model):
 		if user.is_superuser:
 			return True
 		elif user.is_authenticated():
-			return self.is_player_mod(user.get_profile().player)
+			return self.is_player_mod(user.profile.player)
 		else:
 			return False
 
@@ -333,7 +333,7 @@ class BlogPost(models.Model):
 	
 class UserProfile(models.Model):
 	player		= models.ForeignKey(Player, unique=True)
-	user		= models.ForeignKey(User, unique=True)
+	user		= models.OneToOneField(User, related_name="profile")
 	registered	= models.DateTimeField(auto_now=True)
 
 	def __unicode__(self):
