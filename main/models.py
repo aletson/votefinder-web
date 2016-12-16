@@ -369,6 +369,7 @@ class AddCommentForm(forms.Form):
 class VotecountTemplateForm(ModelForm):
 	class Meta:
 		model = VotecountTemplate
+		fields = '__all__'
 
 class LynchMessage(models.Model):
 	text = models.CharField(max_length=512)
