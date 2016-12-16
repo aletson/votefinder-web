@@ -68,13 +68,13 @@ def add_game(request, threadid):
 			data['success'] = False
 			data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
 
-	return HttpResponse(simplejson.dumps(data), mimetype='application/json')
+	return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
 @login_required
 def game_list(request, page):
 	p = GameListDownloader()
 	p.GetGameList("http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber=%s" % page)
-	return HttpResponse(simplejson.dumps(p.GameList), mimetype='application/json')
+	return HttpResponse(simplejson.dumps(p.GameList), content_type='application/json')
 
 def game(request, slug):
 	game = get_object_or_404(Game, slug=slug)
@@ -92,7 +92,7 @@ def game(request, slug):
 	templates = VotecountTemplate.objects.select_related(depth=1).filter(Q(creator__in=moderators) | Q(shared=True))
 	updates = GameStatusUpdate.objects.filter(game=game).order_by('-timestamp')
 
-	gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
+	gameday = game.days.select_related(depth=1).all().last()
 	manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
 
 	if game.deadline:
@@ -120,21 +120,21 @@ def game(request, slug):
 def update(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
 	if game.is_locked():
-		return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'Someone else is updating that game right now.  Please wait.'}), mimetype='application/json')
+		return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'Someone else is updating that game right now.  Please wait.'}), content_type='application/json')
 	else:
 		game.lock()
 	try:
 		p = PageParser()
 		newGame = p.Update(game)
 		if newGame:
-			return HttpResponse(simplejson.dumps({ 'success': True, 'curPage': newGame.currentPage, 'maxPages': newGame.maxPages}), mimetype='application/json')
+			return HttpResponse(simplejson.dumps({ 'success': True, 'curPage': newGame.currentPage, 'maxPages': newGame.maxPages}), content_type='application/json')
 		else:
 			game.save()
-			return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}), mimetype='application/json')
+			return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}), content_type='application/json')
 	except:
 		game.save()
 		raise
-		#return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'There was a problem updating the thread.  Please try again later.'}), mimetype='application/json')
+		#return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'There was a problem updating the thread.  Please try again later.'}), content_type='application/json')
 
 @login_required
 def profile(request):
@@ -202,7 +202,7 @@ def player_list(request):
 	except Player.DoesNotExist:
 		pass
 	
-	return HttpResponse(simplejson.dumps(results), mimetype='application/json')
+	return HttpResponse(simplejson.dumps(results), content_type='application/json')
 
 @login_required
 def add_player(request, gameid):
@@ -604,7 +604,7 @@ def active_games_style(request, style):
 def active_games_json(request):
 	gameList = sorted([{'name': g.name, 'mod': g.moderator.name, 'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s' % g.threadId} for g in Game.objects.select_related(depth=1).filter(closed=False)], key = lambda g: g['name'])
 	
-	return HttpResponse(simplejson.dumps(gameList), mimetype='application/json')
+	return HttpResponse(simplejson.dumps(gameList), content_type='application/json')
 
 def closed_games(request):
 	game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
@@ -783,7 +783,7 @@ def votecount_image(request, slug):
 	else:
 		img = Image.fromstring("RGBA", img_dict['size'], img_dict['data'])
 
-	response = HttpResponse(mimetype="image/png")
+	response = HttpResponse(content_type="image/png")
 	img.save(response, "PNG")#, transparency=(255, 255, 255))
 	return response
 
