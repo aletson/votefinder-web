@@ -30,7 +30,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.contrib.auth.context_processors.auth'
 )
 
-AUTH_PROFILE_MODULE = 'main.UserProfile'
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/'
 
