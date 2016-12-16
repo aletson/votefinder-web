@@ -81,7 +81,7 @@
 			</div>
 			{% if user.is_authenticated %}
 			<div id="menu_my_games" class="mbmenu">
-				{% for g in user.get_profile.player.current_games %}
+				{% for g in user.profile.player.current_games %}
 					<a href="{{g.game.get_absolute_url}}">{{g.game.name|safe}}</a>
 				{% empty %}
 					<a rel="text">No games</a>
