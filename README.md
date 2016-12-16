@@ -3,8 +3,7 @@ SA web-based vote parser
 
 
 # Usage
-`pip install -r requirements.txt`
-`python -Wall manage.py runserver`
+`pip install -r requirements.txt && python -Wall manage.py runserver`
 
 # Troubleshooting
 - You may need to move `manage.py` up a directory. YMMV.
