@@ -92,7 +92,7 @@ def game(request, slug):
 	templates = VotecountTemplate.objects.select_related(depth=1).filter(Q(creator__in=moderators) | Q(shared=True))
 	updates = GameStatusUpdate.objects.filter(game=game).order_by('-timestamp')
 
-	gameday = game.days.select_related(depth=1).all().last()
+	gameday = game.days.select_related(depth=1).last()
 	manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
 
 	if game.deadline:
