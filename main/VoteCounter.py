@@ -75,6 +75,9 @@ class VoteCounter:
             return
 
         message = random.choice(LynchMessage.objects.all()).text
+	v = VotecountFormatter(game)
+	v.go()
+	message += v.bbcode_votecount
         dl = ForumPageDownloader()
         dl.ReplyToThread(game.threadId, ":redhammer: " + (message % name))
 
