@@ -19,7 +19,7 @@
 			$(document).ready(function(){ {% block onready %}{% endblock %}	{% if messages %}if ($('hr').length > 0) { $('hr:first').after(messages); } else if ($('h1').length > 0) { $('h1:first').after(messages); } else { $('body').prepend(messages); }$('.messages').hide().show('slide');{% endif %}
 				$(".myMenu").buildMenu({
 					menuSelector: ".menuContainer",
-					iconPath:"http://media.votefinder.org/menu/ico/",
+					iconPath:"//votefinder.org/static/menu/ico/",
 					hasImages:false, fadeInTime: 200, hoverIntent:0, submenuHoverIntent: 100,
 					shadow:true,
 				});
