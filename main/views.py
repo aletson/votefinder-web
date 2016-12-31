@@ -781,7 +781,7 @@ def votecount_image(request, slug):
 		img = img.crop((0, 0, w, h))
 		cache.set(key, { "size": img.size, "data": img.tobytes() }, 120)
 	else:
-		img = Image.fromstring("RGBA", img_dict['size'], img_dict['data'])
+		img = Image.frombytes("RGBA", img_dict['size'], img_dict['data'])
 
 	response = HttpResponse(content_type="image/png")
 	img.save(response, "PNG")#, transparency=(255, 255, 255))
