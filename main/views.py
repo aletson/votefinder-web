@@ -98,7 +98,7 @@ def game(request, slug):
 	if game.deadline:
 		tz = timezone(game.timezone)
 		tzone = tz.zone
-		deadline = timezone('UTC').localize(game.deadline).astimezone(tz)
+		deadline = timezone(settings.TIME_ZONE).localize(game.deadline).astimezone(tz)
 	else:
 		deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
 		tzone = game.timezone
@@ -358,7 +358,7 @@ def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
 	prev_deadline = game.deadline
 	dl = timezone(tzname).localize(datetime(int(year), int(month), int(day), int(hour), int(min)))
 	game.timezone = tzname
-	game.deadline = dl.astimezone(timezone('UTC')).replace(tzinfo=None)
+	game.deadline = dl.astimezone(timezone(settings.TIME_ZONE)).replace(tzinfo=None)
 	game.save()
 
 	if not prev_deadline:
