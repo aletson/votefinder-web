@@ -6,6 +6,7 @@ from datetime import timedelta, datetime
 from VoteCounter import VoteCounter
 import re, math
 from pytz import timezone
+from django.conf import settings
 
 class VotecountFormatter:    
     def __init__(self, game):
@@ -27,7 +28,7 @@ class VotecountFormatter:
         alive = len(living_players)
         if self.game.deadline:
             tz = timezone(self.game.timezone)
-            dl = timezone('UTC').localize(self.game.deadline).astimezone(tz)
+            dl = timezone(settings.TIME_ZONE).localize(self.game.deadline).astimezone(tz)
             deadline = format(dl, r"F d[\s\u\p\e\r]S[/\s\u\p\e\r], Y \a\t P ") + dl.tzname()
             until_deadline = timeuntil(self.game.deadline, datetime.now())
             until_deadline = until_deadline.replace(u"\u00A0", " ")

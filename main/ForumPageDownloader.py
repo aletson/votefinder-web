@@ -37,7 +37,7 @@ class ForumPageDownloader():
 
     def LogLoginAttempt(self):
         with open("/tmp/logins.txt", "a") as f:
-            f.write("%s\n" % timezone('UTC').localize(datetime.now()).astimezone(timezone('US/Pacific')).ctime())
+            f.write("%s\n" % timezone(settings.TIME_ZONE).localize(datetime.now()).astimezone(timezone('US/Pacific')).ctime())
 
         g = Game.objects.get(id=228)
         g.status_update("Trying to re-login to forums.  PM soru if this happens a lot.")
