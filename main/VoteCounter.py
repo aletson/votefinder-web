@@ -3,6 +3,7 @@ import math
 from ForumPageDownloader import ForumPageDownloader
 import thread
 import random
+import VotecountFormatter
 
 class VoteCounter:
     def __init__(self):
@@ -75,8 +76,9 @@ class VoteCounter:
             return
 
         message = random.choice(LynchMessage.objects.all()).text
-	v = VotecountFormatter(game)
+	v = VotecountFormatter.VotecountFormatter(game)
 	v.go()
+	message += "\n\n"
 	message += v.bbcode_votecount
         dl = ForumPageDownloader()
         dl.ReplyToThread(game.threadId, ":redhammer: " + (message % name))
