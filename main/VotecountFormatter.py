@@ -3,7 +3,7 @@ from django.template import Context, Template
 from django.utils.timesince import timeuntil
 from django.utils.dateformat import format
 from datetime import timedelta, datetime
-from VoteCounter import VoteCounter
+import VoteCounter
 import re, math
 from pytz import timezone
 from django.conf import settings
@@ -13,7 +13,7 @@ class VotecountFormatter:
         self.empty_tick = ''
         self.tick = ''
         
-        self.vc = VoteCounter()
+        self.vc = VoteCounter.VoteCounter()
         self.game = game
 
     def go(self, show_comment = True):
