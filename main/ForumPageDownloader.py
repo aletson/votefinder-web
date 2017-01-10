@@ -95,8 +95,8 @@ class ForumPageDownloader():
             new_cookie.save()
 
     def ReplyToThread(self, thread, message):
-        getUrl = "http://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s" % thread
-        postUrl = "http://forums.somethingawful.com/newreply.php?action=newreply"
+        getUrl = "https://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s" % thread
+        postUrl = "https://forums.somethingawful.com/newreply.php?action=newreply"
 
         data = self.download(getUrl)
         if data is None:
