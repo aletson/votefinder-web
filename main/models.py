@@ -57,7 +57,7 @@ class VotecountTemplate(models.Model):
 	creator				= models.ForeignKey(Player, editable=False)
 	name				= models.CharField(max_length=256)
 	shared				= models.BooleanField(default=False)
-	system_default		= models.BooleanField(editable=False)
+	system_default		= models.BooleanField(editable=False, default=False)
 
 	overall				= models.TextField()
 	single_line			= models.CharField(max_length=256)
