@@ -95,8 +95,8 @@ class PageParser:
 			try:
 				game = Game.objects.get(id=post.game.id)
 				playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
-				theLastGameDay = GameDay.objects.filter(game=post.game).last()
-				if game.ecco_mode == False or playersLastVote == None or (theLastGameDay == None and (playersLastVote.unvote == True or v.unvote == True)) or (playersLastVote.post < theLastGameDay.startPost) or (playersLastVote.unvote == True) or (v.unvote == True):
+				currentGameDay = GameDay.objects.filter(game=post.game).last()
+				if game.ecco_mode == False or playersLastVote == None or (currentGameDay.dayNumber == 1 and (playersLastVote.unvote == True or v.unvote == True)) or (playersLastVote.post_id < currentGameDay.startPost_id) or (playersLastVote.unvote == True) or (v.unvote == True):
 					v.save()
 			except Game.DoesNotExist:
 				v.save()
