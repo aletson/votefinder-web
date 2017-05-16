@@ -48,7 +48,7 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         try:
-            usock = self.opener.open("http://forums.somethingawful.com/account.php",
+            usock = self.opener.open("https://forums.somethingawful.com/account.php",
                                      urllib.urlencode(dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD, secure_login="")))
             data = usock.read()
             usock.close()
@@ -117,4 +117,4 @@ class ForumPageDownloader():
 
 if __name__ == "__main__":
     dl = ForumPageDownloader()
-    result = dl.download("http://forums.somethingawful.com/showthread.php?threadid=3552086")
+    result = dl.download("https://forums.somethingawful.com/showthread.php?threadid=3552086")
