@@ -4,6 +4,7 @@ SA web-based vote parser
 
 # Usage
 `pip install -r requirements.txt && python -Wall manage.py runserver`
+
 Add `curl -s https://your.host/autoupdate` to your crontab.
 
 # Troubleshooting
