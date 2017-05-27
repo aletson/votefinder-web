@@ -103,7 +103,7 @@ def game(request, slug):
 		deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
 		tzone = game.timezone
 
-	if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or game.deadline - datetime.now() <= timedelta(minutes=60)):
+	if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
 		post_vc_button = True
 	else:
 		post_vc_button = False
