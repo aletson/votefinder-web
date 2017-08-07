@@ -165,19 +165,19 @@ class Game(models.Model):
 		return self.players.filter(spectator=False, moderator=False).count()
 		
 	def all_players(self):
-		return sorted(self.players.select_related(depth=1).filter(spectator=False, moderator=False), key=lambda p: p.player.name.lower())
+		return sorted(self.players.select_related().filter(spectator=False, moderator=False), key=lambda p: p.player.name.lower())
 	
 	def living_players(self):
-		return sorted(self.players.select_related(depth=1).filter(alive=True), key=lambda p: p.player.name.lower())
+		return sorted(self.players.select_related().filter(alive=True), key=lambda p: p.player.name.lower())
 
 	def dead_players(self):
-		return sorted(self.players.select_related(depth=1).filter(alive=False, moderator=False, spectator=False), key=lambda p: p.player.name.lower())
+		return sorted(self.players.select_related().filter(alive=False, moderator=False, spectator=False), key=lambda p: p.player.name.lower())
 
 	def spectators(self):
-		return sorted(self.players.select_related(depth=1).filter(spectator=True), key=lambda p: p.player.name.lower())
+		return sorted(self.players.select_related().filter(spectator=True), key=lambda p: p.player.name.lower())
 
 	def moderators(self):
-		return sorted(self.players.select_related(depth=1).filter(moderator=True), key=lambda p: p.player.name.lower())
+		return sorted(self.players.select_related().filter(moderator=True), key=lambda p: p.player.name.lower())
 
 	def is_player_mod(self, player):
 		try:
