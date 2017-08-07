@@ -18,14 +18,14 @@ class VoteCounter:
         gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
 
         try:
-            votes = Vote.objects.select_related(depth=2).filter(game=game, ignored=False, manual=False, post__id__gte=gameday.startPost.id).order_by('id')
-            manual_votes = Vote.objects.select_related(depth=2).filter(game=game, ignored=False, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
+            votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=False, post__id__gte=gameday.startPost.id).order_by('id')
+            manual_votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
             self.votesFound = True
             nextDay = None
         except Vote.DoesNotExist:
             return
         
-        self.livingPlayers = Player.objects.select_related(depth=2).filter(games__in=game.living_players())
+        self.livingPlayers = Player.objects.select_related().filter(games__in=game.living_players())
         self.game = game
         self.voteLog = []
 

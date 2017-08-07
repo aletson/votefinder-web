@@ -243,7 +243,7 @@ def delete_spectators(request, gameid):
 def votecount(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
 	try:
-		votes = Vote.objects.select_related(depth=2).filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+		votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
 		if votes:
 			players = sorted(game.all_players(), key=lambda p: p.player.name.lower())
 			return render_to_response('unresolved.html', 
@@ -297,7 +297,7 @@ def resolve(request, voteid, resolution):
 
 def posts(request, gameid, page):
 	game = get_object_or_404(Game, id=gameid)
-	posts = game.posts.select_related(depth=2).filter(pageNumber=page).order_by('id')
+	posts = game.posts.select_related().filter(pageNumber=page).order_by('id')
 	page = int(page)
 	gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
 	moderator = game.is_user_mod(request.user)
@@ -738,7 +738,7 @@ def votecount_to_image(img, game, xpos = 0, ypos = 0, max_width = 600):
 
 	(x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
 
-	votes = Vote.objects.select_related(depth=2).filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+	votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
 	if len(votes) > 0:
 		ypos += header_y_size
 		if len(votes) == 1:
