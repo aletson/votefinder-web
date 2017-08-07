@@ -95,7 +95,7 @@ class Game(models.Model):
 	name 		= models.CharField(max_length=255) 
 	threadId 	= models.IntegerField(unique=True, db_index=True)
 	moderator 	= models.ForeignKey(Player, related_name='moderatingGames')
-	lastUpdated 	= models.DateTimeField(auto_now=True, auto_now_add=True)
+	lastUpdated 	= models.DateTimeField(auto_now=True)
 	maxPages 	= models.IntegerField()
 	currentPage 	= models.IntegerField()
 	slug		= models.SlugField()
