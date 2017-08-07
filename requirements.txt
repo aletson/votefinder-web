@@ -3,7 +3,7 @@ chardet==2.3.0
 ConfigArgParse==0.10.0
 configobj==5.0.6
 cryptography==1.2.3
-Django==1.6.11
+Django==1.7.11
 enum34==1.1.2
 funcsigs==0.4
 httplib2==0.9.2
