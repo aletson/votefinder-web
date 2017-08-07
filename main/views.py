@@ -26,7 +26,7 @@ from django.db.models import Max, Min, Count
 from django.db import connections
 
 def index(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
+	game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
 	big_games = filter(lambda g: g.is_big == True, game_list)
 	mini_games = filter(lambda g: g.is_big == False, game_list)
@@ -89,10 +89,10 @@ def game(request, slug):
 		comment_form = AddCommentForm()
 
 	moderators = [ps.player for ps in game.moderators()]
-	templates = VotecountTemplate.objects.select_related(depth=1).filter(Q(creator__in=moderators) | Q(shared=True))
+	templates = VotecountTemplate.objects.select_related().filter(Q(creator__in=moderators) | Q(shared=True))
 	updates = GameStatusUpdate.objects.filter(game=game).order_by('-timestamp')
 
-	gameday = game.days.select_related(depth=1).last()
+	gameday = game.days.select_related().last()
 	manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
 
 	if game.deadline:
@@ -299,7 +299,7 @@ def posts(request, gameid, page):
 	game = get_object_or_404(Game, id=gameid)
 	posts = game.posts.select_related(depth=2).filter(pageNumber=page).order_by('id')
 	page = int(page)
-	gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
+	gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
 	moderator = game.is_user_mod(request.user)
 
 	return render_to_response('posts.html',
@@ -573,7 +573,7 @@ def game_template(request, gameid, templateid):
 	return HttpResponseRedirect(game.get_absolute_url())
 
 def active_games(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
+	game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
 	big_games = filter(lambda g: g.is_big == True, game_list)
 	mini_games = filter(lambda g: g.is_big == False, game_list)
@@ -583,7 +583,7 @@ def active_games(request):
 
 def active_games_style(request, style):
 	if style == "default" or style == "verbose":
-		game_list = Game.objects.select_related(depth=1).filter(closed=False).order_by("name")
+		game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
 		big_games = filter(lambda g: g.is_big == True, game_list)
 		mini_games = filter(lambda g: g.is_big == False, game_list)
@@ -592,7 +592,7 @@ def active_games_style(request, style):
 								{'big_games': big_games, 'mini_games': mini_games, 'style': style }, 
 								context_instance=RequestContext(request))
 	elif style == "closedmonthly":
-		game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by("-last_post")
+		game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by("-last_post")
 		game_list = filter(lambda g: datetime.now() - g.last_post < timedelta(days=31), game_list)
 
 		return render_to_response("wiki_closed_games.html", 
@@ -602,12 +602,12 @@ def active_games_style(request, style):
 		return HttpResponse("Style not supported")
 
 def active_games_json(request):
-	gameList = sorted([{'name': g.name, 'mod': g.moderator.name, 'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s' % g.threadId} for g in Game.objects.select_related(depth=1).filter(closed=False)], key = lambda g: g['name'])
+	gameList = sorted([{'name': g.name, 'mod': g.moderator.name, 'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s' % g.threadId} for g in Game.objects.select_related().filter(closed=False)], key = lambda g: g['name'])
 	
 	return HttpResponse(simplejson.dumps(gameList), content_type='application/json')
 
 def closed_games(request):
-	game_list = Game.objects.select_related(depth=1).filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
+	game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
 
 	return render_to_response("closed.html",
                                                         {'games': game_list,
@@ -619,7 +619,7 @@ def add_vote(request, gameid, player, votes, target):
 	if not game.is_user_mod(request.user):
 		return HttpResponseNotFound
 
-	gameday = game.days.select_related(depth=1).all().order_by('-dayNumber')[:1][0]
+	gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
 	v = Vote(manual=True, post=gameday.startPost, game=game)
 	if player == '-1':
 		v.author = Player.objects.get(uid=0) #anonymous
@@ -815,7 +815,7 @@ def players_page(request, page):
 	total_players = Player.objects.all().count()
 	total_pages = int(ceil(1.0 * total_players / items_per_page))
 
-	players = Player.objects.select_related(depth=1).filter(uid__gt='0').order_by("name").extra(select={'alive':"select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.closed=false and main_playerstate.alive=true", 'last_post':"select max(timestamp) from main_post where author_id=main_player.id", 'total_posts':"select count(*) from main_post where main_post.author_id=main_player.id",'total_games_played':"select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false",'total_games_run':"select count(*) from main_game where main_game.moderator_id=main_player.id"})[first_record : first_record + items_per_page]
+	players = Player.objects.select_related().filter(uid__gt='0').order_by("name").extra(select={'alive':"select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.closed=false and main_playerstate.alive=true", 'last_post':"select max(timestamp) from main_post where author_id=main_player.id", 'total_posts':"select count(*) from main_post where main_post.author_id=main_player.id",'total_games_played':"select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false",'total_games_run':"select count(*) from main_game where main_game.moderator_id=main_player.id"})[first_record : first_record + items_per_page]
 
 	if len(players) == 0:
 		return HttpResponseRedirect('/players')
