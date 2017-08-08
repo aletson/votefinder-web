@@ -109,7 +109,7 @@ class Game(models.Model):
 	ecco_mode	= models.BooleanField(default=False)
 	last_vc_post 	= models.DateTimeField(null=True, blank=True)
 	is_big		= models.BooleanField(default=False)
-	current_day	= models.IntegerField(default=1)
+	current_day	= models.IntegerField(default=0)
 	living_count	= models.IntegerField(default=0)
 	players_count	= models.IntegerField(default=0)
 
