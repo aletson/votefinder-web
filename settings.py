@@ -8,6 +8,8 @@ import os
 #VF_MYSQL_HOST = os.environ['VF_MYSQL_PORT_3306_TCP_ADDR'] or ''
 #VF_MYSQL_PORT = os.environ['VF_MYSQL_PORT_3306_TCP_PORT'] or ''
 
+ALLOWED_HOSTS = ['domain.com']
+
 ADMINS = (
     ('Your Name', 'you@yourname.com')
 )
@@ -121,7 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
-    'django.contrib.comments',
+    'django_comments',
     'votefinder.main',
     'votefinder.auth',
 )
