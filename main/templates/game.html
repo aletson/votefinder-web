@@ -7,9 +7,8 @@
   	});
   	$('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
   }
-{% endblock %}
 
-{% block onready %}
+$(document).ready(function() {
   var curPage = {{game.currentPage}};
   var maxPages = {{game.maxPages}};
   var pushed = false;
@@ -46,7 +45,7 @@
   });
   {% if moderator and not game.closed %}
 	{% if post_vc_button %}
-		$('#post-vc-button').live('click', function() {
+		$('#post-vc-button').on('click', function() {
 			if (pushed == false) {
 				pushed = true;
 				$('#post-vc-button').attr('disabled', 'disabled');
@@ -54,13 +53,10 @@
 			}
 		});
 	{% endif %}
-  	$('.post-action').live('change', function(obj) {
+  	$('.post-action').on('change', function(obj) {
   		var action = $(this).val();
   		var id = $(this).attr("id");
   		location.href = '/'+action+'/'+id;
-  	});
-  	$('#bbcode').live('click', function(obj) {
-  		$('#bbcode').select();
   	});
 	$('.playerList').sortable({ 
   		connectWith: '.playerList', items: 'div:not(.creator)',
@@ -115,23 +111,10 @@
   	$('#modActions').accordion({autoHeight: false});
   {% endif %}
   $('#toolsActions').accordion({autoHeight: false});
-  $('#pageJump').live('change', function(obj) {
+  $('#pageJump').on('change', function(obj) {
   	loadPage($(this).val());
   });
  
-  $('.resolver').live('change', function(obj) {
-    var resolution = $(this).val();
-    var vote = $(this).attr('id');
-    var removing = $(this);
-    $.getJSON('/resolve/'+vote+'/'+resolution, 
-    	function(data) {
-    		removing.parent().parent().remove();
-    		if ($(".resolver").length == 0 || data.refresh == true) {
-    			$('#votecount_contents').load('/votecount/{{game.id}}', function() { $('.button').button(); });
-    		}
-    	}
-   );
-  });
   $("#tabs").tabs({ 
 	show: function(event,ui) { 
 		if (ui.panel.id == "votecount") { 
@@ -150,8 +133,29 @@
 	}
   });
   $('#refreshbutton').button();
+  $('#votecount_contents').load('/votecount/{{game.id}}', function() {
+                                $('.button').button();
+                        });
+  loadPage({{game.currentPage}});
+})
+.on('change', '.resolver', function(obj) {
+    console.log('Event fired!"');
+    var resolution = $(this).val();
+    var vote = $(this).attr('id');
+    var removing = $(this);
+    $.getJSON('/resolve/'+vote+'/'+resolution, 
+        function(data) {
+                removing.parent().parent().remove();
+                if ($(".resolver").length == 0 || data.refresh == true) {
+                        $('#votecount_contents').load('/votecount/{{game.id}}', function() { $('.button').button(); });
+                }
+        }
+   );
+})
+.on('click', '#bbcode', function(obj) {
+                $('#bbcode').select();
+});
 {% endblock %}
-
 {% block content %}
 	<h1><a href="/">VoteFinder</a>: {{game.name|safe}}</h1>
 	<a title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{game.threadId}}" id="liveThread"><span class="ui-icon ui-icon-link"></span></a>
