@@ -13,7 +13,7 @@ import random
 def create_step_1(request):
     profileKey = random.randint(10000000, 99999999)
     request.session['profileKey'] = profileKey
-    return render_to_response('step1.html', { 'profileKey': profileKey }, context_instance=RequestContext(request))
+    return render(request, 'step1.html', { 'profileKey': profileKey })
 
 def create_step_2(request):
     key = request.session['profileKey']
@@ -21,7 +21,7 @@ def create_step_2(request):
         return HttpResponseRedirect('/auth/create')
 
     form = CreateUserForm()
-    return render_to_response('step2.html', { 'form': form }, context_instance=RequestContext(request))
+    return render(request, 'step2.html', { 'form': form })
 
 def create_step_3(request):
     key = request.session['profileKey']
@@ -40,7 +40,7 @@ def create_step_3(request):
         messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> Your account was created and you are now logged in.')
         return HttpResponseRedirect('/')
     else:
-        return render_to_response('step2.html', { 'form': form }, context_instance=RequestContext(request))
+        return render(request, 'step2.html', { 'form': form })
 
 def CreateUser(login, email, password, userid):
     u = User.objects.create_user(login, email, password)

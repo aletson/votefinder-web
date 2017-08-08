@@ -1,5 +1,5 @@
 from votefinder.main.models import *
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseNotFound
 from django.http import HttpResponseRedirect
@@ -38,17 +38,17 @@ def index(request):
 	vote_count = Vote.objects.count()
 	player_count = Player.objects.count()
 
-	return render_to_response("index.html", 
+	return render(request, "index.html", 
 							{'big_games': big_games, 'mini_games': mini_games, 
 							'total': len(big_games) + len(mini_games), 'posts': posts,
 							'game_count': game_count, 'post_count': post_count, 'vote_count': vote_count,
-							'player_count': player_count }, 
-							context_instance=RequestContext(request))
+							'player_count': player_count }
+							)
 
 @login_required
 def add(request):
 	defaultUrl = "http://forums.somethingawful.com/showthread.php?threadid=3069667"
-	return render_to_response("add.html", { 'defaultUrl': defaultUrl }, context_instance=RequestContext(request))
+	return render(request, "add.html", { 'defaultUrl': defaultUrl })
 
 @login_required
 def add_game(request, threadid):
@@ -109,13 +109,13 @@ def game(request, slug):
 		post_vc_button = False
 
 
-	return render_to_response('game.html', 
+	return render(request, 'game.html', 
 				{ 'game': game, 'players': players, 'moderator': moderator, 'form': form,
 					'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
 					'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
 					'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-					'updates': updates }, 
-				context_instance=RequestContext(request))
+					'updates': updates }
+				)
 
 def update(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
@@ -141,10 +141,10 @@ def profile(request):
 	player = request.user.profile.player
 	games = player.games.select_related().all()
 
-	return render_to_response('profile.html', 
+	return render(request, 'profile.html', 
 							  { 'player': player, 'games': games, 'profile': request.user.profile,
-								'show_delete': True }, 
-							  context_instance=RequestContext(request))
+								'show_delete': True }
+							  )
 
 def player(request, slug):
 	try:
@@ -162,8 +162,8 @@ def player(request, slug):
 	if request.user.is_superuser or (request.user.is_authenticated() and request.user.profile.player == player):
 		show_delete = True
 	
-	return render_to_response('player.html', 
-							  { 'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete }, context_instance=RequestContext(request))
+	return render(request, 'player.html', 
+							  { 'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete })
 
 def player_id(request, playerid):
 	player = get_object_or_404(Player, id=playerid)
@@ -246,8 +246,8 @@ def votecount(request, gameid):
 		votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
 		if votes:
 			players = sorted(game.all_players(), key=lambda p: p.player.name.lower())
-			return render_to_response('unresolved.html', 
-								  { 'game': game, 'votes': votes, 'players': players }, context_instance=RequestContext(request))
+			return render(request, 'unresolved.html', 
+								  { 'game': game, 'votes': votes, 'players': players })
 	except Vote.DoesNotExist:
 		pass
 
@@ -259,10 +259,10 @@ def votecount(request, gameid):
 	else:
 		post_vc_button = False
 	
-	return render_to_response('votecount.html',
+	return render(request, 'votecount.html',
 							{ 'post_vc_button': post_vc_button, 
-							  'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount }, 
-							context_instance=RequestContext(request))
+							  'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount }
+							)
 	
 def resolve(request, voteid, resolution):
 	vote = get_object_or_404(Vote, id=voteid)
@@ -302,11 +302,10 @@ def posts(request, gameid, page):
 	gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
 	moderator = game.is_user_mod(request.user)
 
-	return render_to_response('posts.html',
+	return render(request, 'posts.html',
 						{ 'game': game, 'posts': posts,
 							'prevPage': page - 1, 'nextPage': page + 1, 'page': page, 'pageNumbers': range(1, game.currentPage + 1),
-							'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': moderator
-						}, context_instance=RequestContext(request))
+							'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': moderator})
 
 @login_required
 def add_comment(request, gameid):
@@ -479,7 +478,7 @@ def start_day(request, day, postid):
 @login_required
 def templates(request):
 	templates = VotecountTemplate.objects.filter(creator=request.user.profile.player)
-	return render_to_response("templates.html", {'templates': templates }, context_instance=RequestContext(request))
+	return render(request, "templates.html", {'templates': templates })
 
 @login_required
 def create_template(request):
@@ -490,7 +489,7 @@ def create_template(request):
 			system_default = VotecountTemplate()
 			
 		system_default.name = "My New Template"
-		return render_to_response("template_edit.html", {'form': VotecountTemplateForm(instance=system_default) }, context_instance=RequestContext(request))
+		return render(request, "template_edit.html", {'form': VotecountTemplateForm(instance=system_default) })
 
 	c = {}
 	c.update(csrf(request))
@@ -503,8 +502,7 @@ def create_template(request):
 		messages.add_message(request, messages.SUCCESS, 'Success! The template <strong>%s</strong> was saved.' % new_temp.name)
 		return HttpResponseRedirect("/templates")
 	else:
-		return render_to_response("template_edit.html", {'form': form }, 
-								context_instance=RequestContext(request))
+		return render(request, "template_edit.html", {'form': form })
 
 @login_required
 def edit_template(request, templateid):
@@ -513,8 +511,7 @@ def edit_template(request, templateid):
 		return HttpResponseNotFound
 	
 	if request.method == 'GET':
-		return render_to_response("template_edit.html", {'form': VotecountTemplateForm(instance=t), 'template': t, 'edit': True }, 
-								context_instance=RequestContext(request))
+		return render(request, "template_edit.html", {'form': VotecountTemplateForm(instance=t), 'template': t, 'edit': True })
 	
 	c = {}
 	c.update(csrf(request))
@@ -536,8 +533,7 @@ def edit_template(request, templateid):
 		messages.add_message(request, messages.SUCCESS, 'Success! The template <strong>%s</strong> was saved.' % new_temp.name)
 		return HttpResponseRedirect("/templates")
 	else:
-		return render_to_response("template_edit.html", {'form': form, 'template': t, 'edit': True }, 
-								context_instance=RequestContext(request))
+		return render(request, "template_edit.html", {'form': form, 'template': t, 'edit': True })
 
 @login_required
 def delete_template(request, templateid):
@@ -578,8 +574,8 @@ def active_games(request):
 	big_games = filter(lambda g: g.is_big == True, game_list)
 	mini_games = filter(lambda g: g.is_big == False, game_list)
 	
-	return render_to_response("wiki_games.html", 
-							{'big_games': big_games, 'mini_games': mini_games }, context_instance=RequestContext(request))
+	return render(request, "wiki_games.html", 
+							{'big_games': big_games, 'mini_games': mini_games })
 
 def active_games_style(request, style):
 	if style == "default" or style == "verbose":
@@ -588,16 +584,12 @@ def active_games_style(request, style):
 		big_games = filter(lambda g: g.is_big == True, game_list)
 		mini_games = filter(lambda g: g.is_big == False, game_list)
 	
-		return render_to_response("wiki_games.html", 
-								{'big_games': big_games, 'mini_games': mini_games, 'style': style }, 
-								context_instance=RequestContext(request))
+		return render(request, "wiki_games.html", {'big_games': big_games, 'mini_games': mini_games, 'style': style })
 	elif style == "closedmonthly":
 		game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by("-last_post")
 		game_list = filter(lambda g: datetime.now() - g.last_post < timedelta(days=31), game_list)
 
-		return render_to_response("wiki_closed_games.html", 
-								{'game_list': game_list }, 
-								context_instance=RequestContext(request))
+		return render(request, "wiki_closed_games.html", {'game_list': game_list })
 	else:
 		return HttpResponse("Style not supported")
 
@@ -609,9 +601,7 @@ def active_games_json(request):
 def closed_games(request):
 	game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id", 'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
 
-	return render_to_response("closed.html",
-                                                        {'games': game_list,
-                                                        'total': len(game_list) }, context_instance=RequestContext(request))
+	return render(request, "closed.html", {'games': game_list,'total': len(game_list) })
 
 @login_required
 def add_vote(request, gameid, player, votes, target):
@@ -826,9 +816,8 @@ def players_page(request, page):
 		else:
 			p.posts_per_game = 0
 
-	return render_to_response("players.html", 
-							{'players': players, 'page': page, 'total_pages': total_pages },
-							context_instance=RequestContext(request))
+	return render(request, "players.html", 
+							{'players': players, 'page': page, 'total_pages': total_pages })
 
 @login_required
 def delete_alias(request, id):
@@ -848,12 +837,11 @@ def sendpms(request, slug):
 	if not game.is_user_mod(request.user):
 		return HttpResponseForbidden
 
-	return render_to_response("sendpms.html", { 'game': game },
-							  context_instance=RequestContext(request))
+	return render(request, "sendpms.html", { 'game': game })
 
 def post_histories(request, gameid):
 	game = get_object_or_404(Game, id=gameid)
-	return render_to_response("post_histories.html", { 'game': game },  context_instance=RequestContext(request))
+	return render(request, "post_histories.html", { 'game': game })
 
 @login_required
 def post_lynches(request, gameid, enabled):
@@ -921,13 +909,13 @@ def votechart_all(request, gameslug):
     vc.run(game)
     voteLog = vc.GetVoteLog()
 
-    return render_to_response("votechart.html", 
+    return render(request, "votechart.html", 
                     { 'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
                       'now': datetime.now(), 'toLynch': toLynch,
                       'votes': voteLog, 'numVotes': len(voteLog),
                       'players': map(lambda p: p.player.name, game.living_players()),
                       'allPlayers': map(lambda p: p.player, game.living_players()) },
-                    context_instance=RequestContext(request))
+                    )
 
 def votechart_player(request, gameslug, playerslug):
     game = get_object_or_404(Game, slug=gameslug)
@@ -939,14 +927,14 @@ def votechart_player(request, gameslug, playerslug):
     vc.run(game)
     voteLog = filter(lambda v: v['player'] == player.name, vc.GetVoteLog())
 
-    return render_to_response("votechart.html", 
+    return render(request, "votechart.html", 
                     { 'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
                       'now': datetime.now(), 'toLynch': toLynch,
                       'votes': voteLog, 'numVotes': len(voteLog),
                       'allPlayers': map(lambda p: p.player, game.living_players()),
                       'selectedPlayer': player.name,
                       'players': [ player.name ] },
-                    context_instance=RequestContext(request))
+                    )
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -961,9 +949,9 @@ def gamechart(request):
     cursor.execute("select cast(timestamp as date) as date, count(1)/count(distinct(game_id)) as activity, count(distinct(author_Id)) as posters, count(distinct(game_id)) as games, count(1) as posts from main_post where timestamp > '2010-05-01' group by date order by date")
     data = dictfetchall(cursor)
 
-    return render_to_response("gamechart.html", 
+    return render(request, "gamechart.html", 
                     { 'data': data, 'dataLen': len(data) },
-                    context_instance=RequestContext(request))
+                    )
 
 def my_classes(c):
     if c is None:
