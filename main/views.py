@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 import json as simplejson
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.contrib import messages
 from datetime import timedelta, datetime
 from django.db.models import Q

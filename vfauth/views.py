@@ -5,7 +5,7 @@ from django.http import HttpResponseNotFound
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from django.template import RequestContext
-from django.core.context_processors import csrf
+from django.template.context_processors import csrf
 from django.contrib.auth import *
 from django.contrib import messages
 import random
