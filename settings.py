@@ -1,7 +1,6 @@
 # Django settings for votefinder project.
 
 DEBUG = True 
-TEMPLATE_DEBUG = DEBUG
 
 import os
 
@@ -26,11 +25,6 @@ DATABASES = {
         'PORT': VF_MYSQL_PORT,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-	'django.core.context_processors.request',
-	'django.contrib.auth.context_processors.auth'
-)
 
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/'
@@ -93,12 +87,29 @@ ADMIN_MEDIA_PREFIX = 'http://media.votefinder.org/admin/'
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'insert your secret key here'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            '/home/ubuntu/vf-app/app/votefinder/main/templates'
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -109,13 +120,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'votefinder.urls'
-
-TEMPLATE_DIRS = (
-    '/home/ubuntu/vf-app/app/votefinder/main/templates',
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
