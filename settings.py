@@ -8,7 +8,7 @@ import os
 #VF_MYSQL_HOST = os.environ['VF_MYSQL_PORT_3306_TCP_ADDR'] or ''
 #VF_MYSQL_PORT = os.environ['VF_MYSQL_PORT_3306_TCP_PORT'] or ''
 
-ALLOWED_HOSTS = ['domain.com']
+ALLOWED_HOSTS = ['beta.votefinder.org']
 
 ADMINS = (
     ('Your Name', 'you@yourname.com')
@@ -19,11 +19,11 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db_name',                      # Replace with your votefinder database
-        'USER': 'db_user',                      # Replace with your votefinder user
-        'PASSWORD': 'db_pass',                  # Replace with votefinder password
-        'HOST': VF_MYSQL_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': VF_MYSQL_PORT,                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': 'votefinder',                      # Replace with your votefinder database
+        'USER': 'votefinder',                      # Replace with your votefinder user
+        'PASSWORD': 'votefinder',                  # Replace with votefinder password
+        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': 3306,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -118,6 +118,7 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
@@ -125,5 +126,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_comments',
     'votefinder.main',
-    'votefinder.auth',
+    'votefinder.vfauth',
 )

@@ -1,5 +1,5 @@
 from votefinder.main.models import *
-from votefinder.auth.models import *
+from votefinder.vfauth.models import *
 from django.shortcuts import render_to_response
 from django.http import HttpResponseNotFound
 from django.http import HttpResponseRedirect

@@ -5,7 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^auth/',     include('votefinder.auth.urls')),
+    (r'^auth/',     include('votefinder.vfauth.urls')),
     (r'^admin/',    include(admin.site.urls)),
     (r'',           include('votefinder.main.urls')),
 )
