@@ -166,7 +166,6 @@ $("#tabs").tabs({
 	{% if not game.closed %}
 		<a title="Votecount Image" class="button btn btn-xs" id="voteImgButton">Votecount Image</a>
 		<a title="Update" href="#" id="updateButton" class="btn btn-xs">Refresh</a>
-		<a title="ATOM Feed" class="button btn btn-xs" href="http://fusion.google.com/add?source=atgs&feedurl=http%3A//votefinder.org/game_status/{{game.slug}}" target="_blank">ATOM feed</a>
 		<a title="Vote Chart" class="button btn btn-xs" href="/votechart/{{game.slug}}">Vote Chart</a>
 	{% endif %}
 	</div>
