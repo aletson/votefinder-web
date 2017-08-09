@@ -153,6 +153,10 @@ $("#tabs").tabs({
 })
 .on('click', '#bbcode', function(obj) {
                 $('#bbcode').select();
+})
+.on('click', '.single-tab', function() { //remove after migrating completely off jquery tabs
+	$('.single-tab').removeClass('active');
+	$(this).addClass('active');
 });
 {% endblock %}
 {% block content %}
@@ -198,16 +202,15 @@ $("#tabs").tabs({
 	</table><p></p>
 			
 	<div id="tabs">
-		<ul>
+		<ul class="nav nav-pills">
 			{% if moderator %}<li><a href="#moderator">Moderator</a></li>{% endif %}
-			<li><a href="#votecount">Votecount</a></li>
-			<li><a href="#players">Players</a></li>
-			<li><a href="#posts">Posts</a></li>
-			<li><a href="#updates">Game Updates</a></li>
-			<li><a href="#tools">Tools</a></li>
+			<li class="single-tab"><a href="#votecount">Votecount</a></li>
+			<li class="single-tab"><a href="#players">Players</a></li>
+			<li class="single-tab"><a href="#posts">Posts</a></li>
+			<li class="single-tab"><a href="#updates">Game Updates</a></li>
+			<li class="single-tab"><a href="#tools">Tools</a></li>
 		</ul>
 	{% if moderator %}
-	
 	<div id="moderator">
 		<div id="modActions">
 			{% if game.closed %}
