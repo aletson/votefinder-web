@@ -41,10 +41,10 @@ if DEBUG:
         EMAIL_USE_TLS = True
         DEFAULT_FROM_EMAIL = 'reset@votefinder.org'
 
-WEB_ROOT = '/home/ubuntu/vf-app/app/votefinder/'
-REGULAR_FONT_PATH = '/home/ubuntu/vf-app/app/votefinder/static/MyriadPro-Regular.otf'
-BOLD_FONT_PATH =    '/home/ubuntu/vf-app/app/votefinder/static/MyriadPro-Bold.otf'
-STATIC_ROOT = '/home/ubuntu/vf-app/app/votefinder/static/'
+WEB_ROOT = 'votefinder/'
+REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
+BOLD_FONT_PATH =    'votefinder/static/MyriadPro-Bold.otf'
+STATIC_ROOT = 'votefinder/static/'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -91,7 +91,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/home/ubuntu/vf-app/app/votefinder/main/templates'
+            'votefinder/main/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
