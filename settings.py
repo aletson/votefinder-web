@@ -21,8 +21,8 @@ DATABASES = {
         'NAME': 'db_name',                      # Replace with your votefinder database
         'USER': 'db_user',                      # Replace with your votefinder user
         'PASSWORD': 'db_pass',                  # Replace with votefinder password
-        'HOST': VF_MYSQL_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': VF_MYSQL_PORT,                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': 'db_host',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': 3306,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
