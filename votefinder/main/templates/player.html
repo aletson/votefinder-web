@@ -1,39 +1,43 @@
-
 {% extends "base.html" %}
-{% block title %}VoteFinder: {{player.name|safe}}{% endblock %}
- 
+{% block title %}VoteFinder: {{ player.name|safe }}{% endblock %}
+
 {% block onready %}
 {% endblock %}
- 
+
 {% block content %}
-	<h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }}</h1> 
-	(<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{player.uid}}">jump to live profile</a>)
-	<hr> 
-	
-	<p>Aliases:
-	{% if aliases %}
-		<ol> 
-		{% for a in aliases %}
-			<li>{{a.alias}} {% if show_delete %}<sup><i>(<a href="/delete_alias/{{a.id}}">x</a>)</i></sup>{% endif %}</li> 
-		{% endfor %}
-		</ol> 
-	{% else %}
-		<ul><li><i>None defined</i></li></ul> 
-	{% endif %}
-	
-	<p>Currently Active Games:
-	<ol> 
-	{% for g in player.current_games %}
-		<li>{{g.state}} in <a href="{{g.game.get_absolute_url}}">{{g.game|safe}}</a></li> 
-	{% endfor %}
-	</ol> 
- 
-        <p>Old Games:
-        <ol> 
-        {% for g in player.closed_games %}
-                <li>{% if g.moderator or g.spectator %}{{g.state}}{% else %}Played{% endif %} in <a href="{{g.game.get_absolute_url}}">{{g.game|safe}}</a></li> 
+    <h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }}</h1>
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.uid }}">jump to live
+    profile</a>)
+    <hr>
+
+    <p>Aliases:
+        {% if aliases %}
+            <ol>
+                {% for a in aliases %}
+                    <li>{{ a.alias }} {% if show_delete %}
+                        <sup><i>(<a href="/delete_alias/{{ a.id }}">x</a>)</i></sup>{% endif %}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <ul>
+                <li><i>None defined</i></li>
+            </ul>
+        {% endif %}
+
+    <p>Currently Active Games:
+    <ol>
+        {% for g in player.current_games %}
+            <li>{{ g.state }} in <a href="{{ g.game.get_absolute_url }}">{{ g.game|safe }}</a></li>
         {% endfor %}
-        </ol> 
- 
+    </ol>
+
+    <p>Old Games:
+    <ol>
+        {% for g in player.closed_games %}
+            <li>{% if g.moderator or g.spectator %}{{ g.state }}{% else %}Played{% endif %} in <a
+                    href="{{ g.game.get_absolute_url }}">{{ g.game|safe }}</a></li>
+        {% endfor %}
+    </ol>
+
 {% endblock %}
 

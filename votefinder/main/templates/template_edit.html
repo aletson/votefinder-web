@@ -2,194 +2,233 @@
 {% block title %}VoteFinder: Edit Template{% endblock %}
 
 {% block onready %}
-	$('.button').button();
+    $('.button').button();
 
-	$('#instructionsButton').click(function() { $('.instructions').show(); $('#instructionsButton').hide(); });
-	$('#deleteButton').click(function() { return confirm('Are you sure you want to delete this template?'); });
+    $('#instructionsButton').click(function() { $('.instructions').show(); $('#instructionsButton').hide(); });
+    $('#deleteButton').click(function() { return confirm('Are you sure you want to delete this template?'); });
 {% endblock %}
 
 {% block content %}
-	<h1><a href="/">VoteFinder</a>: {% if edit %}Edit{% else %}Create{% endif %} Template</h1><hr>
-	
-	{% if form.non_field_errors %}
-		<p>
-		{% for error in form.non_field_errors %}
-			<strong>Error:</strong> {{ error }}
-		{% endfor %}
-		</p> 
-	{% endif %}
+    <h1><a href="/">VoteFinder</a>: {% if edit %}Edit{% else %}Create{% endif %} Template</h1>
+    <hr>
 
-	<p><a href="#" id="instructionsButton">(Show Instructions)</a></p>
-		
-	<form action="{% if edit %}/template/{{template.id}}{% else %}/create_template{% endif %}" method="post">{% csrf_token %}
-	
-	<table class="template-form">
-	<tr class="row-highlight">
-		<td class="label">Name:</td>
-		<td colspan="3">{{form.name}}</td>
-		<td>{{form.name.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>This name will be displayed in your list when you choose to change a game's template.  If you choose to 
-				share this template, other players will also see this name.</p> 
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td class="label">Overall Template:</td>
-		<td colspan="3">{{form.overall}}</td>
-		<td>{{form.overall.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>Inside the "Overall Template" field, you may insert the following codes, and they will be replaced with data about the game:</p>
-			<ul>
-				<li><strong>&#123;&#123;day&#125;&#125;</strong> - The most current day number.</li>
-				<li><strong>&#123;&#123;votecount&#125;&#125;</strong> - A series of lines displaying the current votecount.  Each line is formatted based on the "Single Votecount Line" field.  One line will be created per player being voted for.</li>
-				<li><strong>&#123;&#123;notvoting&#125;&#125;</strong> - A single line containing the list of players not voting.  The line will be formatted based on the "Single Votecount Line" field.</li>
-				<li><strong>&#123;&#123;deadline&#125;&#125;</strong> - One of the two "Deadline Text" fields, depending on whether a deadline is currently set in the game. </li>
-				<li><strong>&#123;&#123;alive&#125;&#125;</strong> - The number of players currently alive.</li>
-				<li><strong>&#123;&#123;tolynch&#125;&#125;</strong> - The number of votes required for a majority lynch.</li>
-			</ul>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td class="label">Single Votecount Line:</td>
-		<td colspan="3">{{form.single_line}}</td>
-		<td>{{form.single_line.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>Inside the "Single Votecount Line" field, you may insert the following codes, and they will be replaced with data about the game:</p>
-			<ul>
-				<li><strong>&#123;&#123;ticks&#125;&#125;</strong> - A series of images will be generated to display the votecount "ticks," based on the fields below entered for image ticks.</li>
-				<li><strong>&#123;&#123;target&#125;&#125;</strong> - The name of the player being voted for in this line.</li>
-				<li><strong>&#123;&#123;count&#125;&#125;</strong> - The number of active votes currently on the target player for this line.</li>
-				<li><strong>&#123;&#123;votelist&#125;&#125;</strong> - The list of players currently voting the target player.  Each name will be formatted according to the "before vote" and "after vote" fields below.</li>
-			</ul>
-		</td>
-		<td></td>
-	</tr>
-	<tr class="row-highlight">
-		<td class="label">Deadline Text (when deadline is set):</td>
-		<td colspan="3">{{form.deadline_exists}}</td>
-		<td>{{form.deadline_exists.errors}}</td>
-	</tr>
-	<tr class="row-highlight">
-		<td class="label">Deadline Text (no deadline set):</td>
-		<td colspan="3">{{form.deadline_not_set}}</td>
-		<td>{{form.deadline_not_set.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>These deadline fields will be inserted into the overall template in place of <strong>&#123;&#123;deadline&#125;&#125;</strong>.  You
-				may use some specific codes inside them:</p>
-			<ul>
-				<li><strong>&#123;&#123;deadline&#125;&#125;</strong> - The date and time of the currently selected deadline (blank if none is selected).</li>
-				<li><strong>&#123;&#123;timeuntildeadline&#125;&#125;</strong> - A string containing the time until the current deadline (ex.: "3 days, 7 hours").</li>
-			</ul>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td class="label">Before Votes:</td>
-		<td>{{form.before_vote}}</td>
-		<td class="label">After Votes:</td>
-		<td>{{form.after_vote}}</td>
-		<td>{{form.before_vote.errors}}{{form.after_vote.errors}}</td>
-	</tr>
-	<tr>
-		<td class="label">Before Unvotes:</td>
-		<td>{{form.before_unvote}}</td>
-		<td class="label">After Unvotes:</td>
-		<td>{{form.after_unvote}}</td>
-		<td>{{form.before_unvote.errors}}{{form.after_unvote.errors}}</td>
-	</tr>
-	<tr>
-		<td class="label">Before Unvoted Votes:</td>
-		<td>{{form.before_unvoted_vote}}</td>
-		<td class="label">After Unvoted Votes:</td>
-		<td>{{form.after_unvoted_vote}}</td>
-		<td>{{form.before_unvoted_vote.errors}}{{form.after_unvoted_vote.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>These fields contain BBCode that surrounds the names of players as they appear in the vote list.  You can use it to make
-				active votes bold, unvotes italic, etc.  If desired, you may use one code in the list:  <strong>&#123;&#123;url&#125;&#125;</strong>
-				will be replaced with a link to the post containing the vote/unvote being displayed.
-			</p>
-		</td>
-		<td></td>
-	</tr>
-	<tr class="row-highlight">
-		<td class="label">Image for Empty Ticks:</td>
-		<td colspan="3">{{form.empty_tick}}</td>
-		<td>{{form.empty_tick.errors}}</td>
-	</tr>
-	<tr class="row-highlight">
-		<td class="label">Image for Full Ticks:</td>
-		<td colspan="3">{{form.full_tick}}</td>
-		<td>{{form.full_tick.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>These fields link to the images used in creating the <strong>&#123;&#123;ticks&#125;&#125;</strong> field in the overall template.
-				If a player has 5 votes out of 7 needed to lynch, the field will use an empty tick twice, then five full ticks to make a total of seven.</p>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td class="label">Detail Level:</td>
-		<td>{{form.detail_level}}</td>
-		<td class="label">Hide Players with Zero Votes?</td>
-		<td>{{form.hide_zero_votes}}{{form.detail_level.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td class="text">
-			<p>The detail level controls what votes/unvotes are displayed on each individual line of the votecount:</p>
-			<ul>
-				<li><strong>Detailed</strong> - All data is displayed:  active and inactive votes and unvotes.</li>
-				<li><strong>Medium</strong> - Active and votes that have been unvoted are displayed, but the unvotes themselves are not.</li>
-				<li><strong>Detailed</strong> - Only active votes are displayed.</li>
-			</ul>
-		</td>
-		<td></td>
-		<td class="text">
-			<p>If this is selected, a player that has been voted for and then unvoted for and currently has zero active votes on them
-				will not be displayed.</p>
-		</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td class="label">Share This Template with Others?</td>
-		<td colspan="3">{{form.shared}}</td>
-		<td>{{form.hide_zero_votes.errors}}{{form.shared.errors}}</td>
-	</tr>
-	<tr class="instructions">
-		<td></td>
-		<td colspan="3" class="text">
-			<p>If a template is shared, then other mods will be able to use it in their games.  However, they will not be able to edit it.
-				Only a template's creator can make changes to it.</p>
-		</td>
-		<td></td>
-	<tr>
-		<td>{% if edit %}<a class="button" href="/delete_template/{{template.id}}" id="deleteButton">Delete This Template!</a>{% endif %}</td>
-		<td colspan="4" class="label">
-			<input class="button" type="reset" value="Reset!">
-			<input type="submit" class="button" value="{% if edit %}Update{% else %}Create{% endif %}!">
-		</td>
-	</tr>
-	</table>
-	
-	</form>
-	
+    {% if form.non_field_errors %}
+        <p>
+            {% for error in form.non_field_errors %}
+                <strong>Error:</strong> {{ error }}
+            {% endfor %}
+        </p>
+    {% endif %}
+
+    <p><a href="#" id="instructionsButton">(Show Instructions)</a></p>
+
+    <form action="{% if edit %}/template/{{ template.id }}{% else %}/create_template{% endif %}"
+          method="post">{% csrf_token %}
+
+        <table class="template-form">
+            <tr class="row-highlight">
+                <td class="label">Name:</td>
+                <td colspan="3">{{ form.name }}</td>
+                <td>{{ form.name.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>This name will be displayed in your list when you choose to change a game's template. If you
+                        choose to
+                        share this template, other players will also see this name.</p>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="label">Overall Template:</td>
+                <td colspan="3">{{ form.overall }}</td>
+                <td>{{ form.overall.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>Inside the "Overall Template" field, you may insert the following codes, and they will be
+                        replaced with data about the game:</p>
+                    <ul>
+                        <li><strong>&#123;&#123;day&#125;&#125;</strong> - The most current day number.</li>
+                        <li><strong>&#123;&#123;votecount&#125;&#125;</strong> - A series of lines displaying the
+                            current votecount. Each line is formatted based on the "Single Votecount Line" field. One
+                            line will be created per player being voted for.
+                        </li>
+                        <li><strong>&#123;&#123;notvoting&#125;&#125;</strong> - A single line containing the list of
+                            players not voting. The line will be formatted based on the "Single Votecount Line" field.
+                        </li>
+                        <li><strong>&#123;&#123;deadline&#125;&#125;</strong> - One of the two "Deadline Text" fields,
+                            depending on whether a deadline is currently set in the game.
+                        </li>
+                        <li><strong>&#123;&#123;alive&#125;&#125;</strong> - The number of players currently alive.</li>
+                        <li><strong>&#123;&#123;tolynch&#125;&#125;</strong> - The number of votes required for a
+                            majority lynch.
+                        </li>
+                    </ul>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="label">Single Votecount Line:</td>
+                <td colspan="3">{{ form.single_line }}</td>
+                <td>{{ form.single_line.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>Inside the "Single Votecount Line" field, you may insert the following codes, and they will be
+                        replaced with data about the game:</p>
+                    <ul>
+                        <li><strong>&#123;&#123;ticks&#125;&#125;</strong> - A series of images will be generated to
+                            display the votecount "ticks," based on the fields below entered for image ticks.
+                        </li>
+                        <li><strong>&#123;&#123;target&#125;&#125;</strong> - The name of the player being voted for in
+                            this line.
+                        </li>
+                        <li><strong>&#123;&#123;count&#125;&#125;</strong> - The number of active votes currently on the
+                            target player for this line.
+                        </li>
+                        <li><strong>&#123;&#123;votelist&#125;&#125;</strong> - The list of players currently voting the
+                            target player. Each name will be formatted according to the "before vote" and "after vote"
+                            fields below.
+                        </li>
+                    </ul>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="row-highlight">
+                <td class="label">Deadline Text (when deadline is set):</td>
+                <td colspan="3">{{ form.deadline_exists }}</td>
+                <td>{{ form.deadline_exists.errors }}</td>
+            </tr>
+            <tr class="row-highlight">
+                <td class="label">Deadline Text (no deadline set):</td>
+                <td colspan="3">{{ form.deadline_not_set }}</td>
+                <td>{{ form.deadline_not_set.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>These deadline fields will be inserted into the overall template in place of <strong>&#123;&#123;deadline&#125;&#125;</strong>.
+                        You
+                        may use some specific codes inside them:</p>
+                    <ul>
+                        <li><strong>&#123;&#123;deadline&#125;&#125;</strong> - The date and time of the currently
+                            selected deadline (blank if none is selected).
+                        </li>
+                        <li><strong>&#123;&#123;timeuntildeadline&#125;&#125;</strong> - A string containing the time
+                            until the current deadline (ex.: "3 days, 7 hours").
+                        </li>
+                    </ul>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="label">Before Votes:</td>
+                <td>{{ form.before_vote }}</td>
+                <td class="label">After Votes:</td>
+                <td>{{ form.after_vote }}</td>
+                <td>{{ form.before_vote.errors }}{{ form.after_vote.errors }}</td>
+            </tr>
+            <tr>
+                <td class="label">Before Unvotes:</td>
+                <td>{{ form.before_unvote }}</td>
+                <td class="label">After Unvotes:</td>
+                <td>{{ form.after_unvote }}</td>
+                <td>{{ form.before_unvote.errors }}{{ form.after_unvote.errors }}</td>
+            </tr>
+            <tr>
+                <td class="label">Before Unvoted Votes:</td>
+                <td>{{ form.before_unvoted_vote }}</td>
+                <td class="label">After Unvoted Votes:</td>
+                <td>{{ form.after_unvoted_vote }}</td>
+                <td>{{ form.before_unvoted_vote.errors }}{{ form.after_unvoted_vote.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>These fields contain BBCode that surrounds the names of players as they appear in the vote list.
+                        You can use it to make
+                        active votes bold, unvotes italic, etc. If desired, you may use one code in the list: <strong>&#123;&#123;url&#125;&#125;</strong>
+                        will be replaced with a link to the post containing the vote/unvote being displayed.
+                    </p>
+                </td>
+                <td></td>
+            </tr>
+            <tr class="row-highlight">
+                <td class="label">Image for Empty Ticks:</td>
+                <td colspan="3">{{ form.empty_tick }}</td>
+                <td>{{ form.empty_tick.errors }}</td>
+            </tr>
+            <tr class="row-highlight">
+                <td class="label">Image for Full Ticks:</td>
+                <td colspan="3">{{ form.full_tick }}</td>
+                <td>{{ form.full_tick.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>These fields link to the images used in creating the
+                        <strong>&#123;&#123;ticks&#125;&#125;</strong> field in the overall template.
+                        If a player has 5 votes out of 7 needed to lynch, the field will use an empty tick twice, then
+                        five full ticks to make a total of seven.</p>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="label">Detail Level:</td>
+                <td>{{ form.detail_level }}</td>
+                <td class="label">Hide Players with Zero Votes?</td>
+                <td>{{ form.hide_zero_votes }}{{ form.detail_level.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td class="text">
+                    <p>The detail level controls what votes/unvotes are displayed on each individual line of the
+                        votecount:</p>
+                    <ul>
+                        <li><strong>Detailed</strong> - All data is displayed: active and inactive votes and unvotes.
+                        </li>
+                        <li><strong>Medium</strong> - Active and votes that have been unvoted are displayed, but the
+                            unvotes themselves are not.
+                        </li>
+                        <li><strong>Detailed</strong> - Only active votes are displayed.</li>
+                    </ul>
+                </td>
+                <td></td>
+                <td class="text">
+                    <p>If this is selected, a player that has been voted for and then unvoted for and currently has zero
+                        active votes on them
+                        will not be displayed.</p>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="label">Share This Template with Others?</td>
+                <td colspan="3">{{ form.shared }}</td>
+                <td>{{ form.hide_zero_votes.errors }}{{ form.shared.errors }}</td>
+            </tr>
+            <tr class="instructions">
+                <td></td>
+                <td colspan="3" class="text">
+                    <p>If a template is shared, then other mods will be able to use it in their games. However, they
+                        will not be able to edit it.
+                        Only a template's creator can make changes to it.</p>
+                </td>
+                <td></td>
+            <tr>
+                <td>{% if edit %}
+                    <a class="button" href="/delete_template/{{ template.id }}" id="deleteButton">Delete This
+                        Template!</a>{% endif %}</td>
+                <td colspan="4" class="label">
+                    <input class="button" type="reset" value="Reset!">
+                    <input type="submit" class="button" value="{% if edit %}Update{% else %}Create{% endif %}!">
+                </td>
+            </tr>
+        </table>
+
+    </form>
+
 {% endblock %}

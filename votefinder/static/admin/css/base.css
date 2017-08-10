@@ -6,7 +6,7 @@ body {
     margin: 0;
     padding: 0;
     font-size: 12px;
-    font-family: "Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+    font-family: "Lucida Grande", "DejaVu Sans", "Bitstream Vera Sans", Verdana, Arial, sans-serif;
     color: #333;
     background: #fff;
 }
@@ -42,7 +42,7 @@ p {
     line-height: 140%;
 }
 
-h1,h2,h3,h4,h5 {
+h1, h2, h3, h4, h5 {
     font-weight: bold;
 }
 
@@ -338,7 +338,7 @@ table.orderable tbody tr td:first-child {
     background-repeat: repeat-y;
 }
 
-table.orderable-initalized .order-cell, body>tr>td.order-cell {
+table.orderable-initalized .order-cell, body > tr > td.order-cell {
     display: none;
 }
 
@@ -548,7 +548,7 @@ a.deletelink:hover {
 .object-tools {
     font-size: 10px;
     font-weight: bold;
-    font-family: Arial,Helvetica,sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     padding-left: 0;
     float: right;
     position: relative;
