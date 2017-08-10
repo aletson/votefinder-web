@@ -3,7 +3,7 @@
 
 {% block script %}
   function loadPage(x) {
-  	$('#posts').load('/posts/{{game.id}}/'+x, function() {
+  	$('#postList').load('/posts/{{game.id}}/'+x, function() {
   	});
   	$('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
   }
@@ -453,11 +453,13 @@ $("#tabs").tabs({
 		</table>
 	</div>
 	<div id="posts">
+    <hr />
 		<div id="postList"></div>
 	</div>
 
 	<div id="updates">
-		<table border="0" cellpadding="3" cellspacing="2">
+    <hr />
+		<table class="table table-striped" border="0" cellpadding="3" cellspacing="2">
 		{% for u in updates %}
 			<tr>
 				<td>{{u.timestamp|timesince}} ago</td>
