@@ -636,8 +636,9 @@ def delete_vote(request, voteid):
 	messages.add_message(request, messages.SUCCESS, 'Success!  The vote was deleted.')
 	return HttpResponseRedirect(game.get_absolute_url())
 
-import Image, ImageFont
-from ImageDraw import ImageDraw
+from PIL.Image import core as Image
+from PIL.ImageFont import core as ImageFont
+from PIL import ImageDraw
 
 def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
 	fill = (0, 0, 0, 255)
