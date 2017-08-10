@@ -21,8 +21,8 @@ DATABASES = {
         'NAME': 'db_name',                      # Replace with your votefinder database
         'USER': 'db_user',                      # Replace with your votefinder user
         'PASSWORD': 'db_pass',                  # Replace with votefinder password
-        'HOST': VF_MYSQL_HOST,                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': VF_MYSQL_PORT,                      # Set to empty string for default. Not used with sqlite3.
+        'HOST': 'db_host',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': 3306,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -41,10 +41,10 @@ if DEBUG:
         EMAIL_USE_TLS = True
         DEFAULT_FROM_EMAIL = 'reset@votefinder.org'
 
-WEB_ROOT = '/home/ubuntu/vf-app/app/votefinder/'
-REGULAR_FONT_PATH = '/home/ubuntu/vf-app/app/votefinder/static/MyriadPro-Regular.otf'
-BOLD_FONT_PATH =    '/home/ubuntu/vf-app/app/votefinder/static/MyriadPro-Bold.otf'
-STATIC_ROOT = '/home/ubuntu/vf-app/app/votefinder/static/'
+WEB_ROOT = 'votefinder/'
+REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
+BOLD_FONT_PATH =    'votefinder/static/MyriadPro-Bold.otf'
+STATIC_ROOT = 'votefinder/static/'
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -91,7 +91,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            '/home/ubuntu/vf-app/app/votefinder/main/templates'
+            'votefinder/main/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
