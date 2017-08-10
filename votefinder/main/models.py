@@ -5,15 +5,10 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 import re
 from datetime import datetime, timedelta
-import thread
-from oauth import oauth
-from oauthtwitter import OAuthApi
-import random
-from urllib2 import urlopen, Request, HTTPError
+from urllib2 import urlopen, Request
 from urllib import quote
 from simplejson import loads
 import bitly
-from django.db.models import signals
 
 DETAIL_LEVEL_CHOICES = (
     ( 1, 'Brief' ),
@@ -82,14 +77,6 @@ class VotecountTemplate(models.Model):
 		else:
 			return '%s [by %s]' % (self.name, self.creator)
 
-def twitter_in_bg(msg):
-	consumer_key = "r11W5M2m2tdNtcknWSjNKw"
-	consumer_secret = "zSd0vCV2mTcWVyKfAKiIcm6gdzozLEVMjXXpT51XV3c"
-	oauth_token = "166303978-z0Dp7pAoKrgs2ZjN7rCmwVmd9zum4LaUNjH5fzhJ"
-	oauth_token_secret = "YK7cOAF7HcSbvn43EPGBgSXyQ5RWIaruYAfTz3lNpwE"
-
-	twitter = OAuthApi(consumer_key, consumer_secret, oauth_token, oauth_token_secret)
-	twitter.UpdateStatus(msg)
 
 class Game(models.Model):
 	name 		= models.CharField(max_length=255) 
@@ -125,7 +112,6 @@ class Game(models.Model):
 	def status_update(self, message):
 		self.status_update_noncritical(message)
 		tag =  "".join([w.capitalize() for w in re.split(re.compile("[\W_-]*"), self.slug)])
-		thread.start_new_thread(twitter_in_bg, ('#%s %s' % (tag, message),))
 
 	def status_update_noncritical(self, message):
 		u = GameStatusUpdate(game=self, message=message)
