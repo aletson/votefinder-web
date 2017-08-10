@@ -15,8 +15,8 @@ function findForm(node) {
 }
 
 var SelectFilter = {
-    init: function(field_id, field_name, is_stacked, admin_media_prefix) {
-        if (field_id.match(/__prefix__/)){
+    init: function (field_id, field_name, is_stacked, admin_media_prefix) {
+        if (field_id.match(/__prefix__/)) {
             // Don't intialize on empty forms.
             return;
         }
@@ -26,7 +26,7 @@ var SelectFilter = {
 
         // Remove <p class="info">, because it just gets in the way.
         var ps = from_box.parentNode.getElementsByTagName('p');
-        for (var i=0; i<ps.length; i++) {
+        for (var i = 0; i < ps.length; i++) {
             from_box.parentNode.removeChild(ps[i]);
         }
 
@@ -62,7 +62,7 @@ var SelectFilter = {
         quickElement('h2', selector_chosen, interpolate(gettext('Chosen %s'), [field_name]));
         var selector_filter = quickElement('p', selector_chosen, gettext('Select your choice(s) and click '));
         selector_filter.className = 'selector-filter';
-        quickElement('img', selector_filter, '', 'src', admin_media_prefix + (is_stacked ? 'img/admin/selector_stacked-add.gif':'img/admin/selector-add.gif'), 'alt', 'Add');
+        quickElement('img', selector_filter, '', 'src', admin_media_prefix + (is_stacked ? 'img/admin/selector_stacked-add.gif' : 'img/admin/selector-add.gif'), 'alt', 'Add');
         var to_box = quickElement('select', selector_chosen, '', 'id', field_id + '_to', 'multiple', 'multiple', 'size', from_box.size, 'name', from_box.getAttribute('name'));
         to_box.className = 'filtered';
         var clear_all = quickElement('a', selector_chosen, gettext('Clear all'), 'href', 'javascript: (function() { SelectBox.move_all("' + field_id + '_to", "' + field_id + '_from");})()');
@@ -71,17 +71,27 @@ var SelectFilter = {
         from_box.setAttribute('name', from_box.getAttribute('name') + '_old');
 
         // Set up the JavaScript event handlers for the select box filter interface
-        addEvent(filter_input, 'keyup', function(e) { SelectFilter.filter_key_up(e, field_id); });
-        addEvent(filter_input, 'keydown', function(e) { SelectFilter.filter_key_down(e, field_id); });
-        addEvent(from_box, 'dblclick', function() { SelectBox.move(field_id + '_from', field_id + '_to'); });
-        addEvent(to_box, 'dblclick', function() { SelectBox.move(field_id + '_to', field_id + '_from'); });
-        addEvent(findForm(from_box), 'submit', function() { SelectBox.select_all(field_id + '_to'); });
+        addEvent(filter_input, 'keyup', function (e) {
+            SelectFilter.filter_key_up(e, field_id);
+        });
+        addEvent(filter_input, 'keydown', function (e) {
+            SelectFilter.filter_key_down(e, field_id);
+        });
+        addEvent(from_box, 'dblclick', function () {
+            SelectBox.move(field_id + '_from', field_id + '_to');
+        });
+        addEvent(to_box, 'dblclick', function () {
+            SelectBox.move(field_id + '_to', field_id + '_from');
+        });
+        addEvent(findForm(from_box), 'submit', function () {
+            SelectBox.select_all(field_id + '_to');
+        });
         SelectBox.init(field_id + '_from');
         SelectBox.init(field_id + '_to');
         // Move selected from_box options to to_box
         SelectBox.move(field_id + '_from', field_id + '_to');
     },
-    filter_key_up: function(event, field_id) {
+    filter_key_up: function (event, field_id) {
         from = document.getElementById(field_id + '_from');
         // don't submit form if user pressed Enter
         if ((event.which && event.which == 13) || (event.keyCode && event.keyCode == 13)) {
@@ -95,7 +105,7 @@ var SelectFilter = {
         from.selectedIndex = temp;
         return true;
     },
-    filter_key_down: function(event, field_id) {
+    filter_key_down: function (event, field_id) {
         from = document.getElementById(field_id + '_from');
         // right arrow -- move across
         if ((event.which && event.which == 39) || (event.keyCode && event.keyCode == 39)) {

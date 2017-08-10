@@ -1,18 +1,21 @@
-import urllib, urllib2, cookielib, re
 import cPickle as pickle
-from votefinder.main.models import *
-from django.conf import settings
-from BeautifulSoup import BeautifulSoup
-from poster.encode import multipart_encode
-from poster.streaminghttp import register_openers
-from poster import poster
+import cookielib
+import urllib
+import urllib2
 from datetime import datetime
-from pytz import timezone, common_timezones
+
+from django.conf import settings
+from poster import poster
+from pytz import timezone
+
+from BeautifulSoup import BeautifulSoup
+from votefinder.main.models import *
+
 
 class ForumPageDownloader():
     def __init__(self):
         self.cj = cookielib.CookieJar()
-        #self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
+        # self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         self.opener = poster.streaminghttp.register_openers()
         self.opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
         self.opener.add_handler(urllib2.HTTPCookieProcessor(self.cj))
@@ -37,7 +40,8 @@ class ForumPageDownloader():
 
     def LogLoginAttempt(self):
         with open("/tmp/logins.txt", "a") as f:
-            f.write("%s\n" % timezone(settings.TIME_ZONE).localize(datetime.now()).astimezone(timezone('US/Pacific')).ctime())
+            f.write("%s\n" % timezone(settings.TIME_ZONE).localize(datetime.now()).astimezone(
+                timezone('US/Pacific')).ctime())
 
         g = Game.objects.get(id=228)
         g.status_update("Trying to re-login to forums.  PM soru if this happens a lot.")
@@ -49,7 +53,9 @@ class ForumPageDownloader():
 
         try:
             usock = self.opener.open("https://forums.somethingawful.com/account.php",
-                                     urllib.urlencode(dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD, secure_login="")))
+                                     urllib.urlencode(
+                                         dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD,
+                                              secure_login="")))
             data = usock.read()
             usock.close()
         except URLError, e:
@@ -104,16 +110,17 @@ class ForumPageDownloader():
 
         soup = BeautifulSoup(data)
 
-        inputs = { 'message': message }
-        for i in soup.findAll('input', { 'value': True }):
+        inputs = {'message': message}
+        for i in soup.findAll('input', {'value': True}):
             inputs[i['name']] = i['value']
-	
+
         del inputs['disablesmilies']
         del inputs['preview']
 
         datagen, headers = poster.encode.multipart_encode(inputs)
         request = urllib2.Request(postUrl, datagen, headers)
         result = urllib2.urlopen(request).read()
+
 
 if __name__ == "__main__":
     dl = ForumPageDownloader()

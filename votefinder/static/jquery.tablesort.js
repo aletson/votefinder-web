@@ -59,7 +59,7 @@
  * @addon
  * @constructor
  */
-(function() {
+(function () {
     /**
      * @param {Object} an object to customize the behavior with following keys:
      *      headRow: {Number}       // row in thead to connect sorting handlers to
@@ -100,42 +100,42 @@
      * @returns jQuery Object
      * @type Object
      */
-    jQuery.fn.tableSort = function( options ) {
+    jQuery.fn.tableSort = function (options) {
         var cols;
 
-        var opt = jQuery.extend( {}, jQuery.fn.tableSort.defaults, options );
+        var opt = jQuery.extend({}, jQuery.fn.tableSort.defaults, options);
 
         opt.columnType = opt.columnType.toLowerCase();
 
         // check if opt.columns isn't empty
         // lowercase type and sorted if used
         for (cols in opt.columns) {
-            if (opt.columns[ cols ].type) {
-                opt.columns[ cols ].type = opt.columns[ cols ].type.toLowerCase();
+            if (opt.columns[cols].type) {
+                opt.columns[cols].type = opt.columns[cols].type.toLowerCase();
             }
 
-            if (opt.columns[ cols ].sorted) {
-                opt.columns[ cols ].sorted = opt.columns[ cols ].sorted.toLowerCase();
+            if (opt.columns[cols].sorted) {
+                opt.columns[cols].sorted = opt.columns[cols].sorted.toLowerCase();
             }
         }
 
-        return this.each( function() {
+        return this.each(function () {
             // Don't execute if no <thead>, because there's no place to bind sorting events
             if (this.tagName != 'TABLE' || !this.tHead) {
                 if (typeof console == 'object') {
-                    console.log( 'tableSort: Selected element is no <table> or has no <thead>.' );
+                    console.log('tableSort: Selected element is no <table> or has no <thead>.');
                 }
                 return;
             }
 
-            var cells = this.tHead.rows[ opt.headRow ].cells;
+            var cells = this.tHead.rows[opt.headRow].cells;
             var i = cells.length - 1;
             var j;
             var rows;
 
             if (typeof cols == 'undefined') {
                 do {
-                    opt.columns[i] = { type: opt.columnType };
+                    opt.columns[i] = {type: opt.columnType};
                 } while (i--);
                 cols == true; // so next iteration this isn't called -> first table defines all others sortable columns
                 i = cells.length - 1;
@@ -144,15 +144,15 @@
             // bind options to table
             this.tsOpt = opt;
 
-            stripe( this );
+            stripe(this);
 
             do {
-                if (opt.columns[ i ]) {
-                    $( cells[ i ] )
-                        .bind( 'click.tableSort', sort )
+                if (opt.columns[i]) {
+                    $(cells[i])
+                        .bind('click.tableSort', sort)
                         .addClass(
                             opt.classes.sortable
-                            + (opt.columns[ i ].sorted ? (' ' + opt.classes[ opt.columns[ i ].sorted ]) : '')
+                            + (opt.columns[i].sorted ? (' ' + opt.classes[opt.columns[i].sorted]) : '')
                         )
                     ;
                 }
@@ -160,18 +160,18 @@
 
             i = this.tBodies.length - 1;
             do {
-                rows = this.tBodies[ i ].rows;
+                rows = this.tBodies[i].rows;
                 j = rows.length - 1;
 
                 // BUGFIX: Don't try to sort if <tbody> is empty
                 if (j > -1) {
                     do {
-                        rows[ j ].numbering = j;
+                        rows[j].numbering = j;
                     } while (j--);
                 }
             } while (i--);
 
-        } );
+        });
     };
 
     /**
@@ -206,22 +206,22 @@
      * @param {Object} Event Object from onclick event.
      * @private
      */
-    function sort( evt ) {
+    function sort(evt) {
         var t = evt.target;
         var table = t.offsetParent;
         var col = t.cellIndex;
         var opt = table.tsOpt;
-        var colOpt = opt.columns[ col ];
-        var desc = sortDirection( t, opt );
+        var colOpt = opt.columns[col];
+        var desc = sortDirection(t, opt);
 
-        $( table ).addClass( opt.classes.sorting );
+        $(table).addClass(opt.classes.sorting);
 
-        $( table.tBodies ).each( function() {
-            var $rows = $( this.rows );
+        $(table.tBodies).each(function () {
+            var $rows = $(this.rows);
             var length = $rows.length;
             var data;
             var tmpData = [];
-            var tmpTbody = document.createElement( 'tbody' );
+            var tmpTbody = document.createElement('tbody');
             var tmpRows = [];
             var afterCare;
             var i;
@@ -240,110 +240,110 @@
 
             // If column wasn't sorted before, extract data in cells, sort it and transpose data matrix
             // for fast access later on.
-            if (!data[ col ]) {
+            if (!data[col]) {
                 if (colOpt.type == 'number') {
                     if (opt.decimalSymbol == '.') {
-                        afterCare = function( data ) {
-                            return parseFloat( data.replace( /(<.*?>|\s)/g, '' ) );
+                        afterCare = function (data) {
+                            return parseFloat(data.replace(/(<.*?>|\s)/g, ''));
                         };
                     }
                     else {
-                        decimalSymbolRe = new RegExp( opt.decimalSymbol );
+                        decimalSymbolRe = new RegExp(opt.decimalSymbol);
 
-                        afterCare = function( data ) {
-                            return parseFloat( data.replace( /(<.*?>|\s)/g, '' ).replace( decimalSymbolRe, '.' ) );
+                        afterCare = function (data) {
+                            return parseFloat(data.replace(/(<.*?>|\s)/g, '').replace(decimalSymbolRe, '.'));
                         };
                     }
                 }
                 else if (colOpt.type == 'string') {
-                    afterCare = function( data ) {
+                    afterCare = function (data) {
                         // For an unknown reason, JavaScript uses predefined RegExes in single line mode
                         // How to avoid that?
-                        return data.replace( /<.*?>/g, '' ).replace( /^(\s*)(.*?)(\s*)$/, "$2" ).toUpperCase();
+                        return data.replace(/<.*?>/g, '').replace(/^(\s*)(.*?)(\s*)$/, "$2").toUpperCase();
                     };
                 }
                 else if (colOpt.type == 'date') {
                     if (typeof opt.dateParser == 'function') {
-                        afterCare = function( data ) {
+                        afterCare = function (data) {
                             var result = 0;
-                            data = data.replace( /<.*?>/g, '' ).replace( /^(\s*)(.*?)(\s*)$/, "$2" );
+                            data = data.replace(/<.*?>/g, '').replace(/^(\s*)(.*?)(\s*)$/, "$2");
                             try {
-                                result = opt.dateParser( data );
+                                result = opt.dateParser(data);
                             }
-                            catch( e ) {
+                            catch (e) {
                                 if (typeof console == 'object') {
-                                    console.log( 'tableSort: Custom dateParser throws error "' + e + '", argument "' + data + '"' );
+                                    console.log('tableSort: Custom dateParser throws error "' + e + '", argument "' + data + '"');
                                 }
                             }
                             return result;
                         };
                     } else {
-                        afterCare = function( data ) {
+                        afterCare = function (data) {
                             // removes all tags and trims string
                             return Date.parse(
-                                data.replace( /<.*?>/g, '' ).replace( /^(\s*)(.*?)(\s*)$/, "$2" )
+                                data.replace(/<.*?>/g, '').replace(/^(\s*)(.*?)(\s*)$/, "$2")
                             );
                         };
                     }
 
                 }
                 else {
-                    afterCare = function( data ) {
+                    afterCare = function (data) {
                         return data;
                     };
                 }
 
                 i = length - 1;
                 do {
-                    tmpData[ i ] = [ afterCare( $rows[ i ].cells[ col ].innerHTML ), $rows[ i ].numbering ];
+                    tmpData[i] = [afterCare($rows[i].cells[col].innerHTML), $rows[i].numbering];
                 } while (i--);
 
                 if (colOpt.type == 'number' || colOpt.type == 'date') {
-                    tmpData.sort( sortNumHelper );
+                    tmpData.sort(sortNumHelper);
                 }
                 else {
                     tmpData.sort();
                 }
 
-                data = data[ col ] = [];
+                data = data[col] = [];
                 i = length - 1;
                 do {
-                    data[ tmpData[ i ][1] ] = i;
+                    data[tmpData[i][1]] = i;
                 } while (i--);
             }
             else {
-                data = data[ col ];
+                data = data[col];
             }
 
             if (desc) {
-                sortFunc = function( a, b ) {
-                    return data[ a.numbering ] - data[ b.numbering ];
+                sortFunc = function (a, b) {
+                    return data[a.numbering] - data[b.numbering];
                 };
             }
             else {
-                sortFunc = function( a, b ) {
-                    return data[ b.numbering ] - data[ a.numbering ];
+                sortFunc = function (a, b) {
+                    return data[b.numbering] - data[a.numbering];
                 };
             }
 
             // create sortable array, move out of DOM, so sorting won't be visualized (Opera likes to do this...)
             i = length - 1;
             do {
-                tmpRows.push( $rows[i] );
-                tmpTbody.appendChild( $rows[i] );
+                tmpRows.push($rows[i]);
+                tmpTbody.appendChild($rows[i]);
             } while (i--);
 
-            tmpRows.sort( sortFunc );
+            tmpRows.sort(sortFunc);
 
             // move back to DOM
             i = length - 1;
             do {
-                this.appendChild( tmpRows[i] );
+                this.appendChild(tmpRows[i]);
             } while (i--);
 
-        } );
-        stripe( table );
-        $( table ).removeClass( opt.classes.sorting );
+        });
+        stripe(table);
+        $(table).removeClass(opt.classes.sorting);
     };
 
     /**
@@ -355,8 +355,8 @@
      * @returns -1, 0, 1 meaning first value is lower, equal or higher than second
      * @type Number
      */
-    function sortNumHelper( a, b ) {
-        return isNaN( a[0] ) ? (isNaN( b[0] ) ? 0 : -1) : (isNaN( b[0] ) ? 1 : (a[0] - b[0]) );
+    function sortNumHelper(a, b) {
+        return isNaN(a[0]) ? (isNaN(b[0]) ? 0 : -1) : (isNaN(b[0]) ? 1 : (a[0] - b[0]) );
     };
 
     /**
@@ -365,11 +365,11 @@
      * @private
      * @param {Object} DOM node of table which tbody rows shall get striped
      */
-    function stripe( node ) {
+    function stripe(node) {
         if (node.tsOpt.stripe) {
-            var $tBodies = $( node ).children( 'tbody' );
-            $tBodies.children( 'tr:even' ).addClass( node.tsOpt.classes.stripe );
-            $tBodies.children( 'tr:odd' ).removeClass( node.tsOpt.classes.stripe );
+            var $tBodies = $(node).children('tbody');
+            $tBodies.children('tr:even').addClass(node.tsOpt.classes.stripe);
+            $tBodies.children('tr:odd').removeClass(node.tsOpt.classes.stripe);
         }
     };
 
@@ -384,16 +384,16 @@
      * @returns true if column should be sorted descending
      * @type Boolean
      */
-    function sortDirection( node, opt ) {
-        var $node = $( node );
+    function sortDirection(node, opt) {
+        var $node = $(node);
 
-        $node.siblings( '.' + opt.classes.sortable ).removeClass( opt.classes.asc + ' ' + opt.classes.desc );
-        if ($node.hasClass( opt.classes.asc )) {
-            $node.removeClass( opt.classes.asc ).addClass( opt.classes.desc );
+        $node.siblings('.' + opt.classes.sortable).removeClass(opt.classes.asc + ' ' + opt.classes.desc);
+        if ($node.hasClass(opt.classes.asc)) {
+            $node.removeClass(opt.classes.asc).addClass(opt.classes.desc);
             return true;
         }
 
-        $node.removeClass( opt.classes.desc ).addClass( opt.classes.asc );
+        $node.removeClass(opt.classes.desc).addClass(opt.classes.asc);
     };
 
 })();

@@ -1,484 +1,528 @@
 {% extends "base.html" %}
-{% block title %}{{game.name|safe}}{% endblock %}
+{% block title %}{{ game.name|safe }}{% endblock %}
 
 {% block script %}
-  function loadPage(x) {
-  	$('#postList').load('/posts/{{game.id}}/'+x, function() {
-  	});
-  	$('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
-  }
+    function loadPage(x) {
+    $('#postList').load('/posts/{{ game.id }}/'+x, function() {
+    });
+    $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
+    }
 
-$(document).ready(function() {
-  var curPage = {{game.currentPage}};
-  var maxPages = {{game.maxPages}};
-  var pushed = false;
-  $('#dialog').dialog({modal: true, autoOpen: false});
-  $('#liveThread').button();
-  $('#updateButton').button().click(function() {
-  	updateGame(); return false;
-  });
-  function dataReceived(data) {
-  	$('#dialog').dialog("close");
-  	if (data.success) {
-  		curPage = parseInt(data.curPage);
-  		maxPages = parseInt(data.maxPages);
-  		$('#readPages').html(curPage + ' / ' + maxPages);
+    $(document).ready(function() {
+    var curPage = {{ game.currentPage }};
+    var maxPages = {{ game.maxPages }};
+    var pushed = false;
+    $('#dialog').dialog({modal: true, autoOpen: false});
+    $('#liveThread').button();
+    $('#updateButton').button().click(function() {
+    updateGame(); return false;
+    });
+    function dataReceived(data) {
+    $('#dialog').dialog("close");
+    if (data.success) {
+    curPage = parseInt(data.curPage);
+    maxPages = parseInt(data.maxPages);
+    $('#readPages').html(curPage + ' / ' + maxPages);
 
-		if (curPage < maxPages) {
-			updateGame();
-		} else {
-			location.href="{{game.get_absolute_url}}#votecount";
-			location.reload();
-		}
-  	} else {
-		alert('Error from the server: ' + data.message);
-  	}
-  }
-  function updateGame() {
-  	var page = (curPage < maxPages) ? curPage + 1 : curPage;
-	$("#dialog").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
-  	$('#dialog').dialog("open");
-  	$.getJSON('/update/{{game.id}}/', dataReceived);
-  }
-  $('#voteImgButton').click(function() {
-    prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=http://votefinder.org{{game.get_absolute_url}}#votecount][img]http://votefinder.org/img/{{game.slug}}[/img][/url]");
-  });
-  {% if moderator and not game.closed %}
-	{% if post_vc_button %}
-		$('#post-vc-button').on('click', function() {
-			if (pushed == false) {
-				pushed = true;
-				$('#post-vc-button').attr('disabled', 'disabled');
-				location.href = '/post_vc/{{game.id}}';
-			}
-		});
-	{% endif %}
-  	$('.post-action').on('change', function(obj) {
-  		var action = $(this).val();
-  		var id = $(this).attr("id");
-  		location.href = '/'+action+'/'+id;
-  	});
-	$('.playerList').sortable({
-  		connectWith: '.playerList', items: 'div:not(.creator)',
-	  	start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
-  		stop: function(event, ui) {	$(ui.item).delay(500).queue(function() { $(this).unbind('click'); }); },
-	  	over: function(event, ui) { $(this).addClass('blackOutline'); },
-  		out: function(event, ui) { $(this).removeClass('blackOutline'); },
-	  	receive: function(event, ui) {
- 			var uid = $(ui.item.html()).attr("href").match(/\d+$/);
- 			var state = $(this).attr('id');
-			$.ajax({ url: '/player_state/{{game.id}}/'+uid+'/'+state});
-		}
-  	});
-	$("#id_name").autocomplete({ source: "/player_list/", select: function(event, ui) {
-  		$('#id_name').val(ui.item.value); 
-  		$('#addPlayerForm').submit(); 
-  	} 
-  	});
-  	$('#incomingPlayerName').autocomplete({ source: "/player_list/" });
-  	$("#deadlineDate").datepicker();
-  	$('#submitNewDeadline').click(function() {
-  		location.href = '/deadline/{{game.id}}/' + $('#deadlineDate').val() + '/' 
-			+ $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' + $('#timezone').val();
-  	});
-  $('#submitTemplate').click(function() {
-  	location.href='/game_template/{{game.id}}/' + $('#templates').val();
-  });
-  $('#addVoteType').change(function() {
-    if ($(this).val() == 'unvotes') {
-		$('#addVoteTarget').hide();
-	} else {
-		$('#addVoteTarget').show();
-	}
-  });
-  $('#submitAddVote').click(function() {
-	location.href='/add_vote/{{game.id}}/' + $('#addVotePlayer').val() + '/' + $('#addVoteType').val() + '/' + $('#addVoteTarget').val();
-  });
-  $('#submitNewDay').click(function() {
-  	var day = $('#dayNumber').val();
-  	$('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
-	location.href = '/new_day/{{game.id}}/'+day;
-  });
-  $('#submitReplacePlayer').click(function() {
-  	var outgoing = $('#replacePlayer').val();
-  	var incoming = $('#incomingPlayerName').val();
-  	var clear = $("input[@name='clearVotes']:checked").val();
-	location.href = '/replace/{{game.id}}/'+clear+'/'+outgoing+'/'+incoming;
-  });
-  {% endif %}
-  $('.button').button();
-  {% if moderator %}
-  	$('#modActions').accordion({autoHeight: false});
-  {% endif %}
-  $('#toolsActions').accordion({autoHeight: false});
-$("#tabs").tabs({ 
-        show: function(event,ui) { 
-                if (ui.panel.id == "votecount") { 
-                        $('#votecount_contents').load('/votecount/{{game.id}}', function() {
-                                $('.button').button();
-                        }); 
-                }
-                else if ( ui.panel.id == "posts") { loadPage({{game.currentPage}});     }
-        },
-        select: function(event,ui) {
-                if ( ui.panel.id == "tools") {
-                        $.get('/post_histories/{{game.id}}', function(data) { 
-                                $('#playerPostHistories').html(data); 
-                        });
-                }
+    if (curPage < maxPages) {
+    updateGame();
+    } else {
+    location.href="{{ game.get_absolute_url }}#votecount";
+    location.reload();
+    }
+    } else {
+    alert('Error from the server: ' + data.message);
+    }
+    }
+    function updateGame() {
+    var page = (curPage < maxPages) ? curPage + 1 : curPage;
+    $("#dialog").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
+    $('#dialog').dialog("open");
+    $.getJSON('/update/{{ game.id }}/', dataReceived);
+    }
+    $('#voteImgButton').click(function() {
+    prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=http://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
+    });
+    {% if moderator and not game.closed %}
+        {% if post_vc_button %}
+            $('#post-vc-button').on('click', function() {
+            if (pushed == false) {
+            pushed = true;
+            $('#post-vc-button').attr('disabled', 'disabled');
+            location.href = '/post_vc/{{ game.id }}';
+            }
+            });
+        {% endif %}
+        $('.post-action').on('change', function(obj) {
+        var action = $(this).val();
+        var id = $(this).attr("id");
+        location.href = '/'+action+'/'+id;
+        });
+        $('.playerList').sortable({
+        connectWith: '.playerList', items: 'div:not(.creator)',
+        start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
+        stop: function(event, ui) {    $(ui.item).delay(500).queue(function() { $(this).unbind('click'); }); },
+        over: function(event, ui) { $(this).addClass('blackOutline'); },
+        out: function(event, ui) { $(this).removeClass('blackOutline'); },
+        receive: function(event, ui) {
+        var uid = $(ui.item.html()).attr("href").match(/\d+$/);
+        var state = $(this).attr('id');
+        $.ajax({ url: '/player_state/{{ game.id }}/'+uid+'/'+state});
         }
-  });
-  $('#pageJump').on('change', function(obj) {
-  	loadPage($(this).val());
-  });
-  $('#refreshbutton').button();
-  $('#votecount_contents').load('/votecount/{{game.id}}', function() {
-                                $('.button').button();
-                        });
-  loadPage({{game.currentPage}});
-})
-.on('change', '.resolver', function(obj) {
+        });
+        $("#id_name").autocomplete({ source: "/player_list/", select: function(event, ui) {
+        $('#id_name').val(ui.item.value);
+        $('#addPlayerForm').submit();
+        }
+        });
+        $('#incomingPlayerName').autocomplete({ source: "/player_list/" });
+        $("#deadlineDate").datepicker();
+        $('#submitNewDeadline').click(function() {
+        location.href = '/deadline/{{ game.id }}/' + $('#deadlineDate').val() + '/'
+        + $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' +
+        $('#timezone').val();
+        });
+        $('#submitTemplate').click(function() {
+        location.href='/game_template/{{ game.id }}/' + $('#templates').val();
+        });
+        $('#addVoteType').change(function() {
+        if ($(this).val() == 'unvotes') {
+        $('#addVoteTarget').hide();
+        } else {
+        $('#addVoteTarget').show();
+        }
+        });
+        $('#submitAddVote').click(function() {
+        location.href='/add_vote/{{ game.id }}/' + $('#addVotePlayer').val() + '/' + $('#addVoteType').val() + '/' +
+        $('#addVoteTarget').val();
+        });
+        $('#submitNewDay').click(function() {
+        var day = $('#dayNumber').val();
+        $('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
+        location.href = '/new_day/{{ game.id }}/'+day;
+        });
+        $('#submitReplacePlayer').click(function() {
+        var outgoing = $('#replacePlayer').val();
+        var incoming = $('#incomingPlayerName').val();
+        var clear = $("input[@name='clearVotes']:checked").val();
+        location.href = '/replace/{{ game.id }}/'+clear+'/'+outgoing+'/'+incoming;
+        });
+    {% endif %}
+    $('.button').button();
+    {% if moderator %}
+        $('#modActions').accordion({autoHeight: false});
+    {% endif %}
+    $('#toolsActions').accordion({autoHeight: false});
+    $("#tabs").tabs({
+    show: function(event,ui) {
+    if (ui.panel.id == "votecount") {
+    $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
+    $('.button').button();
+    });
+    }
+    else if ( ui.panel.id == "posts") { loadPage({{ game.currentPage }});     }
+    },
+    select: function(event,ui) {
+    if ( ui.panel.id == "tools") {
+    $.get('/post_histories/{{ game.id }}', function(data) {
+    $('#playerPostHistories').html(data);
+    });
+    }
+    }
+    });
+    $('#pageJump').on('change', function(obj) {
+    loadPage($(this).val());
+    });
+    $('#refreshbutton').button();
+    $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
+    $('.button').button();
+    });
+    loadPage({{ game.currentPage }});
+    })
+    .on('change', '.resolver', function(obj) {
     console.log('Event fired!"');
     var resolution = $(this).val();
     var vote = $(this).attr('id');
     var removing = $(this);
-    $.getJSON('/resolve/'+vote+'/'+resolution, 
-        function(data) {
-                removing.parent().parent().remove();
-                if ($(".resolver").length == 0 || data.refresh == true) {
-                        $('#votecount_contents').load('/votecount/{{game.id}}', function() { $('.button').button(); });
-                }
-        }
-   );
-})
-.on('click', '#bbcode', function(obj) {
-                $('#bbcode').select();
-})
-.on('click', '.single-tab', function() { //remove after migrating completely off jquery tabs
-	$('.single-tab').removeClass('active');
-	$(this).addClass('active');
-});
+    $.getJSON('/resolve/'+vote+'/'+resolution,
+    function(data) {
+    removing.parent().parent().remove();
+    if ($(".resolver").length == 0 || data.refresh == true) {
+    $('#votecount_contents').load('/votecount/{{ game.id }}', function() { $('.button').button(); });
+    }
+    }
+    );
+    })
+    .on('click', '#bbcode', function(obj) {
+    $('#bbcode').select();
+    })
+    .on('click', '.single-tab', function() { //remove after migrating completely off jquery tabs
+    $('.single-tab').removeClass('active');
+    $(this).addClass('active');
+    });
 {% endblock %}
 {% block content %}
-	<h1><a href="/">VoteFinder</a>: {{game.name|safe}}</h1>
-	<div class="btn-group"> <!-- TODO implement Font Awesome! -->
-	<a class="btn btn-xs" title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{game.threadId}}" id="liveThread">Thread Link</a>
-	{% if not game.closed %}
-		<a title="Votecount Image" class="button btn btn-xs" id="voteImgButton">Votecount Image</a>
-		<a title="Update" href="#" id="updateButton" class="btn btn-xs">Refresh</a>
-		<a title="Vote Chart" class="button btn btn-xs" href="/votechart/{{game.slug}}">Vote Chart</a>
-	{% endif %}
-	</div>
-	<hr>
-	
-	<p>
-	<table border="0" cellpadding="0.5em">
-	<tr>
-		<td>Moderator:</td>
-		<td><a href="{{game.moderator.get_absolute_url}}">{{game.moderator.name|safe}}</a></td>
-	</tr>
-	<tr>
-		<td>Thread ID:</td>
-		<td>{{game.threadId}}</td>
-	</tr>
-	<tr>
-		<td>Game Day:</td>
-		<td><a target="_blank" href="http://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{gameday.startPost.postId}}">Day {{gameday.dayNumber}}</a> began {{gameday.startPost.timestamp|timesince}} ago on {{gameday.startPost.timestamp}}</td>
-	</tr>
-	{% if game.deadline %}
-	<tr>
-		<td>Deadline:</td>
-		<td id="deadlineText">in {{deadline|timeuntil}}, on {{deadline}} {{deadline.tzname}}</td>
-	</tr>
-	{% endif %}
-	<tr>
-		<td>Read pages:</td>
-		<td><span id="readPages">{{game.currentPage}} / {{game.maxPages}}</span></td>
-	</tr>
-	<tr>
-		<td>Last updated:</td>
-		<td>{{game.lastUpdated|timesince}} ago</td>
-	</tr>	
-	</table><p></p>
-			
-	<div id="tabs">
-		<ul class="nav nav-pills">
-			{% if moderator %}<li><a href="#moderator">Moderator</a></li>{% endif %}
-			<li class="single-tab"><a href="#votecount">Votecount</a></li>
-			<li class="single-tab"><a href="#players">Players</a></li>
-			<li class="single-tab"><a href="#posts">Posts</a></li>
-			<li class="single-tab"><a href="#updates">Game Updates</a></li>
-			<li class="single-tab"><a href="#tools">Tools</a></li>
-		</ul>
-	{% if moderator %}
-	<div id="moderator">
-		<div id="modActions">
-			{% if game.closed %}
-			<h3><a href="#">Add This Game to the Wiki!</a></h3>
-			<div>
-				This game is over and you're the moderator!  Have you added it to the <a href="http://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed Games List</a>?  <b>It's your responsibility!</b>  Here is some sample wiki code you can use.  Just edit in the winning team:</p>
+    <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
+    <div class="btn-group"> <!-- TODO implement Font Awesome! -->
+        <a class="btn btn-xs" title="Open Thread" target="_blank"
+           href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}" id="liveThread">Thread
+            Link</a>
+        {% if not game.closed %}
+            <a title="Votecount Image" class="button btn btn-xs" id="voteImgButton">Votecount Image</a>
+            <a title="Update" href="#" id="updateButton" class="btn btn-xs">Refresh</a>
+            <a title="Vote Chart" class="button btn btn-xs" href="/votechart/{{ game.slug }}">Vote Chart</a>
+        {% endif %}
+    </div>
+    <hr>
 
-				<p><textarea rows="2" cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{game.threadId}} {{game.name}}] - (something) victory.  Hosted by {{game.moderator.name}}.</textarea></p>
-			</div>			
+    <p>
+    <table border="0" cellpadding="0.5em">
+        <tr>
+            <td>Moderator:</td>
+            <td><a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name|safe }}</a></td>
+        </tr>
+        <tr>
+            <td>Thread ID:</td>
+            <td>{{ game.threadId }}</td>
+        </tr>
+        <tr>
+            <td>Game Day:</td>
+            <td><a target="_blank"
+                   href="http://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.startPost.postId }}">Day {{ gameday.dayNumber }}</a>
+                began {{ gameday.startPost.timestamp|timesince }} ago on {{ gameday.startPost.timestamp }}</td>
+        </tr>
+        {% if game.deadline %}
+            <tr>
+                <td>Deadline:</td>
+                <td id="deadlineText">in {{ deadline|timeuntil }}, on {{ deadline }} {{ deadline.tzname }}</td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td>Read pages:</td>
+            <td><span id="readPages">{{ game.currentPage }} / {{ game.maxPages }}</span></td>
+        </tr>
+        <tr>
+            <td>Last updated:</td>
+            <td>{{ game.lastUpdated|timesince }} ago</td>
+        </tr>
+    </table><p></p>
 
-			<h3><a href="#">Re-Open Game</a></h3>
-			<div>
-				<p>This game is currently closed.  It's not being tracked and can't be modified or updated.  If you'd like
-					to re-open it, just press the link below.</p>
-				<a href="/reopen_game/{{game.id}}" class="button">Re-Open it!</a>
-			</div>
-			{% else %}
+    <div id="tabs">
+        <ul class="nav nav-pills">
+            {% if moderator %}
+                <li><a href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab"><a href="#votecount">Votecount</a></li>
+            <li class="single-tab"><a href="#players">Players</a></li>
+            <li class="single-tab"><a href="#posts">Posts</a></li>
+            <li class="single-tab"><a href="#updates">Game Updates</a></li>
+            <li class="single-tab"><a href="#tools">Tools</a></li>
+        </ul>
+        {% if moderator %}
+            <div id="moderator">
+                <div id="modActions">
+                    {% if game.closed %}
+                        <h3><a href="#">Add This Game to the Wiki!</a></h3>
+                        <div>
+                            This game is over and you're the moderator! Have you added it to the <a
+                                href="http://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed
+                            Games List</a>? <b>It's your responsibility!</b> Here is some sample wiki code you can use.
+                            Just edit in the winning team:</p>
+
+                            <p><textarea rows="2"
+                                         cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
+                            </p>
+                        </div>
+
+                        <h3><a href="#">Re-Open Game</a></h3>
+                        <div>
+                            <p>This game is currently closed. It's not being tracked and can't be modified or updated.
+                                If you'd like
+                                to re-open it, just press the link below.</p>
+                            <a href="/reopen_game/{{ game.id }}" class="button">Re-Open it!</a>
+                        </div>
+                    {% else %}
 
 
-			<h3><a href="#">Set a Deadline</a></h3>
-			<div>
-				{% if game.deadline %}
-					The current deadline for day {{gameday.dayNumber}} is: 
-				{% else %}
-					No deadline is currently set for day {{gameday.dayNumber}}.  <p/>Set it now:
-				{% endif %}				
-				<input type="text" size="5" id="deadlineDate" value="{{deadline|date:"m/d/Y"}}">
-				at <input type="text" size="2" maxlength="2" id="deadlineHour" value="{{deadline|time:"h"}}">
-				: <input type="text" size="2" maxlength="2" id="deadlineMinute" value="{{deadline|time:"i"}}">
-				<select name="ampm" id="deadlineAmPm">
-					<option value="AM"{%ifequal deadline|time:"A" "AM"%} selected="selected"{%endifequal%}>AM</option>
-					<option value="PM"{%ifequal deadline|time:"A" "PM"%} selected="selected"{%endifequal%}>PM</option></select> 
-				
-				<select name="timezone" id="timezone">
-					{% for t in common_timezones %}
-						<option value="{{t}}" {% ifequal t timezone %}selected="selected"{% endifequal%}>{{t}}</option>
-					{% endfor %}
-				</select>
+                        <h3><a href="#">Set a Deadline</a></h3>
+                        <div>
+                            {% if game.deadline %}
+                                The current deadline for day {{ gameday.dayNumber }} is:
+                            {% else %}
+                                No deadline is currently set for day {{ gameday.dayNumber }}.  <p/>Set it now:
+                            {% endif %}
+                            <input type="text" size="5" id="deadlineDate" value="{{ deadline|date:"m/d/Y" }}">
+                            at <input type="text" size="2" maxlength="2" id="deadlineHour"
+                                      value="{{ deadline|time:"h" }}">
+                            : <input type="text" size="2" maxlength="2" id="deadlineMinute"
+                                     value="{{ deadline|time:"i" }}">
+                            <select name="ampm" id="deadlineAmPm">
+                                <option value="AM"{% ifequal deadline|time:"A" "AM" %}
+                                        selected="selected"{% endifequal %}>AM
+                                </option>
+                                <option value="PM"{% ifequal deadline|time:"A" "PM" %}
+                                        selected="selected"{% endifequal %}>PM
+                                </option>
+                            </select>
 
-				<br/><button type="button" id="submitNewDeadline" class="button">Set!</button>
-				<span id="deadlineStatus"></span>
-			</div>
+                            <select name="timezone" id="timezone">
+                                {% for t in common_timezones %}
+                                    <option value="{{ t }}"
+                                            {% ifequal t timezone %}selected="selected"{% endifequal %}>{{ t }}</option>
+                                {% endfor %}
+                            </select>
 
-			{% if user.is_superuser %}
-			<h3><a href="#">Send PMs</a></h3>
-			<div>
-				Votefinder can let you send out individual PMs to living players in the game, to distribute roles or
-				night results or really anything else.<p>
+                            <br/>
+                            <button type="button" id="submitNewDeadline" class="button">Set!</button>
+                            <span id="deadlineStatus"></span>
+                        </div>
 
-				<a href="/sendpms/{{game.slug}}">Click here to access the PM page.</a>
-			</div>
-			{% endif %}
-		
-			<h3><a href="#">Game Options</a></h3>
-			<div>
-				{% if game.post_lynches %}
-					Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch happen.  
-					<a href="/post_lynches/{{game.id}}/off">Click here to disable it</a>.
-				{% else %}
-					Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a lynch happen.  
-					<a href="/post_lynches/{{game.id}}/on">Click here to enable it</a>.
-				{% endif %}
-				<br /><br />				
-				{% if game.ecco_mode %}
-					Ecco Mode is enabled. Votefinder will not process votes of players who are already voting.
-					<a href="/ecco_mode/{{game.id}}/off">Click here to disable it</a>.
-				{% else %}
-					Ecco Mode is disabled. Votefinder will automatically change votes of players already voting.
-					<a href="/ecco_mode/{{game.id}}/on">Click here to enable it</a>.
-				{% endif %}
-			</div>
+                        {% if user.is_superuser %}
+                            <h3><a href="#">Send PMs</a></h3>
+                            <div>
+                                Votefinder can let you send out individual PMs to living players in the game, to
+                                distribute roles or
+                                night results or really anything else.<p>
 
-			<h3><a href="#">Change the Template</a></h3>
-			<div>
-				<p>To change the template this game is using, just select it from the dropdown box.</p>
-				
-				New template: <select name="template" id="templates">
-					{% for t in templates %}
-						<option value ="{{t.id}}"{% if game.template == t or game.template == None and t.system_default %} selected="selected"{% endif %}>{{t.name}}{% ifnotequal t.creator user.profile.player %} (shared by {{t.creator}}){% endifnotequal %}</div>
-					{% endfor %}
-				</select>
-				<button type="button" id="submitTemplate" class="button">Change!</button> 
-			</div>
+                                <a href="/sendpms/{{ game.slug }}">Click here to access the PM page.</a>
+                            </div>
+                        {% endif %}
 
-			<h3><a href="#">Add a Votecount Comment</a></h3>
-			<div>
-				<p>If you add a comment here, it will be visible to anyone viewing the votecount
-					at any time.</p>
-				<form action="/add_comment/{{game.id}}" method="post">{% csrf_token %}
-					<table border="0" cellpadding="5" cellspacing="0">
-					<tr>
-						<td valign="top">Comment:</td>
-						<td>{{comment_form.comment}}
-					</tr>
-					<tr>
-						<td colspan="2" align="right"><input type="submit" value="Add Comment" id="submitAddComment" class="button"/></td>
-					</tr>
-					</table>
-				</form>
-			</div>
-			<h3><a href="#">Start a New Day</a></h3>
-			<div>
-				<p>To start a new day beginning right now, just press the button below.  This will cause the most 
-					recent post that VoteFinder knows about to be marked as the start of a new day.</p>
-					
-					<label for="dayNumber">Day number:
-					<input type="text" id="dayNumber" maxlength="2" size="2" value="{{nextDay}}">
-					<button type="button" id="submitNewDay" class="button">Begins Now!</button>
-					<span id="newDayStatus"></span>
-			</div>
-			<h3><a href="#">Add/Change Manual Votes</a></h3>
-			<div>
-				<p>To change manual votes, add or remove them from the list below.  Note: manual votes will always be
-					applied AFTER current votes in the thread, and there will be no sanity
-					checking done on these votes.  So if you make the same user vote 3 different people, he will appear in
-					the votecount as voting all of them (unvotes will not be assumed).</p>
-				<ul>{% for v in manual_votes %}
-						{% if v.unvote %}
-							<li>{{v.author}} unvotes <sup>(<a href="/delete_vote/{{v.id}}">x</a>)</sup></li>
-						{% else %}
-							<li>{{v.author}} votes {{v.target}} <sup>(<a href="/delete_vote/{{v.id}}">x</a>)</sup></li>
-						{% endif %}
-					{% empty %}
-						<li><i>No manual votes defined.</i></li>
-					{% endfor %}</ul>
-					Add a new vote:  
-						<select name="addVotePlayer" id="addVotePlayer">
-							<option value="-1" selected="selected">Anonymous</option>
-							{% for p in game.living_players %}
-								<option value ="{{p.player.id}}">{{p.player|safe}}</div>
-							{% endfor %}
-						</select>
-						<select name="addVoteType" id="addVoteType">
-							<option value="votes" selected="selected">votes</option>
-							<option value="unvotes">unvotes</option>
-						</select>
-						<select name="addVoteTarget" id="addVoteTarget">
-							{% for p in game.living_players %}
-								<option value ="{{p.player.id}}" {% if forloop.first %}selected="selected"{% endif %}>{{p.player|safe}}</div>
-							{% endfor %}
-						</select>
-						<button type="button" class="button" id="submitAddVote">Go</button>
-			</div>
-			<h3><a href="#">Replace a Player</a></h3>
-			<div>
-				<p>To replace a player, just select who is going out and who is coming in.</p>
-				
-				<table>
-					<tr>
-						<td align="right">The player:</td>
-						<td>
-							<select name="replacePlayer" id="replacePlayer">
-							{% for p in game.living_players %}
-								<option value ="{{p.player.id}}">{{p.player|safe}}</div>
-							{% endfor %}
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<td align="right">is replaced by:</td>
-						<td><input type="text" id="incomingPlayerName" name="incomingPlayerName"></td>
-					</tr>
-					<tr>
-						<td align="right" valign="top">and:</td>
-						<td>
-							<input type="radio" name="clearVotes" value="true" checked="checked"/> <b>clear all votes</b> for or by the outgoing player, or<br/>  
-							<input type="radio" name="clearVotes" value="false" /> <b>keep all votes</b> and transfer them to the incoming player
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2" align="right"><button type="button" id="submitReplacePlayer" class="button">Go!</button></td>
-					</tr>
-				</table>
-				
-				 
-			</div>
-			<h3><a href="#">Close the Game</a></h3>
-			<div>
-				<p>Closing the game will move it out of the list of currently tracked games on the main page, and will prevent
-					anyone from refreshing the votecount.</p>
-		
-				<a href="/close_game/{{game.id}}" class="button">Close Game!</a>
-			</div>
-			{% endif %}
-		</div>
-		</div>
-	 
-	{% endif %}
-	<div id="votecount">
-		<div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
-	</div>
+                        <h3><a href="#">Game Options</a></h3>
+                        <div>
+                            {% if game.post_lynches %}
+                                Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch
+                                happen.
+                                <a href="/post_lynches/{{ game.id }}/off">Click here to disable it</a>.
+                            {% else %}
+                                Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a
+                                lynch happen.
+                                <a href="/post_lynches/{{ game.id }}/on">Click here to enable it</a>.
+                            {% endif %}
+                            <br/><br/>
+                            {% if game.ecco_mode %}
+                                Ecco Mode is enabled. Votefinder will not process votes of players who are already
+                                voting.
+                                <a href="/ecco_mode/{{ game.id }}/off">Click here to disable it</a>.
+                            {% else %}
+                                Ecco Mode is disabled. Votefinder will automatically change votes of players already
+                                voting.
+                                <a href="/ecco_mode/{{ game.id }}/on">Click here to enable it</a>.
+                            {% endif %}
+                        </div>
 
-		<div id="players">
-		
-	{% if moderator %}
-		<p>You are a moderator of this game.  To update the player list, simply drag players between the boxes.</p>
+                        <h3><a href="#">Change the Template</a></h3>
+                        <div>
+                            <p>To change the template this game is using, just select it from the dropdown box.</p>
 
-		<form id="addPlayerForm" action="/add_player/{{game.id}}" method="post">{% csrf_token %}
-			<label for="addPlayer">Add Player:</label> 
-			{{ form.name }}
-			<input id="submitAddPlayer" type="submit" value="Add"/>
-		</form>
-		<p></p>
-	{% endif %}
-	
-	<table border="0" cellpadding="0" cellspacing="5" width="95%">
-	<tr>
-		<td>Moderators:</td>
-		<td>Living Players:</td>
-		<td>Dead Players:</td>
-		<td>Spectators:</td>
-	</tr>
-	<tr>
-		<td id="mod" class="playerList">
-			{% for p in game.moderators %}
-				<div class="player{% ifequal p.player game.moderator %} creator{% endifequal %}"><a href="/p:{{p.player.id}}">{{p.player|safe}}</a></div>
-			{% endfor %}
-		</td>
-		<td id="alive" class="playerList">
-			{% for p in game.living_players %}
-				<div class="player"><a href="/p:{{p.player.id}}">{{p.player|safe}}</a></div>
-			{% endfor %}
-		</td>
-		<td id="dead" class="playerList">
-			{% for p in game.dead_players %}
-				<div class="player"><a href="/p:{{p.player.id}}">{{p.player|safe}}</a></div>
-			{% endfor %}
-		</td>
-		<td id="spectator" class="playerList">
-			{% for p in game.spectators %}
-				<div class="player"><a  href="/p:{{p.player.id}}">{{p.player|safe}}</a></div>
-			{% endfor %}
-		</td>
-		{% if moderator %}
-		<tr>
-			<td colspan="3">&nbsp;</td>
-			<td align="right" valign="top"><sup>(<a href="/delete_spectators/{{game.id}}">remove spectators</a>)</sup></td>
-		</tr>
-		{% endif %}
-		</table>
-	</div>
-	<div id="posts">
-    <hr />
-		<div id="postList"></div>
-	</div>
+                            New template: <select name="template" id="templates">
+                            {% for t in templates %}
+                                <option value="{{ t.id }}"
+                                        {% if game.template == t or game.template == None and t.system_default %}
+                                        selected="selected"{% endif %}>
+                                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator }}
+                                        ){% endifnotequal %}</div>
+                            {% endfor %}
+                        </select>
+                        <button type="button" id="submitTemplate" class="button">Change!</button>
+                        </div>
 
-	<div id="updates">
-    <hr />
-		<table class="table table-striped" border="0" cellpadding="3" cellspacing="2">
-		{% for u in updates %}
-			<tr>
-				<td>{{u.timestamp|timesince}} ago</td>
-				<td>{{u.message}}</td>
-			</tr>
-		{% endfor %}
-		</table>
-	</div>
+                        <h3><a href="#">Add a Votecount Comment</a></h3>
+                        <div>
+                            <p>If you add a comment here, it will be visible to anyone viewing the votecount
+                                at any time.</p>
+                            <form action="/add_comment/{{ game.id }}" method="post">{% csrf_token %}
+                                <table border="0" cellpadding="5" cellspacing="0">
+                                    <tr>
+                                        <td valign="top">Comment:</td>
+                                        <td>{{ comment_form.comment }}
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="right"><input type="submit" value="Add Comment"
+                                                                             id="submitAddComment" class="button"/></td>
+                                    </tr>
+                                </table>
+                            </form>
+                        </div>
+                        <h3><a href="#">Start a New Day</a></h3>
+                        <div>
+                            <p>To start a new day beginning right now, just press the button below. This will cause the
+                                most
+                                recent post that VoteFinder knows about to be marked as the start of a new day.</p>
 
-	<div id="tools">
-		<div id="toolsActions">
-			<h3><a href="#">Create Player List</a></h3>
-			<div>
-				Below is a list of all living players with links to their post histories that can be put
-				into an OP:<p/>
-				<textarea style="width:90%; height: 10em;" id="playerPostHistories"></textarea>
-			</div>			
-		</div>
-	</div>
-</div>	
-	<div id="dialog" title="Updating Game"></div> 
+                            <label for="dayNumber">Day number:
+                                <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
+                                <button type="button" id="submitNewDay" class="button">Begins Now!</button>
+                                <span id="newDayStatus"></span>
+                        </div>
+                        <h3><a href="#">Add/Change Manual Votes</a></h3>
+                        <div>
+                            <p>To change manual votes, add or remove them from the list below. Note: manual votes will
+                                always be
+                                applied AFTER current votes in the thread, and there will be no sanity
+                                checking done on these votes. So if you make the same user vote 3 different people, he
+                                will appear in
+                                the votecount as voting all of them (unvotes will not be assumed).</p>
+                            <ul>{% for v in manual_votes %}
+                                {% if v.unvote %}
+                                    <li>{{ v.author }} unvotes <sup>(<a href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
+                                {% else %}
+                                    <li>{{ v.author }} votes {{ v.target }} <sup>(<a
+                                            href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
+                                {% endif %}
+                            {% empty %}
+                                <li><i>No manual votes defined.</i></li>
+                            {% endfor %}</ul>
+                            Add a new vote:
+                            <select name="addVotePlayer" id="addVotePlayer">
+                                <option value="-1" selected="selected">Anonymous</option>
+                                {% for p in game.living_players %}
+                                    <option value="{{ p.player.id }}">{{ p.player|safe }}</div>
+                                {% endfor %}
+                        </select>
+                        <select name="addVoteType" id="addVoteType">
+                            <option value="votes" selected="selected">votes</option>
+                            <option value="unvotes">unvotes</option>
+                        </select>
+                        <select name="addVoteTarget" id="addVoteTarget">
+                            {% for p in game.living_players %}
+                                <option value="{{ p.player.id }}" {% if forloop.first %}selected="selected"{% endif %}>
+                                {{ p.player|safe }}</div>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="button" id="submitAddVote">Go</button>
+                        </div>
+                        <h3><a href="#">Replace a Player</a></h3>
+                        <div>
+                            <p>To replace a player, just select who is going out and who is coming in.</p>
+
+                            <table>
+                                <tr>
+                                    <td align="right">The player:</td>
+                                    <td>
+                                        <select name="replacePlayer" id="replacePlayer">
+                                            {% for p in game.living_players %}
+                                                <option value="{{ p.player.id }}">{{ p.player|safe }}</div>
+                                            {% endfor %}
+                        </select>
+                        </td>
+                        </tr>
+                        <tr>
+                            <td align="right">is replaced by:</td>
+                            <td><input type="text" id="incomingPlayerName" name="incomingPlayerName"></td>
+                        </tr>
+                        <tr>
+                            <td align="right" valign="top">and:</td>
+                            <td>
+                                <input type="radio" name="clearVotes" value="true" checked="checked"/> <b>clear all
+                                votes</b> for or by the outgoing player, or<br/>
+                                <input type="radio" name="clearVotes" value="false"/> <b>keep all votes</b> and transfer
+                                them to the incoming player
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="right">
+                                <button type="button" id="submitReplacePlayer" class="button">Go!</button>
+                            </td>
+                        </tr>
+                        </table>
+
+
+                        </div>
+                        <h3><a href="#">Close the Game</a></h3>
+                        <div>
+                            <p>Closing the game will move it out of the list of currently tracked games on the main
+                                page, and will prevent
+                                anyone from refreshing the votecount.</p>
+
+                            <a href="/close_game/{{ game.id }}" class="button">Close Game!</a>
+                        </div>
+                    {% endif %}
+            </div>
+            </div>
+
+        {% endif %}
+    <div id="votecount">
+        <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
+    </div>
+
+    <div id="players">
+
+        {% if moderator %}
+            <p>You are a moderator of this game. To update the player list, simply drag players between the boxes.</p>
+
+            <form id="addPlayerForm" action="/add_player/{{ game.id }}" method="post">{% csrf_token %}
+                <label for="addPlayer">Add Player:</label>
+                {{ form.name }}
+                <input id="submitAddPlayer" type="submit" value="Add"/>
+            </form>
+            <p></p>
+        {% endif %}
+
+        <table border="0" cellpadding="0" cellspacing="5" width="95%">
+            <tr>
+                <td>Moderators:</td>
+                <td>Living Players:</td>
+                <td>Dead Players:</td>
+                <td>Spectators:</td>
+            </tr>
+            <tr>
+                <td id="mod" class="playerList">
+                    {% for p in game.moderators %}
+                        <div class="player{% ifequal p.player game.moderator %} creator{% endifequal %}"><a
+                                href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                    {% endfor %}
+                </td>
+                <td id="alive" class="playerList">
+                    {% for p in game.living_players %}
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                    {% endfor %}
+                </td>
+                <td id="dead" class="playerList">
+                    {% for p in game.dead_players %}
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                    {% endfor %}
+                </td>
+                <td id="spectator" class="playerList">
+                    {% for p in game.spectators %}
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                    {% endfor %}
+                </td>
+                {% if moderator %}
+                    <tr>
+                        <td colspan="3">&nbsp;</td>
+                        <td align="right" valign="top"><sup>(<a href="/delete_spectators/{{ game.id }}">remove
+                            spectators</a>)</sup></td>
+                    </tr>
+                {% endif %}
+        </table>
+    </div>
+    <div id="posts">
+        <hr/>
+        <div id="postList"></div>
+    </div>
+
+    <div id="updates">
+        <hr/>
+        <table class="table table-striped" border="0" cellpadding="3" cellspacing="2">
+            {% for u in updates %}
+                <tr>
+                    <td>{{ u.timestamp|timesince }} ago</td>
+                    <td>{{ u.message }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div id="tools">
+        <div id="toolsActions">
+            <h3><a href="#">Create Player List</a></h3>
+            <div>
+                Below is a list of all living players with links to their post histories that can be put
+                into an OP:<p/>
+                <textarea style="width:90%; height: 10em;" id="playerPostHistories"></textarea>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div id="dialog" title="Updating Game"></div>
 {% endblock %}

@@ -15,7 +15,7 @@ function reorder_init() {
     var limit = (lis.length - 1) * height;
     for (var i = 0; i < lis.length; i++) {
         var li = lis[i];
-        var img = document.getElementById('handle'+li.id);
+        var img = document.getElementById('handle' + li.id);
         li.style.zIndex = 1;
         Drag.init(img, li, left + 10, left + 10, top + 10, top + 10 + limit);
         li.onDragStart = startDrag;
@@ -27,7 +27,7 @@ function reorder_init() {
 function submitOrderForm() {
     var inputOrder = document.getElementsBySelector('input[name=order_]')[0];
     inputOrder.value = getOrder();
-    inputOrder.disabled=false;
+    inputOrder.disabled = false;
 }
 
 function startDrag() {
@@ -125,13 +125,13 @@ function addEvent(elm, evType, fn, useCapture)
 // cross-browser event handling for IE5+,  NS6 and Mozilla
 // By Scott Andrew
 {
-  if (elm.addEventListener){
-    elm.addEventListener(evType, fn, useCapture);
-    return true;
-  } else if (elm.attachEvent){
-    var r = elm.attachEvent("on"+evType, fn);
-    return r;
-  } else {
-    elm['on'+evType] = fn;
-  }
+    if (elm.addEventListener) {
+        elm.addEventListener(evType, fn, useCapture);
+        return true;
+    } else if (elm.attachEvent) {
+        var r = elm.attachEvent("on" + evType, fn);
+        return r;
+    } else {
+        elm['on' + evType] = fn;
+    }
 }

@@ -113,10 +113,10 @@ div.breadcrumbs {
 }
 
 .filtered .actions {
-    border-left:1px solid #DDDDDD;
-    margin-left:160px !important;
+    border-left: 1px solid #DDDDDD;
+    margin-left: 160px !important;
     border-right: 0 none;
-    margin-right:0 !important;
+    margin-right: 0 !important;
 }
 
 /* FORMS */

@@ -1,16 +1,17 @@
-from django.conf.urls import *
-from django.conf import settings
-
-from django.contrib import admin
-import votefinder.vfauth.urls
-import votefinder.main.urls
 import django.views.static
+from django.conf import settings
+from django.conf.urls import *
+from django.contrib import admin
+
+import votefinder.main.urls
+import votefinder.vfauth.urls
+
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^auth/',     include(votefinder.vfauth.urls)),
-    url(r'^admin/',    include(admin.site.urls)),
-    url(r'',           include(votefinder.main.urls)),
+    url(r'^auth/', include(votefinder.vfauth.urls)),
+    url(r'^admin/', include(admin.site.urls)),
+    url(r'', include(votefinder.main.urls)),
 ]
 
 if settings.DEBUG:
