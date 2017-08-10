@@ -1,7 +1,8 @@
 import sys, os
 
 cwd = os.getcwd()
-sys.path.insert(0, cwd + '/votefinder')
+sys.path.append(cwd)
+sys.path.append(os.path.join(cwd, 'votefinder'))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "votefinder.settings"
 

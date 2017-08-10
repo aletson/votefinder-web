@@ -58,7 +58,7 @@ $(document).ready(function() {
   		var id = $(this).attr("id");
   		location.href = '/'+action+'/'+id;
   	});
-	$('.playerList').sortable({ 
+	$('.playerList').sortable({
   		connectWith: '.playerList', items: 'div:not(.creator)',
 	  	start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
   		stop: function(event, ui) {	$(ui.item).delay(500).queue(function() { $(this).unbind('click'); }); },
