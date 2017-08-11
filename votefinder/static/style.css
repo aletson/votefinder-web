@@ -18,6 +18,19 @@ body {
     background-color: #ccc;
 }
 
+.navbar-brand {
+    font-family: 'Raleway', serif;
+}
+
+.navbar a:not(.navbar-brand) {
+    color: #636b6f;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
 .dropdown-submenu .dropdown-submenu-right {
     position: relative;
 }
