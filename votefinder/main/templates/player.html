@@ -14,7 +14,7 @@
         {% if aliases %}
             <ol>
                 {% for a in aliases %}
-                    <li>{{ a.alias }} {% if show_delete %}
+                    <li>{{ a.alias|safe }} {% if show_delete %}
                         <sup><i>(<a href="/delete_alias/{{ a.id }}">x</a>)</i></sup>{% endif %}</li>
                 {% endfor %}
             </ol>
