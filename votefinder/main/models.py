@@ -34,6 +34,8 @@ class Player(models.Model):
     name = models.CharField(max_length=255, unique=True, db_index=True)
     uid = models.IntegerField(unique=True, db_index=True)
     slug = models.SlugField()
+    last_post = models.DateTimeField(null=True, blank=True)
+    total_posts = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name

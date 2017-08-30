@@ -1,5 +1,5 @@
 import time
-
+from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 from BeautifulSoup import Comment
 from ForumPageDownloader import ForumPageDownloader
@@ -157,6 +157,10 @@ class PageParser:
 
             if not post.author in self.players:
                 self.players.append(post.author)
+            cur_player = post.author
+            cur_player.last_post = datetime.now()
+            cur_player.total_posts += 1
+            cur_player.save()
 
         if self.new_game or self.pageNumber == 1:
             defaultState = 'alive'

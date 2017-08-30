@@ -442,6 +442,8 @@ CREATE TABLE `main_player` (
   `name` varchar(255) NOT NULL,
   `uid` int(11) NOT NULL,
   `slug` varchar(50) NOT NULL,
+  `last_post` datetime NULL,
+  `total_posts` int NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `uid` (`uid`),
