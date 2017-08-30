@@ -892,7 +892,7 @@ def players_page(request, page):
        'total_games_run': "select count(*) from main_game where main_game.moderator_id=main_player.id"})[
              first_record: first_record + items_per_page]
         
-    if len(players)) == 0:
+    if len(players) == 0:
         return HttpResponseRedirect('/players')
     
     for p in players:
