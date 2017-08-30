@@ -885,18 +885,18 @@ def players_page(request, page):
 
     total_players = Player.objects.all().count()
     total_pages = int(ceil(1.0 * total_players / items_per_page))
-
+    #players = Player.objects.raw('SELECT main_player.id, main_player.name, main_player.slug, main_player.last_post, main_player.total_posts, sum(case when main_playerstate.moderator=false and main_playerstate.spectator=false then 1 else 0 end) as total_games_played, sum(case when main_game.closed=false and main_playerstate.alive=true then 1 else 0 end) as alive, sum(case when main_playerstate.moderator=true then 1 else 0 end) as total_games_run FROM main_player LEFT JOIN main_playerstate ON main_player.id = main_playerstate.player_id LEFT JOIN main_game ON main_playerstate.game_id = main_game.id WHERE main_player.uid > 0 GROUP BY main_player.name ORDER BY main_player.name ASC')
     players = Player.objects.select_related().filter(uid__gt='0').order_by("name").extra(select={
-        'alive': "select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.closed=false and main_playerstate.alive=true",
-        'last_post': "select max(timestamp) from main_post where author_id=main_player.id",
-        'total_posts': "select count(*) from main_post where main_post.author_id=main_player.id",
-        'total_games_played': "select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false",
-        'total_games_run': "select count(*) from main_game where main_game.moderator_id=main_player.id"})[
-              first_record: first_record + items_per_page]
-
-    if len(players) == 0:
+       'alive': "select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.closed=false and main_playerstate.alive=true",
+       'last_post': "select max(timestamp) from main_post where author_id=main_player.id",
+       'total_posts': "select count(*) from main_post where main_post.author_id=main_player.id",
+       'total_games_played': "select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false",
+       'total_games_run': "select count(*) from main_game where main_game.moderator_id=main_player.id"})[
+             first_record: first_record + items_per_page]
+        
+    if len(players)) == 0:
         return HttpResponseRedirect('/players')
-
+    
     for p in players:
         if p.total_games_played > 0:
             p.posts_per_game = p.total_posts / (1.0 * p.total_games_played)
