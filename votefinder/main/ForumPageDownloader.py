@@ -110,7 +110,7 @@ class ForumPageDownloader():
 
         soup = BeautifulSoup(data)
 
-        inputs = {'message': message}
+        inputs = {'message': message.encode('utf-8')}
         for i in soup.findAll('input', {'value': True}):
             inputs[i['name']] = i['value']
 
@@ -118,7 +118,7 @@ class ForumPageDownloader():
         del inputs['preview']
 
         datagen, headers = poster.encode.multipart_encode(inputs)
-        request = urllib2.Request(postUrl, datagen.encode('utf-8'), headers)
+        request = urllib2.Request(postUrl, datagen, headers)
         result = urllib2.urlopen(request).read()
 
 
