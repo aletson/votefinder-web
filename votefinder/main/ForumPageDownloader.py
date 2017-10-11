@@ -118,7 +118,7 @@ class ForumPageDownloader():
         del inputs['preview']
 
         datagen, headers = poster.encode.multipart_encode(inputs)
-        request = urllib2.Request(postUrl, datagen, headers)
+        request = urllib2.Request(postUrl, datagen.encode('utf-8'), headers)
         result = urllib2.urlopen(request).read()
 
 
