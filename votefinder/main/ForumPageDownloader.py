@@ -110,7 +110,7 @@ class ForumPageDownloader():
 
         soup = BeautifulSoup(data)
 
-        inputs = {'message': message.encode('utf-8')}
+        inputs = {'message': message}
         for i in soup.findAll('input', {'value': True}):
             inputs[i['name']] = i['value']
 
