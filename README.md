@@ -1,4 +1,6 @@
 # votefinder-web
+![Coverity Build Status](https://img.shields.io/coverity/scan/14207.svg)
+
 SA web-based vote parser
 
 
