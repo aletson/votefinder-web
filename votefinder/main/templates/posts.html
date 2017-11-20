@@ -1,8 +1,8 @@
 <div class="row">
     <div class="col-md-3">
         <div id="navigation">
-            Pages ({{ game.currentPage }}):
     <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="pagecount">Pages ({{ game.currentPage }}):</span>
         <span class="input-group-btn">
       <button type="button" onclick="javascript:loadPage(1);" class="btn btn-xs" id="firstPage"
               {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;
