@@ -209,8 +209,8 @@
     <div id="tabs">
         <ul class="nav nav-pills">
             {% if moderator %}
-                <li class="single-tab active"><a href="#moderator">Moderator</a></li>{% endif %}
-            <li class="single-tab{% if not moderator %} active{% endif %}"><a href="#votecount">Votecount</a></li>
+            <li class="single-tab ui-tabs-selected ui-state-active"><a href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab{% if not moderator %} ui-tabs-selected ui-state-active{% endif %}"><a href="#votecount">Votecount</a></li>
             <li class="single-tab"><a href="#players">Players</a></li>
             <li class="single-tab"><a href="#posts">Posts</a></li>
             <li class="single-tab"><a href="#updates">Game Updates</a></li>
