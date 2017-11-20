@@ -110,7 +110,7 @@
     {% endif %}
     $('.button').button();
     {% if moderator %}
-        $('#modActions').accordion({autoHeight: false});
+        $('#modActions').find('h3').accordion({autoHeight: false});
     {% endif %}
     $('#toolsActions').accordion({autoHeight: false});
     $("#tabs").tabs({
