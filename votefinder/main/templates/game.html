@@ -474,7 +474,14 @@
                 </td>
                 <td id="alive" class="playerList">
                     {% for p in game.living_players %}
-                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a>
+                            <select id="player-state-selector" class="form-control">
+                                <option id="mod">Moderator</option>
+                                <option id="alive" selected="selected">Alive</option>
+                                <option id="dead">Dead</option>
+                                <option id="spectator">Spectator</option>
+                            </select>
+                    </div>
                     {% endfor %}
                 </td>
                 <td id="dead" class="playerList">
