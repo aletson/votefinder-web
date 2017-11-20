@@ -51,7 +51,7 @@ body {
     margin-top: -6px;
     margin-right: -1px;
     -webkit-border-radius: 0 6px 6px 6px;
-    -mox-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px 6px;
     border-radius: 0 6px 6px 6px;
 }
 
@@ -550,4 +550,9 @@ left top, left bottom, from(#FFEFBE), to(#FEEEBD));
 /* remove halo effect in firefox   */
 a:active {
     outline: none;
+}
+
+.nav-pills > li {
+    border-radius: 8px;
+    border: 1px solid #ccc;
 }
