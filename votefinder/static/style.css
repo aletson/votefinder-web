@@ -370,12 +370,12 @@ body {
 #votecount-results {
     padding: 0.5em;
 
-/ / background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
-/ / background: -webkit-gradient(linear,
+// background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+// background: -webkit-gradient(linear,
 left top, left bottom, from(#EEDEAD), to(#FEEEBD));
-/ / filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#EEDEAD', EndColorStr = '#FEEEBD', GradientType = 0);
-/ / -moz-border-radius: 8 px;
-/ / -webkit-border-radius: 8 px;
+// filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#EEDEAD', EndColorStr = '#FEEEBD', GradientType = 0);
+// -moz-border-radius: 8 px;
+// -webkit-border-radius: 8 px;
 }
 
 .middle {
@@ -436,16 +436,16 @@ tr.instructions td.text {
 
 .mini {
     background: #ddd;
-/ / background: -moz-linear-gradient(top, #fEeEbD, #ffffd6);
-/ / background: -webkit-gradient(linear, left top, left bottom, from(#fEeEbD), to(#ffffd6));
-/ / filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#fEeEbD', EndColorStr = '#ffffd6', GradientType = 0);
+// background: -moz-linear-gradient(top, #fEeEbD, #ffffd6);
+// background: -webkit-gradient(linear, left top, left bottom, from(#fEeEbD), to(#ffffd6));
+// filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#fEeEbD', EndColorStr = '#ffffd6', GradientType = 0);
 }
 
 .big {
     background: #ccc;
-/ / background: -moz-linear-gradient(top, #ffff44, #ffffd6);
-/ / background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffff44), color-stop(1, #ffffd6));
-/ / filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#ffff44', EndColorStr = '#ffffd6', GradientType = 0);
+// background: -moz-linear-gradient(top, #ffff44, #ffffd6);
+// background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffff44), color-stop(1, #ffffd6));
+// filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#ffff44', EndColorStr = '#ffffd6', GradientType = 0);
 }
 
 .game:hover {
@@ -519,10 +519,10 @@ table.game-list thead tr {
     margin-bottom: 1em;
     width: 90%;
 
-/ / background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
-/ / background: -webkit-gradient(linear,
+// background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+// background: -webkit-gradient(linear,
 left top, left bottom, from(#FFEFBE), to(#FEEEBD));
-/ / filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#EEDEAD', EndColorStr = '#FEEEBD', GradientType = 0);
+// filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#EEDEAD', EndColorStr = '#FEEEBD', GradientType = 0);
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
 }
@@ -550,12 +550,4 @@ left top, left bottom, from(#FFEFBE), to(#FEEEBD));
 /* remove halo effect in firefox   */
 a:active {
     outline: none;
-}
-
-.single-tab {
-    background-color: #eeeeee;
-}
-
-.single-tab:hover {
-    background-color: #cccccc;
 }
