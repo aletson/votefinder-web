@@ -1,22 +1,31 @@
 <div id="navigation">
     Pages ({{ game.currentPage }}):
-    <button type="button" onclick="javascript:loadPage(1);" class="btn btn-sm" id="firstPage"
-            {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;
-    </button>
-    <button type="button" onclick="javascript:loadPage({{ prevPage }});" class="btn btn-sm" id="prevPage"
-            {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="Previous Page">&lsaquo;
-    </button>
-    {% spaceless %}<select id="pageJump">
-        {% for p in pageNumbers %}
-            <option value="{{ p }}" {% ifequal p page %}selected="selected"{% endifequal %}>{{ p }}</option>
-        {% endfor %}
-    </select>{% endspaceless %}
-    <button type="button" onclick="javascript:loadPage({{ nextPage }});" class="btn btn-sm" id="nextPage"
-            {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %}
-    " title="Next Page">&rsaquo;</button>
-    <button type="button" onclick="javascript:loadPage({{ game.maxPages }});" class="btn btn-sm" id="lastPage"
-            {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;
-    </button>
+    <div class="input-group input-group-sm">
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage(1);" class="btn btn-xs" id="firstPage"
+              {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;
+      </button>
+        </span>
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ prevPage }});" class="btn btn-xs" id="prevPage"
+              {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="Previous Page">&lsaquo;
+      </button>
+        </span>
+      {% spaceless %}<select id="pageJump" class="form-control">
+          {% for p in pageNumbers %}
+              <option value="{{ p }}" {% ifequal p page %}selected="selected"{% endifequal %}>{{ p }}</option>
+          {% endfor %}
+      </select>{% endspaceless %}
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ nextPage }});" class="btn btn-xs" id="nextPage"
+              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Next Page">&rsaquo;</button>
+      </span>
+      <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ game.maxPages }});" class="btn btn-xs" id="lastPage"
+              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;
+      </button>
+      </span>
+    </div>
 </div>
 {% spaceless %}
     <p/>
