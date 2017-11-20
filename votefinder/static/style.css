@@ -552,6 +552,10 @@ a:active {
     outline: none;
 }
 
-#tabs li {
+.single-tab {
     background-color: #eeeeee;
+}
+
+.single-tab:hover {
+    background-color: #cccccc;
 }
