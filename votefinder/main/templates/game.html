@@ -221,17 +221,20 @@
             <div id="moderator">
                 <div id="modActions">
                     {% if game.closed %}
+                    <div class="well">
                         <h3><a href="#">Add This Game to the Wiki!</a></h3>
                         <div>
                             This game is over and you're the moderator! Have you added it to the <a
                                 href="http://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed
                             Games List</a>? <b>It's your responsibility!</b> Here is some sample wiki code you can use.
-                            Just edit in the winning team:</p>
+                            Just edit in the winning team:</div>
 
                             <p><textarea rows="2"
                                          cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
                             </p>
                         </div>
+                </div>
+                <div class="well">
 
                         <h3><a href="#">Re-Open Game</a></h3>
                         <div>
@@ -240,9 +243,11 @@
                                 to re-open it, just press the link below.</p>
                             <a href="/reopen_game/{{ game.id }}" class="button">Re-Open it!</a>
                         </div>
+                </div>
                     {% else %}
 
 
+                <div class="well">
                         <h3><a href="#">Set a Deadline</a></h3>
                         <div>
                             {% if game.deadline %}
@@ -275,8 +280,10 @@
                             <button type="button" id="submitNewDeadline" class="button">Set!</button>
                             <span id="deadlineStatus"></span>
                         </div>
+                </div>
 
                         {% if user.is_superuser %}
+                <div class="well">
                             <h3><a href="#">Send PMs</a></h3>
                             <div>
                                 Votefinder can let you send out individual PMs to living players in the game, to
@@ -285,8 +292,9 @@
 
                                 <a href="/sendpms/{{ game.slug }}">Click here to access the PM page.</a>
                             </div>
+                </div>
                         {% endif %}
-
+                <div class="well">
                         <h3><a href="#">Game Options</a></h3>
                         <div>
                             {% if game.post_lynches %}
@@ -309,7 +317,9 @@
                                 <a href="/ecco_mode/{{ game.id }}/on">Click here to enable it</a>.
                             {% endif %}
                         </div>
+                </div>
 
+                <div class="well">
                         <h3><a href="#">Change the Template</a></h3>
                         <div>
                             <p>To change the template this game is using, just select it from the dropdown box.</p>
@@ -320,12 +330,14 @@
                                         {% if game.template == t or game.template == None and t.system_default %}
                                         selected="selected"{% endif %}>
                                     {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator }}
-                                        ){% endifnotequal %}</div>
+                                        ){% endifnotequal %}</option>
                             {% endfor %}
                         </select>
                         <button type="button" id="submitTemplate" class="button">Change!</button>
                         </div>
-
+        </div>
+        
+        <div class="well">
                         <h3><a href="#">Add a Votecount Comment</a></h3>
                         <div>
                             <p>If you add a comment here, it will be visible to anyone viewing the votecount
@@ -343,6 +355,9 @@
                                 </table>
                             </form>
                         </div>
+        </div>
+        
+        <div class="well">
                         <h3><a href="#">Start a New Day</a></h3>
                         <div>
                             <p>To start a new day beginning right now, just press the button below. This will cause the
@@ -352,8 +367,11 @@
                             <label for="dayNumber">Day number:
                                 <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
                                 <button type="button" id="submitNewDay" class="button">Begins Now!</button>
-                                <span id="newDayStatus"></span>
+                                <span id="newDayStatus"></span></label>
                         </div>
+            </div>
+            
+            <div class="well">
                         <h3><a href="#">Add/Change Manual Votes</a></h3>
                         <div>
                             <p>To change manual votes, add or remove them from the list below. Note: manual votes will
@@ -376,7 +394,7 @@
                             <select name="addVotePlayer" id="addVotePlayer">
                                 <option value="-1" selected="selected">Anonymous</option>
                                 {% for p in game.living_players %}
-                                    <option value="{{ p.player.id }}">{{ p.player|safe }}</div>
+                                    <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
                                 {% endfor %}
                         </select>
                         <select name="addVoteType" id="addVoteType">
@@ -386,11 +404,13 @@
                         <select name="addVoteTarget" id="addVoteTarget">
                             {% for p in game.living_players %}
                                 <option value="{{ p.player.id }}" {% if forloop.first %}selected="selected"{% endif %}>
-                                {{ p.player|safe }}</div>
+                                {{ p.player|safe }}</option>
                             {% endfor %}
                         </select>
                         <button type="button" class="button" id="submitAddVote">Go</button>
                         </div>
+</div>
+<div class="well">
                         <h3><a href="#">Replace a Player</a></h3>
                         <div>
                             <p>To replace a player, just select who is going out and who is coming in.</p>
@@ -401,7 +421,7 @@
                                     <td>
                                         <select name="replacePlayer" id="replacePlayer">
                                             {% for p in game.living_players %}
-                                                <option value="{{ p.player.id }}">{{ p.player|safe }}</div>
+                                                <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
                                             {% endfor %}
                         </select>
                         </td>
@@ -428,6 +448,9 @@
 
 
                         </div>
+</div>
+
+<div class="well">
                         <h3><a href="#">Close the Game</a></h3>
                         <div>
                             <p>Closing the game will move it out of the list of currently tracked games on the main
@@ -436,6 +459,7 @@
 
                             <a href="/close_game/{{ game.id }}" class="button">Close Game!</a>
                         </div>
+</div>
                     {% endif %}
             </div>
             </div>
