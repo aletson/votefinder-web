@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import *
 from django.http import HttpResponseRedirect
 from django.template.context_processors import csrf
+from django.shortcuts import render
 
 from votefinder.vfauth.models import *
 
