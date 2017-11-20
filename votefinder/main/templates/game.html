@@ -110,7 +110,7 @@
     {% endif %}
     $('.button').button();
     {% if moderator %}
-        $('#modActions').find('.well').accordion({autoHeight: false});
+        $('.collapse').collapse();
     {% endif %}
     $('#toolsActions').accordion({autoHeight: false});
     $("#tabs").tabs({
@@ -219,11 +219,18 @@
         <hr />
         {% if moderator %}
             <div id="moderator">
-                <div id="modActions">
                     {% if game.closed %}
-                    <div class="well">
-                        <h3><a href="#">Add This Game to the Wiki!</a></h3>
-                        <div>
+                <div class="panel-group" id="moderator-closed-game-accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="moderator-add-wiki-heading">
+                        <h3 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#moderator-closed-game-accordion" href="#moderator-add-wiki-collapse" aria-expanded="true" aria-controls="moderator-add-wiki-collapse">
+                            Add This Game to the Wiki!
+                            </a>
+                            </h3>
+                        </div>
+                        <div id="moderator-add-wiki-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-add-wiki-heading">
+                            <div class="panel-body">
                             This game is over and you're the moderator! Have you added it to the <a
                                 href="http://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed
                             Games List</a>? <b>It's your responsibility!</b> Here is some sample wiki code you can use.
@@ -233,17 +240,27 @@
                                          cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
                             </p>
                         </div>
+                    </div>
                 </div>
-                <div class="well">
-
-                        <h3><a href="#">Re-Open Game</a></h3>
-                        <div>
+                <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="moderator-reopen-heading">
+                        <h3 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#moderator-reopen-accordion" href="#moderator-reopen-collapse" aria-expanded="false" aria-controls="moderator-add-wiki-collapse">
+                                Re-Open Game
+                            </a>
+                            </h3>
+                    </div>
+                    
+                        <div id="moderator-reopen-collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="moderator-reopen-heading">
+                            <div class="panel-body">
                             <p>This game is currently closed. It's not being tracked and can't be modified or updated.
                                 If you'd like
                                 to re-open it, just press the link below.</p>
                             <a href="/reopen_game/{{ game.id }}" class="button">Re-Open it!</a>
                         </div>
                 </div>
+                </div>
+        </div>
                     {% else %}
 
 
@@ -461,7 +478,6 @@
                         </div>
 </div>
                     {% endif %}
-            </div>
             </div>
 
         {% endif %}
