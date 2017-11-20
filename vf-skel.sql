@@ -443,7 +443,7 @@ CREATE TABLE `main_player` (
   `uid` int(11) NOT NULL,
   `slug` varchar(50) NOT NULL,
   `last_post` datetime NULL,
-  `total_posts` int NULL,
+  `total_posts` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `uid` (`uid`),
