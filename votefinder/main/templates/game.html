@@ -164,12 +164,12 @@
 {% block content %}
     <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
     <div class="btn-group">
-        <a class="btn btn-sm" title="Open Thread" target="_blank"
+        <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
            href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}" id="liveThread"><i class="fa fa-link"></i></a>
         {% if not game.closed %}
-            <a title="Votecount Image" class="button btn btn-sm" id="voteImgButton"><i class="fa fa-image"></i></a>
-            <a title="Update" href="#" id="updateButton" class="btn btn-sm"><i class="fa fa-refresh"></i></a>
-            <a title="Vote Chart" class="button btn btn-sm" href="/votechart/{{ game.slug }}"><i class="fa fa-bar-chart"></i></a>
+            <a title="Votecount Image" class="button btn btn-sm btn-default" id="voteImgButton"><i class="fa fa-image"></i></a>
+            <a title="Update" href="#" id="updateButton" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i></a>
+            <a title="Vote Chart" class="button btn btn-sm btn-default" href="/votechart/{{ game.slug }}"><i class="fa fa-bar-chart"></i></a>
         {% endif %}
     </div>
     <hr>
