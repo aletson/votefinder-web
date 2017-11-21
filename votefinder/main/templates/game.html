@@ -574,7 +574,7 @@
             <form id="addPlayerForm" action="/add_player/{{ game.id }}" method="post">{% csrf_token %}
                 <label for="addPlayer">Add Player:</label>
                 {{ form.name }}
-                <input id="submitAddPlayer" type="submit" value="Add"/>
+                <input id="submitAddPlayer" type="submit" class="btn btn-primary" value="Add"/>
             </form>
             <p></p>
         {% endif %}
