@@ -121,9 +121,7 @@
     }
     else if ( ui.panel.id == "posts") { loadPage({{ game.currentPage }});     }
     else if ( ui.panel.id == "tools") {
-    $.get('/post_histories/{{ game.id }}', function(data) {
-    $('#playerPostHistories').html(data);
-    });
+    $('#playerPostHistories').load('/post_histories/{{ game.id }}');
     }
     }
     });
