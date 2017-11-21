@@ -37,7 +37,10 @@
         function updateGame() {
             var page = (curPage < maxPages) ? curPage + 1 : curPage;
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
-            $('#dialog').modal('show');
+	
+            if(!$('#myModal').hasClass('in')){
+                $('#dialog').modal('show');
+            }
             $.getJSON('/update/{{ game.id }}/', dataReceived);
         }
         $('#voteImgButton').click(function() {
