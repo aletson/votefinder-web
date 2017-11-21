@@ -140,10 +140,6 @@
         })
         .on('click', '#bbcode', function(obj) {
             $('#bbcode').select();
-        })
-        .on('click', '.single-tab', function() { //remove after migrating completely off jquery tabs
-            $('.single-tab').removeClass('active');
-            $(this).addClass('active');
         });
 {% endblock %}
 {% block content %}
@@ -562,7 +558,7 @@
                     {% endif %}
 
         {% endif %}
-    <div id="votecount" class="tab-pane fade{% if not moderator %} active{% endif %}">
+    <div id="votecount" class="tab-pane fade{% if not moderator %} in active{% endif %}">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
