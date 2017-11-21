@@ -18,7 +18,6 @@
             updateGame(); return false;
         });
         function dataReceived(data) {
-            $('#dialog').modal('hide');
             if (data.success) {
                 curPage = parseInt(data.curPage);
                 maxPages = parseInt(data.maxPages);
@@ -26,7 +25,8 @@
 
                 if (curPage < maxPages) {
                     updateGame();
-                } else {
+                } else {				       
+                    $('#dialog').modal('hide');
                     location.href="{{ game.get_absolute_url }}#votecount";
                     location.reload();
                 }
