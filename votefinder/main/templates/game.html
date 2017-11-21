@@ -352,21 +352,21 @@
         <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
             <div class="panel-body">
                 {% if game.post_lynches %}
-                Posting of executions is enabled.  Votefinder will post in the thread when it sees a majority-vote execution
+                Posting of executions is <b>enabled</b>.  Votefinder will post in the thread when it sees a majority-vote execution
                 happen.
                 <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
-                Posting of executions is disabled.  Votefinder will NOT post in the thread when it sees a
+                Posting of executions is <b>disabled</b>.  Votefinder will NOT post in the thread when it sees a
                 majority-vote execution happen.
                 <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
                 <br/><br/>
                 {% if game.ecco_mode %}
-                Ecco Mode is enabled. Votefinder will not process votes of players who are already
+                Ecco Mode is <b>enabled</b>. Votefinder will not process votes of players who are already
                 voting.
                 <a href="/ecco_mode/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
-                Ecco Mode is disabled. Votefinder will automatically change votes of players already
+                Ecco Mode is <b>disabled</b>. Votefinder will automatically change votes of players already
                 voting.
                 <a href="/ecco_mode/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
