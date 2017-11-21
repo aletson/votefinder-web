@@ -256,7 +256,7 @@
                             <p>This game is currently closed. It's not being tracked and can't be modified or updated.
                                 If you'd like
                                 to re-open it, just press the link below.</p>
-                            <a href="/reopen_game/{{ game.id }}" class="button">Re-Open it!</a>
+                            <a href="/reopen_game/{{ game.id }}" class="button btn btn-default">Re-Open it!</a>
                         </div>
                 </div>
                 </div>
@@ -306,7 +306,7 @@
                 </select>
 
                 <br/>
-                <button type="button" id="submitNewDeadline" class="button">Set!</button>
+                <button type="button" id="submitNewDeadline" class="button btn btn-default">Set!</button>
                 <span id="deadlineStatus"></span>
 
             </div>
@@ -333,7 +333,7 @@
                 distribute roles or
                 night results or really anything else.<p>
 
-                <a href="/sendpms/{{ game.slug }}">Click here to access the PM page.</a>
+                <a href="/sendpms/{{ game.slug }}" class="btn btn-default">Access PMs</a>
             </div>
         </div>
     </div>
@@ -352,23 +352,23 @@
         <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
             <div class="panel-body">
                 {% if game.post_lynches %}
-                Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch
+                Posting of executions is enabled.  Votefinder will post in the thread when it sees a majority-vote execution
                 happen.
-                <a href="/post_lynches/{{ game.id }}/off">Click here to disable it</a>.
+                <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
-                Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a
-                lynch happen.
-                <a href="/post_lynches/{{ game.id }}/on">Click here to enable it</a>.
+                Posting of executions is disabled.  Votefinder will NOT post in the thread when it sees a
+                majority-vote execution happen.
+                <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
                 <br/><br/>
                 {% if game.ecco_mode %}
                 Ecco Mode is enabled. Votefinder will not process votes of players who are already
                 voting.
-                <a href="/ecco_mode/{{ game.id }}/off">Click here to disable it</a>.
+                <a href="/ecco_mode/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
                 Ecco Mode is disabled. Votefinder will automatically change votes of players already
                 voting.
-                <a href="/ecco_mode/{{ game.id }}/on">Click here to enable it</a>.
+                <a href="/ecco_mode/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
             </div>
         </div>
@@ -396,7 +396,7 @@
                     ){% endifnotequal %}</option>
                 {% endfor %}
             </select>
-                <button type="button" id="submitTemplate" class="button">Change!</button>
+                <button type="button" id="submitTemplate" class="button btn btn-default">Change!</button>
             </div>
         </div>
     </div>
@@ -422,7 +422,7 @@
                         </tr>
                         <tr>
                             <td colspan="2" align="right"><input type="submit" value="Add Comment"
-                                                                 id="submitAddComment" class="button"/></td>
+                                                                 id="submitAddComment" class="button btn btn-default"/></td>
                         </tr>
                     </table>
                 </form>
@@ -447,7 +447,8 @@
 
                 <label for="dayNumber">Day number:
                     <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
-                    <button type="button" id="submitNewDay" class="button">Begins Now!</button>
+                    <button type="button" id="submitNewDay" class="button btn btn-default">Begins Now!</button>
+                    <!-- TODO input group -->
                     <span id="newDayStatus"></span></label>
             </div>
         </div>
@@ -497,7 +498,7 @@
                         {{ p.player|safe }}</option>
                     {% endfor %}
                 </select>
-                <button type="button" class="button" id="submitAddVote">Go</button>
+                <button type="button" class="button btn btn-default" id="submitAddVote">Go</button>
             </div>
         </div>
     </div>
@@ -540,7 +541,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" align="right">
-                            <button type="button" id="submitReplacePlayer" class="button">Go!</button>
+                            <button type="button" id="submitReplacePlayer" class="button btn btn-default">Go!</button>
                         </td>
                     </tr>
                 </table>
@@ -565,7 +566,7 @@
                     page, and will prevent
                     anyone from refreshing the votecount.</p>
 
-                <a href="/close_game/{{ game.id }}" class="button">Close Game!</a>
+                <a href="/close_game/{{ game.id }}" class="button btn btn-default">Close Game!</a>
             </div>
         </div>
     </div>
