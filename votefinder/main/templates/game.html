@@ -112,31 +112,15 @@
         {% if moderator %}
         $('.collapse').collapse();
         {% endif %}
-        $("#tabs").tabs({
-            show: function(event,ui) {
-                console.log('Load event fired!');
-                if (ui.panel.id == "votecount") {
-                    $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
-                        $('.button').button();
-                    });
-                }
-                else if ( ui.panel.id == "posts") { loadPage({{ game.currentPage }});     }
-            },
-            select: function(event, ui) {
-                console.log('Event fired!');
-                if ( ui.panel.id == "tools") {
-                    $.get('/post_histories/{{ game.id }}', function(data) {
-                        $('#playerPostHistories').html(data);
-                    });
-                }
-            }
-        });
         $('#pageJump').on('change', function(obj) {
             loadPage($(this).val());
         });
         $('#refreshbutton').button();
         $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
             $('.button').button();
+        });
+        $.get('/post_histories/{{ game.id }}', function(data) {
+            $('#playerPostHistories').html(data);
         });
         loadPage({{ game.currentPage }});
     })
