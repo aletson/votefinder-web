@@ -12,7 +12,7 @@
         var curPage = {{ game.currentPage }};
         var maxPages = {{ game.maxPages }};
         var pushed = false;
-        $('#dialog').modal();
+        $('#dialog').modal('hide');
         $('#liveThread').button();
         $('#updateButton').button().click(function() {
             updateGame(); return false;
