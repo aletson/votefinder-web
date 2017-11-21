@@ -12,13 +12,13 @@
         var curPage = {{ game.currentPage }};
         var maxPages = {{ game.maxPages }};
         var pushed = false;
-        $('#dialog').dialog({modal: true, autoOpen: false});
+        $('#dialog').modal();
         $('#liveThread').button();
         $('#updateButton').button().click(function() {
             updateGame(); return false;
         });
         function dataReceived(data) {
-            $('#dialog').dialog("close");
+            $('#dialog').modal('hide');
             if (data.success) {
                 curPage = parseInt(data.curPage);
                 maxPages = parseInt(data.maxPages);
@@ -36,8 +36,8 @@
         }
         function updateGame() {
             var page = (curPage < maxPages) ? curPage + 1 : curPage;
-            $("#dialog").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
-            $('#dialog').dialog("open");
+            $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
+            $('#dialog').modal('show');
             $.getJSON('/update/{{ game.id }}/', dataReceived);
         }
         $('#voteImgButton').click(function() {
@@ -643,5 +643,18 @@
         </div>
     </div>
     </div>
-    <div id="dialog" title="Updating Game"></div>
+<!-- DIALOG MODAL FOR MANUAL UPDATE -->
+    <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-label">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="dialog-label">Updating Game</h4>
+              </div>
+          <div class="modal-body" id="dialog-content">
+              </div>
+          </div>
+        </div>
+    </div>
+
 {% endblock %}
