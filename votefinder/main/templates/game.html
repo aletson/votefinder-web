@@ -263,220 +263,314 @@
         </div>
                     {% else %}
 
+<div class="panel-group" id="moderator-open-game-accordion" role="tablist" aria-multiselectable="true">
 
-                <div class="well">
-                        <h3><a href="#">Set a Deadline</a></h3>
-                        <div>
-                            {% if game.deadline %}
-                                The current deadline for day {{ gameday.dayNumber }} is:
-                            {% else %}
-                                No deadline is currently set for day {{ gameday.dayNumber }}.  <p/>Set it now:
-                            {% endif %}
-                            <input type="text" size="5" id="deadlineDate" value="{{ deadline|date:"m/d/Y" }}">
-                            at <input type="text" size="2" maxlength="2" id="deadlineHour"
-                                      value="{{ deadline|time:"h" }}">
-                            : <input type="text" size="2" maxlength="2" id="deadlineMinute"
-                                     value="{{ deadline|time:"i" }}">
-                            <select name="ampm" id="deadlineAmPm">
-                                <option value="AM"{% ifequal deadline|time:"A" "AM" %}
-                                        selected="selected"{% endifequal %}>AM
-                                </option>
-                                <option value="PM"{% ifequal deadline|time:"A" "PM" %}
-                                        selected="selected"{% endifequal %}>PM
-                                </option>
-                            </select>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-set-deadline-heading">
 
-                            <select name="timezone" id="timezone">
-                                {% for t in common_timezones %}
-                                    <option value="{{ t }}"
-                                            {% ifequal t timezone %}selected="selected"{% endifequal %}>{{ t }}</option>
-                                {% endfor %}
-                            </select>
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-set-deadline-collapse" aria-expanded="true" aria-controls="moderator-set-deadline-collapse">
 
-                            <br/>
-                            <button type="button" id="submitNewDeadline" class="button">Set!</button>
-                            <span id="deadlineStatus"></span>
-                        </div>
-                </div>
+                    Set a Deadline
 
-                        {% if user.is_superuser %}
-                <div class="well">
-                            <h3><a href="#">Send PMs</a></h3>
-                            <div>
-                                Votefinder can let you send out individual PMs to living players in the game, to
-                                distribute roles or
-                                night results or really anything else.<p>
-
-                                <a href="/sendpms/{{ game.slug }}">Click here to access the PM page.</a>
-                            </div>
-                </div>
-                        {% endif %}
-                <div class="well">
-                        <h3><a href="#">Game Options</a></h3>
-                        <div>
-                            {% if game.post_lynches %}
-                                Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch
-                                happen.
-                                <a href="/post_lynches/{{ game.id }}/off">Click here to disable it</a>.
-                            {% else %}
-                                Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a
-                                lynch happen.
-                                <a href="/post_lynches/{{ game.id }}/on">Click here to enable it</a>.
-                            {% endif %}
-                            <br/><br/>
-                            {% if game.ecco_mode %}
-                                Ecco Mode is enabled. Votefinder will not process votes of players who are already
-                                voting.
-                                <a href="/ecco_mode/{{ game.id }}/off">Click here to disable it</a>.
-                            {% else %}
-                                Ecco Mode is disabled. Votefinder will automatically change votes of players already
-                                voting.
-                                <a href="/ecco_mode/{{ game.id }}/on">Click here to enable it</a>.
-                            {% endif %}
-                        </div>
-                </div>
-
-                <div class="well">
-                        <h3><a href="#">Change the Template</a></h3>
-                        <div>
-                            <p>To change the template this game is using, just select it from the dropdown box.</p>
-
-                            New template: <select name="template" id="templates">
-                            {% for t in templates %}
-                                <option value="{{ t.id }}"
-                                        {% if game.template == t or game.template == None and t.system_default %}
-                                        selected="selected"{% endif %}>
-                                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator }}
-                                        ){% endifnotequal %}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="button" id="submitTemplate" class="button">Change!</button>
-                        </div>
+                </a>
+            </h3>
         </div>
-        
-        <div class="well">
-                        <h3><a href="#">Add a Votecount Comment</a></h3>
-                        <div>
-                            <p>If you add a comment here, it will be visible to anyone viewing the votecount
-                                at any time.</p>
-                            <form action="/add_comment/{{ game.id }}" method="post">{% csrf_token %}
-                                <table border="0" cellpadding="5" cellspacing="0">
-                                    <tr>
-                                        <td valign="top">Comment:</td>
-                                        <td>{{ comment_form.comment }}
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" align="right"><input type="submit" value="Add Comment"
-                                                                             id="submitAddComment" class="button"/></td>
-                                    </tr>
-                                </table>
-                            </form>
-                        </div>
-        </div>
-        
-        <div class="well">
-                        <h3><a href="#">Start a New Day</a></h3>
-                        <div>
-                            <p>To start a new day beginning right now, just press the button below. This will cause the
-                                most
-                                recent post that VoteFinder knows about to be marked as the start of a new day.</p>
+        <div id="moderator-set-deadline-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-set-deadline-heading">
+            <div class="panel-body">
 
-                            <label for="dayNumber">Day number:
-                                <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
-                                <button type="button" id="submitNewDay" class="button">Begins Now!</button>
-                                <span id="newDayStatus"></span></label>
-                        </div>
+                {% if game.deadline %}
+                The current deadline for day {{ gameday.dayNumber }} is:
+                {% else %}
+                No deadline is currently set for day {{ gameday.dayNumber }}.  <p/>Set it now:
+                {% endif %}
+                <input type="text" size="5" id="deadlineDate" value="{{ deadline|date:"m/d/Y" }}">
+                at <input type="text" size="2" maxlength="2" id="deadlineHour"
+                          value="{{ deadline|time:"h" }}">
+                : <input type="text" size="2" maxlength="2" id="deadlineMinute"
+                         value="{{ deadline|time:"i" }}">
+                <select name="ampm" id="deadlineAmPm">
+                    <option value="AM"{% ifequal deadline|time:"A" "AM" %}
+                    selected="selected"{% endifequal %}>AM
+                    </option>
+                    <option value="PM"{% ifequal deadline|time:"A" "PM" %}
+                    selected="selected"{% endifequal %}>PM
+                    </option>
+                </select>
+
+                <select name="timezone" id="timezone">
+                    {% for t in common_timezones %}
+                    <option value="{{ t }}"
+                            {% ifequal t timezone %}selected="selected"{% endifequal %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+
+                <br/>
+                <button type="button" id="submitNewDeadline" class="button">Set!</button>
+                <span id="deadlineStatus"></span>
+
             </div>
-            
-            <div class="well">
-                        <h3><a href="#">Add/Change Manual Votes</a></h3>
-                        <div>
-                            <p>To change manual votes, add or remove them from the list below. Note: manual votes will
-                                always be
-                                applied AFTER current votes in the thread, and there will be no sanity
-                                checking done on these votes. So if you make the same user vote 3 different people, he
-                                will appear in
-                                the votecount as voting all of them (unvotes will not be assumed).</p>
-                            <ul>{% for v in manual_votes %}
-                                {% if v.unvote %}
-                                    <li>{{ v.author }} unvotes <sup>(<a href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
-                                {% else %}
-                                    <li>{{ v.author }} votes {{ v.target }} <sup>(<a
-                                            href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
-                                {% endif %}
-                            {% empty %}
-                                <li><i>No manual votes defined.</i></li>
-                            {% endfor %}</ul>
-                            Add a new vote:
-                            <select name="addVotePlayer" id="addVotePlayer">
-                                <option value="-1" selected="selected">Anonymous</option>
+        </div>
+    </div>
+
+
+
+
+    {% if user.is_superuser %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-send-pm-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-send-pm-collapse" aria-expanded="true" aria-controls="moderator-send-pm-collapse">
+                    Send PMs
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-send-pm-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-send-pm-heading">
+            <div class="panel-body">
+
+                Votefinder can let you send out individual PMs to living players in the game, to
+                distribute roles or
+                night results or really anything else.<p>
+
+                <a href="/sendpms/{{ game.slug }}">Click here to access the PM page.</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-game-options-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-game-options-collapse" aria-expanded="true" aria-controls="moderator-game-options-collapse">
+                    Game Options
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
+            <div class="panel-body">
+                {% if game.post_lynches %}
+                Posting of lynches is enabled.  Votefinder will post in the thread when it sees a lynch
+                happen.
+                <a href="/post_lynches/{{ game.id }}/off">Click here to disable it</a>.
+                {% else %}
+                Posting of lynches is disabled.  Votefinder will NOT post in the thread when it sees a
+                lynch happen.
+                <a href="/post_lynches/{{ game.id }}/on">Click here to enable it</a>.
+                {% endif %}
+                <br/><br/>
+                {% if game.ecco_mode %}
+                Ecco Mode is enabled. Votefinder will not process votes of players who are already
+                voting.
+                <a href="/ecco_mode/{{ game.id }}/off">Click here to disable it</a>.
+                {% else %}
+                Ecco Mode is disabled. Votefinder will automatically change votes of players already
+                voting.
+                <a href="/ecco_mode/{{ game.id }}/on">Click here to enable it</a>.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-change-template-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-change-template-collapse" aria-expanded="true" aria-controls="moderator-change-template-collapse">
+                    Change the Template
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-change-template-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-change-template-heading">
+            <div class="panel-body">
+                <p>To change the template this game is using, just select it from the dropdown box.</p>
+
+                New template: <select name="template" id="templates">
+                {% for t in templates %}
+                <option value="{{ t.id }}"
+                        {% if game.template == t or game.template == None and t.system_default %}
+                        selected="selected"{% endif %}>
+                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator }}
+                    ){% endifnotequal %}</option>
+                {% endfor %}
+            </select>
+                <button type="button" id="submitTemplate" class="button">Change!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-votecount-comment-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-votecount-comment-collapse" aria-expanded="true" aria-controls="moderator-votecount-comment-collapse">
+                    Add a Votecount Comment
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-votecount-comment-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-votecount-comment-heading">
+            <div class="panel-body">
+                <p>If you add a comment here, it will be visible to anyone viewing the votecount
+                    at any time.</p>
+                <form action="/add_comment/{{ game.id }}" method="post">{% csrf_token %}
+                    <table border="0" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <td valign="top">Comment:</td>
+                            <td>{{ comment_form.comment }}
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="right"><input type="submit" value="Add Comment"
+                                                                 id="submitAddComment" class="button"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-new-day-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-new-day-collapse" aria-expanded="true" aria-controls="moderator-new-day-collapse">
+                    Start a New Day
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-new-day-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-new-day-heading">
+            <div class="panel-body">
+                <p>To start a new day beginning right now, just press the button below. This will cause the
+                    most
+                    recent post that VoteFinder knows about to be marked as the start of a new day.</p>
+
+                <label for="dayNumber">Day number:
+                    <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
+                    <button type="button" id="submitNewDay" class="button">Begins Now!</button>
+                    <span id="newDayStatus"></span></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-manual-votes-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-manual-votes-collapse" aria-expanded="true" aria-controls="moderator-manual-votes-collapse">
+                    Add/Change Manual Votes
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-manual-votes-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-manual-votes-heading">
+            <div class="panel-body">
+                <p>To change manual votes, add or remove them from the list below. Note: manual votes will
+                    always be
+                    applied AFTER current votes in the thread, and there will be no sanity
+                    checking done on these votes. So if you make the same user vote 3 different people, he
+                    will appear in
+                    the votecount as voting all of them (unvotes will not be assumed).</p>
+                <ul>{% for v in manual_votes %}
+                    {% if v.unvote %}
+                    <li>{{ v.author }} unvotes <sup>(<a href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
+                    {% else %}
+                    <li>{{ v.author }} votes {{ v.target }} <sup>(<a
+                            href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
+                    {% endif %}
+                    {% empty %}
+                    <li><i>No manual votes defined.</i></li>
+                    {% endfor %}</ul>
+                Add a new vote:
+                <select name="addVotePlayer" id="addVotePlayer">
+                    <option value="-1" selected="selected">Anonymous</option>
+                    {% for p in game.living_players %}
+                    <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
+                    {% endfor %}
+                </select>
+                <select name="addVoteType" id="addVoteType">
+                    <option value="votes" selected="selected">votes</option>
+                    <option value="unvotes">unvotes</option>
+                </select>
+                <select name="addVoteTarget" id="addVoteTarget">
+                    {% for p in game.living_players %}
+                    <option value="{{ p.player.id }}" {% if forloop.first %}selected="selected"{% endif %}>
+                        {{ p.player|safe }}</option>
+                    {% endfor %}
+                </select>
+                <button type="button" class="button" id="submitAddVote">Go</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-replace-player-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-replace-player-collapse" aria-expanded="true" aria-controls="moderator-replace-player-collapse">
+                    Replace a Player
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-replace-player-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-replace-player-heading">
+            <div class="panel-body">
+                <p>To replace a player, just select who is going out and who is coming in.</p>
+
+                <table>
+                    <tr>
+                        <td align="right">The player:</td>
+                        <td>
+                            <select name="replacePlayer" id="replacePlayer">
                                 {% for p in game.living_players %}
-                                    <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
+                                <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
                                 {% endfor %}
-                        </select>
-                        <select name="addVoteType" id="addVoteType">
-                            <option value="votes" selected="selected">votes</option>
-                            <option value="unvotes">unvotes</option>
-                        </select>
-                        <select name="addVoteTarget" id="addVoteTarget">
-                            {% for p in game.living_players %}
-                                <option value="{{ p.player.id }}" {% if forloop.first %}selected="selected"{% endif %}>
-                                {{ p.player|safe }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="button" class="button" id="submitAddVote">Go</button>
-                        </div>
-</div>
-<div class="well">
-                        <h3><a href="#">Replace a Player</a></h3>
-                        <div>
-                            <p>To replace a player, just select who is going out and who is coming in.</p>
-
-                            <table>
-                                <tr>
-                                    <td align="right">The player:</td>
-                                    <td>
-                                        <select name="replacePlayer" id="replacePlayer">
-                                            {% for p in game.living_players %}
-                                                <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
-                                            {% endfor %}
-                        </select>
+                            </select>
                         </td>
-                        </tr>
-                        <tr>
-                            <td align="right">is replaced by:</td>
-                            <td><input type="text" id="incomingPlayerName" name="incomingPlayerName"></td>
-                        </tr>
-                        <tr>
-                            <td align="right" valign="top">and:</td>
-                            <td>
-                                <input type="radio" name="clearVotes" value="true" checked="checked"/> <b>clear all
-                                votes</b> for or by the outgoing player, or<br/>
-                                <input type="radio" name="clearVotes" value="false"/> <b>keep all votes</b> and transfer
-                                them to the incoming player
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" align="right">
-                                <button type="button" id="submitReplacePlayer" class="button">Go!</button>
-                            </td>
-                        </tr>
-                        </table>
+                    </tr>
+                    <tr>
+                        <td align="right">is replaced by:</td>
+                        <td><input type="text" id="incomingPlayerName" name="incomingPlayerName"></td>
+                    </tr>
+                    <tr>
+                        <td align="right" valign="top">and:</td>
+                        <td>
+                            <input type="radio" name="clearVotes" value="true" checked="checked"/> <b>clear all
+                            votes</b> for or by the outgoing player, or<br/>
+                            <input type="radio" name="clearVotes" value="false"/> <b>keep all votes</b> and transfer
+                            them to the incoming player
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="right">
+                            <button type="button" id="submitReplacePlayer" class="button">Go!</button>
+                        </td>
+                    </tr>
+                </table>
 
 
-                        </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-close-game-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-close-game-collapse" aria-expanded="true" aria-controls="moderator-close-game-collapse">
+                    Close the Game
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-close-game-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-close-game-heading">
+            <div class="panel-body">
+                <p>Closing the game will move it out of the list of currently tracked games on the main
+                    page, and will prevent
+                    anyone from refreshing the votecount.</p>
+
+                <a href="/close_game/{{ game.id }}" class="button">Close Game!</a>
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="well">
-                        <h3><a href="#">Close the Game</a></h3>
-                        <div>
-                            <p>Closing the game will move it out of the list of currently tracked games on the main
-                                page, and will prevent
-                                anyone from refreshing the votecount.</p>
-
-                            <a href="/close_game/{{ game.id }}" class="button">Close Game!</a>
-                        </div>
-</div>
+        
                     {% endif %}
 
         {% endif %}
