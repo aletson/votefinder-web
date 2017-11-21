@@ -9,15 +9,11 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link type="text/css" rel="stylesheet" media="all" href="/static/style.css"/>
     <link type="text/css" href="/static/jquery-ui.css"/>
-    <link type="text/css" rel="stylesheet" media="all" href="/static/menu/css/menu1.css"/>
     <link href="/static/bootstrap.css" rel="stylesheet"/>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"
             integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="/static/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/static/menu/inc/jquery.metadata.js"></script>
-    <script type="text/javascript" src="/static/menu/inc/jquery.hoverIntent.js"></script>
     <script type="text/javascript" src="/static/jquery.ui.touch-punch.js"></script>
-    <script type="text/javascript" src="/static/menu/inc/mbMenu.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
@@ -34,12 +30,6 @@
             } else {
                 $('body').prepend(messages);
             }$('.messages').hide().show('slide');{% endif %}
-            $(".myMenu").buildMenu({
-                menuSelector: ".menuContainer",
-                iconPath: "//votefinder.org/static/menu/ico/",
-                hasImages: false, fadeInTime: 200, hoverIntent: 0, submenuHoverIntent: 100,
-                shadow: true,
-            });
         });
             {% if messages %}var messages = '{% spaceless %}
                 <div class= "messages" >
