@@ -194,16 +194,17 @@
     <div id="tabs">
         <ul class="nav nav-pills">
             {% if moderator %}
-            <li class="single-tab active"><a href="#moderator">Moderator</a></li>{% endif %}
-            <li class="single-tab{% if not moderator %} active{% endif %}"><a href="#votecount">Votecount</a></li>
-            <li class="single-tab"><a href="#players">Players</a></li>
-            <li class="single-tab"><a href="#posts">Posts</a></li>
-            <li class="single-tab"><a href="#updates">Game Updates</a></li>
-            <li class="single-tab"><a href="#tools">Tools</a></li>
+            <li class="single-tab active"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab{% if not moderator %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
+            <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
+            <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
+            <li class="single-tab"><a data-toggle="pill" href="#updates">Game Updates</a></li>
+            <li class="single-tab"><a data-toggle="pill" href="#tools">Tools</a></li>
         </ul>
         <hr />
+        <div class="tab-content">
         {% if moderator %}
-            <div id="moderator">
+            <div id="moderator" class="tab-pane fade in active">
                     {% if game.closed %}
                 <div class="panel-group" id="moderator-closed-game-accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
@@ -561,11 +562,11 @@
                     {% endif %}
 
         {% endif %}
-    <div id="votecount">
+    <div id="votecount" class="tab-pane fade">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
-    <div id="players">
+    <div id="players" class="tab-pane fade">
 
         {% if moderator %}
             <p>You are a moderator of this game. To update the player list, simply drag players between the boxes.</p>
@@ -616,11 +617,11 @@
                 {% endif %}
         </table>
     </div>
-    <div id="posts">
+    <div id="posts" class="tab-pane fade">
         <div id="postList"></div>
     </div>
 
-    <div id="updates">
+    <div id="updates" class="tab-pane fade">
         <table class="table table-striped" border="0" cellpadding="3" cellspacing="2">
             {% for u in updates %}
                 <tr>
@@ -631,7 +632,7 @@
         </table>
     </div>
 
-    <div id="tools">
+    <div id="tools" class="tab-pane fade">
         <div id="toolsActions">
             <h3><a href="#">Create Player List</a></h3>
             <div>
