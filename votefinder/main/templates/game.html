@@ -120,9 +120,7 @@
     });
     }
     else if ( ui.panel.id == "posts") { loadPage({{ game.currentPage }});     }
-    },
-    select: function(event,ui) {
-    if ( ui.panel.id == "tools") {
+    else if ( ui.panel.id == "tools") {
     $.get('/post_histories/{{ game.id }}', function(data) {
     $('#playerPostHistories').html(data);
     });
