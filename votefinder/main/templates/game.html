@@ -562,7 +562,7 @@
                     {% endif %}
 
         {% endif %}
-    <div id="votecount" class="tab-pane fade">
+    <div id="votecount" class="tab-pane fade{% if not moderator %} active{% endif %}">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
