@@ -114,6 +114,7 @@
         {% endif %}
         $("#tabs").tabs({
             show: function(event,ui) {
+                console.log('Load event fired!');
                 if (ui.panel.id == "votecount") {
                     $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
                         $('.button').button();
