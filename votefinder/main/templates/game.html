@@ -122,6 +122,7 @@
                 else if ( ui.panel.id == "posts") { loadPage({{ game.currentPage }});     }
             },
             select: function(event, ui) {
+                console.log('Event fired!');
                 if ( ui.panel.id == "tools") {
                     $.get('/post_histories/{{ game.id }}', function(data) {
                         $('#playerPostHistories').html(data);
