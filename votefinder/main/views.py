@@ -844,7 +844,7 @@ def votecount_image(request, slug):
 
     if img_dict == None:
         game = check_update_game(game)
-        img = Image.new("RGBA", (800, 1024), color=(255, 255, 255, 0))
+        img = Image.new("RGBA", (800, 1024), (255, 255, 255, 0))
         (w, h) = votecount_to_image(img, game, 0, 0, 800)
         img = img.crop((0, 0, w, h))
         cache.set(key, {"size": img.size, "data": img.tobytes()}, 120)
