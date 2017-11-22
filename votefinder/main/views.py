@@ -779,7 +779,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
 
 
 def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
-    draw = ImageDraw.draw(img)
+    draw = ImageDraw.Draw(img)
     regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
     bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
     try:
