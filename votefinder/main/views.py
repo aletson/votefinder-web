@@ -705,7 +705,7 @@ def delete_vote(request, voteid):
     return HttpResponseRedirect(game.get_absolute_url())
 
 
-from PIL.Image import core as Image
+from PIL import Image
 from PIL.ImageFont import core as ImageFont
 from PIL import ImageDraw
 
@@ -844,7 +844,7 @@ def votecount_image(request, slug):
 
     if img_dict == None:
         game = check_update_game(game)
-        img = Image.new("RGBA", (800, 1024))
+        img = Image.new("RGBA", (800, 1024), (255, 255, 255, 0))
         (w, h) = votecount_to_image(img, game, 0, 0, 800)
         img = img.crop((0, 0, w, h))
         cache.set(key, {"size": img.size, "data": img.tobytes()}, 120)
