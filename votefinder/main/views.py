@@ -705,9 +705,8 @@ def delete_vote(request, voteid):
     return HttpResponseRedirect(game.get_absolute_url())
 
 
-from PIL import Image
+from PIL import Image, ImageDraw
 from PIL.ImageFont import core as ImageFont
-from PIL import ImageDraw
 
 
 def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
@@ -780,7 +779,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
 
 
 def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
-    draw = ImageDraw(img)
+    draw = ImageDraw.draw(img)
     regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
     bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
     try:
