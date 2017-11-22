@@ -18,6 +18,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.template.context_processors import csrf
+from PIL import Image, ImageDraw, ImageFont
 from pytz import timezone, common_timezones
 
 from ForumPageDownloader import ForumPageDownloader
@@ -703,10 +704,6 @@ def delete_vote(request, voteid):
     vote.delete()
     messages.add_message(request, messages.SUCCESS, 'Success!  The vote was deleted.')
     return HttpResponseRedirect(game.get_absolute_url())
-
-
-from PIL import Image, ImageDraw
-from PIL.ImageFont import core as ImageFont
 
 
 def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
