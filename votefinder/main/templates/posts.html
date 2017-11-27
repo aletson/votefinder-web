@@ -1,56 +1,80 @@
-<div id="navigation">
-	Pages ({{game.currentPage}}): 
-	<button type="button" onclick="javascript:loadPage(1);" id="firstPage" {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;</button>
-	<button type="button" onclick="javascript:loadPage({{prevPage}});" id="prevPage" {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="Previous Page">&lsaquo;</button>
-	{%spaceless%}<select id="pageJump">
-		{% for p in pageNumbers %}
-			<option value="{{p}}" {% ifequal p page %}selected="selected"{%endifequal%}>{{p}}</option>
-		{% endfor %}
-	</select>{%endspaceless%}
-	<button type="button" onclick="javascript:loadPage({{nextPage}});" id="nextPage" {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %}" title="Next Page">&rsaquo;</button>
-	<button type="button" onclick="javascript:loadPage({{game.maxPages}});" id="lastPage" {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;</button>
+<div class="row">
+    <div class="col-md-4">
+        <div id="navigation">
+    <div class="input-group input-group-sm">
+        <span class="input-group-addon" id="pagecount">Pages ({{ game.currentPage }}):</span>
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage(1);" class="btn btn-xs" id="firstPage"
+              {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;
+      </button>
+        </span>
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ prevPage }});" class="btn btn-xs" id="prevPage"
+              {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="Previous Page">&lsaquo;
+      </button>
+        </span>
+      {% spaceless %}<select id="pageJump" class="form-control">
+          {% for p in pageNumbers %}
+              <option value="{{ p }}" {% ifequal p page %}selected="selected"{% endifequal %}>{{ p }}</option>
+          {% endfor %}
+      </select>{% endspaceless %}
+        <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ nextPage }});" class="btn btn-xs" id="nextPage"
+              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Next Page">&rsaquo;</button>
+      </span>
+      <span class="input-group-btn">
+      <button type="button" onclick="javascript:loadPage({{ game.maxPages }});" class="btn btn-xs" id="lastPage"
+              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;
+      </button>
+      </span>
+    </div>
+</div>
+</div>
 </div>
 {% spaceless %}
-<p/>
-<div id="postList">
-{% for post in posts %}
-<div class="post {% cycle 'postRowOdd' 'postRowEven' %}">
-	<table border="0" cellpadding="5" cellspacing="0" class="postsTable">
-	<tr class="">
-		<td width="20%" valign="top">
-			<b>{{post.author}}</b><br/>
-			<sup><i>on {{post.timestamp}}</i></sup><p/>
-		</td>
-		<td valign="top">
-			{{post.body|safe}}
-		</td>
-		<td width="20%" valign="top" class="votesCell">
-			<div class="post-vote-list">
-				{% if post.votes.all %}Votes: <ul>
-				{% for v in post.votes.all %}
-					{% if v.unvote %}
-						<li>unvote</li>
-					{% else %}
-						<li>vote: {% firstof v.target v.targetString %}
-						{% if not v.target %}
-							<i>(unresolved!)</i>
-						{% endif %}
-						</li>
-					{% endif %}
-				{% endfor %}
-				</ul>{% endif %}
-			</div>
-			{% if moderator %}Actions: <select class="post-action" id="{{post.id}}">
-				<option value="-">---</option>
-				<option value="startday:{{nextDay}}">Starts Day {{nextDay}} (new day)</option>
-				<option value="startday:{{currentDay}}">Starts Day {{currentDay}} (current day)</option>
-			</select>{% endif %}
-		</td>
-	</tr>
-	</table>
-</div>
-{% empty %}
-	<i>No posts on that page!</i>
-{% endfor %}
-</div>
+    <p/>
+    <div id="postList">
+        {% for post in posts %}
+            <div class="post {% cycle 'postRowOdd' 'postRowEven' %}">
+                <table border="0" cellpadding="5" cellspacing="0" class="postsTable">
+                    <tr class="">
+                        <td width="20%" valign="top">
+                            <b>{{ post.author }}</b><br/>
+                            <sup><i>on {{ post.timestamp }}</i></sup>
+                            <p/>
+                        </td>
+                        <td valign="top">
+                            {{ post.body|safe }}
+                        </td>
+                        <td width="20%" valign="top" class="votesCell">
+                            <div class="post-vote-list">
+                                {% if post.votes.all %}Votes:
+                                    <ul>
+                                        {% for v in post.votes.all %}
+                                            {% if v.unvote %}
+                                                <li>unvote</li>
+                                            {% else %}
+                                                <li>vote: {% firstof v.target v.targetString %}
+                                                    {% if not v.target %}
+                                                        <i>(unresolved!)</i>
+                                                    {% endif %}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>{% endif %}
+                            </div>
+                            {% if moderator %}Actions: <select class="post-action" id="{{ post.id }}">
+                                <option value="-">---</option>
+                                <option value="startday:{{ nextDay }}">Starts Day {{ nextDay }} (new day)</option>
+                                <option value="startday:{{ currentDay }}">Starts Day {{ currentDay }} (current day)
+                                </option>
+                            </select>{% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {% empty %}
+            <i>No posts on that page!</i>
+        {% endfor %}
+    </div>
 {% endspaceless %}

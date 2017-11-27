@@ -2,41 +2,44 @@
 {% block title %}VoteFinder: Game List{% endblock %}
 
 {% block onready %}
-  $('.game').click(function() {
+    $('.game').click(function() {
     location.href = $(this).find("a").attr("href");
-  });
+    });
 {% endblock %}
 
 {% block content %}
-  <h1>Welcome to VoteFinder</h1><hr>
-  
-  <p>Votefinder is currently tracking <strong>{{total}}</strong> game{{total|pluralize}}.  Overall, there
-     have been {{post_count}} posts spread across {{game_count}} games, containing {{vote_count}} votes  
-     cast by {{player_count}} players.</p>
-  
-  {% for game in big_games %}
-      <div class="game big">
-      	<a class="game-title" href="{{game.get_absolute_url}}#votecount">{{game.name|safe}}</a><br>
-	<span class="game-mod">Mod: <a href="{{game.moderator.get_absolute_url}}">{{game.moderator}}</a></span>      		
-	<span class="second-line">Day {{game.current_day}} with {{game.living_count}} alive</span>
-      </div>
-  {% endfor %}
-  
-  {% for game in mini_games %}
-      <div class="game mini">
-      	<a class="game-title" href="{{game.get_absolute_url}}#votecount">{{game.name|safe}}</a><br>
-      	<span class="game-mod">Mod: <a href="{{game.moderator.get_absolute_url}}">{{game.moderator}}</a></span>
-	<span class="second-line">Day {{game.current_day}} with {{game.living_count}} alive</span>
-      </div>
-  {% endfor %}
-  
-  {% if big_games == None and mini_games == None %}
-	  <p>No games are available.</p>
-  {% endif %}
-  
-  <p style="clear: left; padding-top: 1em;"><a class="add-button" href="/add">Add a Game</a> | <a href="/closed">Closed Games</a> | <a href="/players">View Players</a> | <a href="https://github.com/velinath/votefinder-web/issues">Report a Bug</a> | <a href="http://status.votefinder.org/">Website Status</a></p>
-  	    
-  {% comment %}
+    <h1>Welcome to VoteFinder</h1>
+    <hr>
+
+    <p>Votefinder is currently tracking <strong>{{ total }}</strong> game{{ total|pluralize }}. Overall, there
+        have been {{ post_count }} posts spread across {{ game_count }} games, containing {{ vote_count }} votes
+        cast by {{ player_count }} players.</p>
+
+    {% for game in big_games %}
+        <div class="game big">
+            <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+            <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator }}</a></span>
+            <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
+        </div>
+    {% endfor %}
+
+    {% for game in mini_games %}
+        <div class="game mini">
+            <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+            <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator }}</a></span>
+            <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
+        </div>
+    {% endfor %}
+
+    {% if big_games == None and mini_games == None %}
+        <p>No games are available.</p>
+    {% endif %}
+
+    <p style="clear: left; padding-top: 1em;"><a class="add-button" href="/add">Add a Game</a> | <a href="/closed">Closed
+        Games</a> | <a href="/players">View Players</a> | <a href="https://github.com/velinath/votefinder-web/issues">Report
+        a Bug</a> | <a href="http://status.votefinder.org/">Website Status</a></p>
+
+    {% comment %}
   {% if posts %}
     <hr>
    	{% for post in posts %}
