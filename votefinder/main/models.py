@@ -287,23 +287,6 @@ class Vote(models.Model):
             return "%s votes %s" % (self.author, self.targetString)
 
 
-def shorten(url):
-    try:
-        api = bitly.Api(login='soru', apikey='R_7d78eb0cfe6994ee6084b35eba2f20c4')
-        return api.shorten(url)
-    except:
-        pass
-
-    try:
-        data = urlopen(Request('http://goo.gl/api/url', 'url=%s' % quote(url), {'User-Agent': 'toolbar'}))
-        json = loads(data.read())
-        return json['short_url']
-    except:
-        pass
-
-    return None
-
-
 class GameStatusUpdate(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
