@@ -14,8 +14,9 @@ VF_SA_PASS = os.environ['VF_SA_PASS'] or 'SA forums account password'
 VF_EMAIL_HOST = os.environ['VF_EMAIL_HOST'] or 'Email server'
 VF_EMAIL_USER = os.environ['VF_EMAIL_USER'] or 'Email user'
 VF_EMAIL_PASS = os.environ['VF_EMAIL_PASS'] or 'Email password'
+VF_DOMAINS = os.environ['VF_DOMAINS'] or ['127.0.0.1']
 
-ALLOWED_HOSTS = ['domain.com']
+ALLOWED_HOSTS = VF_DOMAINS
 
 ADMINS = (
     ('Your Name', 'you@yourname.com')
