@@ -35,7 +35,7 @@
 
     $('.player-pm-save').click(function() {
     var body = $(this).parent().parent();
-	var pm_text = $('.player-pm-text', body).val();
+	var pm_text = $('.player-pm-text-textarea', body).val();
 	$('.player-pm-preview', body).html(pm_text);
     $('.player-pm-text', body).hide('slow');
     $('.player-pm-preview', body).show('slow');
@@ -69,7 +69,7 @@
                 </div>
                 <div class="player-pm-body" style="display: none;">
                     <div class="player-pm-text">
-                        <textarea></textarea><p></p>
+                        <textarea class="player-pm-text-textarea"></textarea><p></p>
             <input type="button" class="player-pm-save button" name="save" value="Save">
             </div>
             <div class="player-pm-preview" style="display: none;">
