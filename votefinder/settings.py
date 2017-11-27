@@ -15,11 +15,14 @@ VF_EMAIL_HOST = os.environ['VF_EMAIL_HOST'] or 'Email server'
 VF_EMAIL_USER = os.environ['VF_EMAIL_USER'] or 'Email user'
 VF_EMAIL_PASS = os.environ['VF_EMAIL_PASS'] or 'Email password'
 VF_DOMAINS = os.environ['VF_DOMAINS'] or ['127.0.0.1']
+VF_FROM_EMAIL = os.environ['VF_FROM_EMAIL'] or 'reset@votefinder.org'
+VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
+VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
 
 ALLOWED_HOSTS = VF_DOMAINS
 
 ADMINS = (
-    ('Your Name', 'you@yourname.com')
+    (VF_ADMIN_NAME, VF_ADMIN_EMAIL)
 )
 
 MANAGERS = ADMINS
@@ -32,6 +35,7 @@ DATABASES = {
         'PASSWORD': VF_MYSQL_PASS,
         'HOST': VF_MYSQL_HOST,
         'PORT': 3306,
+		'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
@@ -47,7 +51,7 @@ if DEBUG:
         EMAIL_HOST_USER = VF_EMAIL_USER
         EMAIL_HOST_PASSWORD = VF_EMAIL_PASS
         EMAIL_USE_TLS = True
-        DEFAULT_FROM_EMAIL = 'reset@votefinder.org'
+        DEFAULT_FROM_EMAIL = VF_FROM_EMAIL
 
 WEB_ROOT = 'votefinder/'
 REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
