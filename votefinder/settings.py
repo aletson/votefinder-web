@@ -4,8 +4,16 @@ DEBUG = True
 
 import os
 
-#VF_MYSQL_HOST = os.environ['VF_MYSQL_PORT_3306_TCP_ADDR'] or ''
-#VF_MYSQL_PORT = os.environ['VF_MYSQL_PORT_3306_TCP_PORT'] or ''
+# Import sensitive data from envvars
+VF_MYSQL_HOST = os.environ['VF_MYSQL_HOST'] or 'MySQL database server'
+VF_MYSQL_USER = os.environ['VF_MYSQL_USER'] or 'MySQL database user'
+VF_MYSQL_PASS = os.environ['VF_MYSQL_PASS'] or 'MySQL database password'
+VF_MYSQL_NAME = os.environ['VF_MYSQL_NAME'] or 'MySQL database name'
+VF_SA_USER = os.environ['VF_SA_USER'] or 'SA forums account name'
+VF_SA_PASS = os.environ['VF_SA_PASS'] or 'SA forums account password'
+VF_EMAIL_HOST = os.environ['VF_EMAIL_HOST'] or 'Email server'
+VF_EMAIL_USER = os.environ['VF_EMAIL_USER'] or 'Email user'
+VF_EMAIL_PASS = os.environ['VF_EMAIL_PASS'] or 'Email password'
 
 ALLOWED_HOSTS = ['domain.com']
 
@@ -18,26 +26,25 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db_name',                      # Replace with your votefinder database
-        'USER': 'db_user',                      # Replace with your votefinder user
-        'PASSWORD': 'db_pass',                  # Replace with votefinder password
-        'HOST': 'db_host',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': 3306,                      # Set to empty string for default. Not used with sqlite3.
+        'NAME': VF_MYSQL_NAME,
+        'USER': VF_MYSQL_USER,
+        'PASSWORD': VF_MYSQL_PASS,
+        'HOST': VF_MYSQL_HOST,
+        'PORT': 3306,
     }
 }
 
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/'
 
-SA_LOGIN = 'Replace with the account name'
-SA_PASSWORD = 'Replace with the account password'
+SA_LOGIN = VF_SA_USER
+SA_PASSWORD = VF_SA_PASS
 
 if DEBUG:
-        # These are defaults; change to reflect your settings
-        EMAIL_HOST = 'localhost'
+        EMAIL_HOST = VF_EMAIL_HOST
         EMAIL_PORT = 25
-        EMAIL_HOST_USER = ''
-        EMAIL_HOST_PASSWORD = ''
+        EMAIL_HOST_USER = VF_EMAIL_USER
+        EMAIL_HOST_PASSWORD = VF_EMAIL_PASS
         EMAIL_USE_TLS = True
         DEFAULT_FROM_EMAIL = 'reset@votefinder.org'
 
