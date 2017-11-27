@@ -13,7 +13,7 @@ var DateTimeShortcuts = {
     clockLinkName: 'clocklink',      // name of the link that is used to toggle
     shortCutsClass: 'datetimeshortcuts', // class of the clock and cal shortcuts
     admin_media_prefix: '',
-    init: function() {
+    init: function () {
         // Get admin_media_prefix by grabbing it off the window object. It's
         // set in the admin/base.html template, so if it's not there, someone's
         // overridden the template. In that case, we'll set a clearly-invalid
@@ -25,7 +25,7 @@ var DateTimeShortcuts = {
         }
 
         var inputs = document.getElementsByTagName('input');
-        for (i=0; i<inputs.length; i++) {
+        for (i = 0; i < inputs.length; i++) {
             var inp = inputs[i];
             if (inp.getAttribute('type') == 'text' && inp.className.match(/vTimeField/)) {
                 DateTimeShortcuts.addClock(inp);
@@ -36,7 +36,7 @@ var DateTimeShortcuts = {
         }
     },
     // Add clock widget to a given field
-    addClock: function(inp) {
+    addClock: function (inp) {
         var num = DateTimeShortcuts.clockInputs.length;
         DateTimeShortcuts.clockInputs[num] = inp;
 
@@ -91,13 +91,13 @@ var DateTimeShortcuts = {
         cancel_p.className = 'calendar-cancel';
         quickElement('a', cancel_p, gettext('Cancel'), 'href', 'javascript:DateTimeShortcuts.dismissClock(' + num + ');');
     },
-    openClock: function(num) {
-        var clock_box = document.getElementById(DateTimeShortcuts.clockDivName+num)
-        var clock_link = document.getElementById(DateTimeShortcuts.clockLinkName+num)
-    
+    openClock: function (num) {
+        var clock_box = document.getElementById(DateTimeShortcuts.clockDivName + num)
+        var clock_link = document.getElementById(DateTimeShortcuts.clockLinkName + num)
+
         // Recalculate the clockbox position
         // is it left-to-right or right-to-left layout ?
-        if (getStyle(document.body,'direction')!='rtl') {
+        if (getStyle(document.body, 'direction') != 'rtl') {
             clock_box.style.left = findPosX(clock_link) + 17 + 'px';
         }
         else {
@@ -108,22 +108,25 @@ var DateTimeShortcuts = {
             clock_box.style.left = findPosX(clock_link) - 110 + 'px';
         }
         clock_box.style.top = findPosY(clock_link) - 30 + 'px';
-    
+
         // Show the clock box
         clock_box.style.display = 'block';
-        addEvent(window.document, 'click', function() { DateTimeShortcuts.dismissClock(num); return true; });
+        addEvent(window.document, 'click', function () {
+            DateTimeShortcuts.dismissClock(num);
+            return true;
+        });
     },
-    dismissClock: function(num) {
-       document.getElementById(DateTimeShortcuts.clockDivName + num).style.display = 'none';
-       window.document.onclick = null;
+    dismissClock: function (num) {
+        document.getElementById(DateTimeShortcuts.clockDivName + num).style.display = 'none';
+        window.document.onclick = null;
     },
-    handleClockQuicklink: function(num, val) {
-       DateTimeShortcuts.clockInputs[num].value = val;
-       DateTimeShortcuts.clockInputs[num].focus();
-       DateTimeShortcuts.dismissClock(num);
+    handleClockQuicklink: function (num, val) {
+        DateTimeShortcuts.clockInputs[num].value = val;
+        DateTimeShortcuts.clockInputs[num].focus();
+        DateTimeShortcuts.dismissClock(num);
     },
     // Add calendar widget to a given field.
-    addCalendar: function(inp) {
+    addCalendar: function (inp) {
         var num = DateTimeShortcuts.calendars.length;
 
         DateTimeShortcuts.calendarInputs[num] = inp;
@@ -171,9 +174,9 @@ var DateTimeShortcuts = {
 
         // next-prev links
         var cal_nav = quickElement('div', cal_box, '');
-        var cal_nav_prev = quickElement('a', cal_nav, '<', 'href', 'javascript:DateTimeShortcuts.drawPrev('+num+');');
+        var cal_nav_prev = quickElement('a', cal_nav, '<', 'href', 'javascript:DateTimeShortcuts.drawPrev(' + num + ');');
         cal_nav_prev.className = 'calendarnav-previous';
-        var cal_nav_next = quickElement('a', cal_nav, '>', 'href', 'javascript:DateTimeShortcuts.drawNext('+num+');');
+        var cal_nav_next = quickElement('a', cal_nav, '>', 'href', 'javascript:DateTimeShortcuts.drawNext(' + num + ');');
         cal_nav_next.className = 'calendarnav-next';
 
         // main box
@@ -196,9 +199,9 @@ var DateTimeShortcuts = {
         cancel_p.className = 'calendar-cancel';
         quickElement('a', cancel_p, gettext('Cancel'), 'href', 'javascript:DateTimeShortcuts.dismissCalendar(' + num + ');');
     },
-    openCalendar: function(num) {
-        var cal_box = document.getElementById(DateTimeShortcuts.calendarDivName1+num)
-        var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName+num)
+    openCalendar: function (num) {
+        var cal_box = document.getElementById(DateTimeShortcuts.calendarDivName1 + num)
+        var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName + num)
         var inp = DateTimeShortcuts.calendarInputs[num];
 
         // Determine if the current value in the input has a valid date.
@@ -214,7 +217,7 @@ var DateTimeShortcuts = {
 
         // Recalculate the clockbox position
         // is it left-to-right or right-to-left layout ?
-        if (getStyle(document.body,'direction')!='rtl') {
+        if (getStyle(document.body, 'direction') != 'rtl') {
             cal_box.style.left = findPosX(cal_link) + 17 + 'px';
         }
         else {
@@ -225,21 +228,24 @@ var DateTimeShortcuts = {
             cal_box.style.left = findPosX(cal_link) - 180 + 'px';
         }
         cal_box.style.top = findPosY(cal_link) - 75 + 'px';
-    
+
         cal_box.style.display = 'block';
-        addEvent(window.document, 'click', function() { DateTimeShortcuts.dismissCalendar(num); return true; });
+        addEvent(window.document, 'click', function () {
+            DateTimeShortcuts.dismissCalendar(num);
+            return true;
+        });
     },
-    dismissCalendar: function(num) {
-        document.getElementById(DateTimeShortcuts.calendarDivName1+num).style.display = 'none';
+    dismissCalendar: function (num) {
+        document.getElementById(DateTimeShortcuts.calendarDivName1 + num).style.display = 'none';
         window.document.onclick = null;
     },
-    drawPrev: function(num) {
+    drawPrev: function (num) {
         DateTimeShortcuts.calendars[num].drawPreviousMonth();
     },
-    drawNext: function(num) {
+    drawNext: function (num) {
         DateTimeShortcuts.calendars[num].drawNextMonth();
     },
-    handleCalendarCallback: function(num) {
+    handleCalendarCallback: function (num) {
         format = get_format('DATE_INPUT_FORMATS')[0];
         // the format needs to be escaped a little
         format = format.replace('\\', '\\\\');
@@ -248,23 +254,23 @@ var DateTimeShortcuts = {
         format = format.replace('\t', '\\t');
         format = format.replace("'", "\\'");
         return ["function(y, m, d) { DateTimeShortcuts.calendarInputs[",
-               num,
-               "].value = new Date(y, m-1, d).strftime('",
-               format,
-               "');DateTimeShortcuts.calendarInputs[",
-               num,
-               "].focus();document.getElementById(DateTimeShortcuts.calendarDivName1+",
-               num,
-               ").style.display='none';}"].join('');
+            num,
+            "].value = new Date(y, m-1, d).strftime('",
+            format,
+            "');DateTimeShortcuts.calendarInputs[",
+            num,
+            "].focus();document.getElementById(DateTimeShortcuts.calendarDivName1+",
+            num,
+            ").style.display='none';}"].join('');
     },
-    handleCalendarQuickLink: function(num, offset) {
-       var d = new Date();
-       d.setDate(d.getDate() + offset)
-       DateTimeShortcuts.calendarInputs[num].value = d.strftime(get_format('DATE_INPUT_FORMATS')[0]);
-       DateTimeShortcuts.calendarInputs[num].focus();
-       DateTimeShortcuts.dismissCalendar(num);
+    handleCalendarQuickLink: function (num, offset) {
+        var d = new Date();
+        d.setDate(d.getDate() + offset)
+        DateTimeShortcuts.calendarInputs[num].value = d.strftime(get_format('DATE_INPUT_FORMATS')[0]);
+        DateTimeShortcuts.calendarInputs[num].focus();
+        DateTimeShortcuts.dismissCalendar(num);
     },
-    cancelEventPropagation: function(e) {
+    cancelEventPropagation: function (e) {
         if (!e) e = window.event;
         e.cancelBubble = true;
         if (e.stopPropagation) e.stopPropagation();

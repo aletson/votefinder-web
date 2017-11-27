@@ -27,7 +27,7 @@ CREATE TABLE `auth_group` (
   `name` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `auth_group_permissions` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_id` (`group_id`,`permission_id`),
   KEY `permission_id_refs_id_5886d21f` (`permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -60,7 +60,7 @@ CREATE TABLE `auth_message` (
   `message` longtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `auth_message_403f60f` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -78,7 +78,7 @@ CREATE TABLE `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
   KEY `auth_permission_1bb8f392` (`content_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=92 CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `auth_user` (
   `date_joined` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=302 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=302 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -119,7 +119,7 @@ CREATE TABLE `auth_user_groups` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`group_id`),
   KEY `group_id_refs_id_f116770` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +136,7 @@ CREATE TABLE `auth_user_user_permissions` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`permission_id`),
   KEY `permission_id_refs_id_67e79cb` (`permission_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=92 CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE `django_admin_log` (
   PRIMARY KEY (`id`),
   KEY `django_admin_log_403f60f` (`user_id`),
   KEY `django_admin_log_1bb8f392` (`content_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=185 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=185 CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -179,7 +179,7 @@ CREATE TABLE `django_comment_flags` (
   KEY `django_comment_flags_403f60f` (`user_id`),
   KEY `django_comment_flags_64c238ac` (`comment_id`),
   KEY `django_comment_flags_111c90f9` (`flag`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +207,7 @@ CREATE TABLE `django_comments` (
   KEY `django_comments_1bb8f392` (`content_type_id`),
   KEY `django_comments_6223029` (`site_id`),
   KEY `django_comments_403f60f` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_label` (`app_label`,`model`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -239,7 +239,7 @@ CREATE TABLE `django_session` (
   `session_data` longtext NOT NULL,
   `expire_date` datetime NOT NULL,
   PRIMARY KEY (`session_key`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,25 +254,7 @@ CREATE TABLE `django_site` (
   `domain` varchar(100) NOT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `dominion_card`
---
-
-DROP TABLE IF EXISTS `dominion_card`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `dominion_card` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `is_attack` tinyint(1) NOT NULL,
-  `cost` int(11) NOT NULL,
-  `is_defense` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -288,7 +270,7 @@ CREATE TABLE `main_alias` (
   `alias` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `main_alias_15d2e69b` (`player_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2780 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2780 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -306,7 +288,7 @@ CREATE TABLE `main_blogpost` (
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `main_blogpost_337b96ff` (`author_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -325,7 +307,7 @@ CREATE TABLE `main_comment` (
   PRIMARY KEY (`id`),
   KEY `main_comment_15d2e69b` (`player_id`),
   KEY `main_comment_7b333d1e` (`game_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=944 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=944 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +321,7 @@ CREATE TABLE `main_cookiestore` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cookie` longtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -377,7 +359,7 @@ CREATE TABLE `main_game` (
   KEY `main_game_56ae2a2a` (`slug`),
   KEY `main_game_1e0a3f4a` (`template_id`),
   KEY `main_game_72f634e2` (`added_by_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=964 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=964 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -394,7 +376,7 @@ CREATE TABLE `main_game_players` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `game_id` (`game_id`,`player_id`),
   KEY `player_id_refs_id_1de5da5f` (`player_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=209 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=209 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +395,7 @@ CREATE TABLE `main_gameday` (
   PRIMARY KEY (`id`),
   KEY `main_gameday_7b333d1e` (`game_id`),
   KEY `main_gameday_55b1061d` (`startPost_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4548 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4548 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -431,7 +413,7 @@ CREATE TABLE `main_gamestatusupdate` (
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `main_gamestatusupdate_7b333d1e` (`game_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15512 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15512 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -445,7 +427,7 @@ CREATE TABLE `main_lynchmessage` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` varchar(512) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -460,11 +442,13 @@ CREATE TABLE `main_player` (
   `name` varchar(255) NOT NULL,
   `uid` int(11) NOT NULL,
   `slug` varchar(50) NOT NULL,
+  `last_post` datetime NULL,
+  `total_posts` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   UNIQUE KEY `uid` (`uid`),
   KEY `main_player_56ae2a2a` (`slug`)
-) ENGINE=MyISAM AUTO_INCREMENT=1205 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1205 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -481,7 +465,7 @@ CREATE TABLE `main_player_games` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `player_id` (`player_id`,`game_id`),
   KEY `game_id_refs_id_58b93d94` (`game_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -501,7 +485,7 @@ CREATE TABLE `main_playerstate` (
   PRIMARY KEY (`id`),
   KEY `main_playerstate_7b333d1e` (`game_id`),
   KEY `main_playerstate_15d2e69b` (`player_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19581 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=19581 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -525,7 +509,7 @@ CREATE TABLE `main_post` (
   UNIQUE KEY `postId` (`postId`),
   KEY `main_post_337b96ff` (`author_id`),
   KEY `main_post_7b333d1e` (`game_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=1017386 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1017386 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -547,7 +531,7 @@ CREATE TABLE `main_privmsg` (
   KEY `main_privmsg_7b333d1e` (`game_id`),
   KEY `main_privmsg_9358c897` (`target_id`),
   KEY `main_privmsg_cc846901` (`author_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -565,7 +549,7 @@ CREATE TABLE `main_userprofile` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `player_id` (`player_id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=297 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=297 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -591,7 +575,7 @@ CREATE TABLE `main_vote` (
   KEY `main_vote_7b333d1e` (`game_id`),
   KEY `main_vote_337b96ff` (`author_id`),
   KEY `main_vote_6ca73769` (`target_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=104478 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=104478 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -623,7 +607,7 @@ CREATE TABLE `main_votecounttemplate` (
   `empty_tick` varchar(256) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `main_votecounttemplate_685aee7` (`creator_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

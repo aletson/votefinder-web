@@ -7,53 +7,54 @@
 
 {% block onready %}
     $('table.game-list').tableSort({
-        headRow: 0,
-        columns: {
-            0: { type: 'html' },
-            1: { type: 'number' },
-            2: { type: 'date' },
-            3: { type: 'number' },
-            4: { type: 'number' },
-            5: { type: 'number' },
-        },
-        stripe: true,
-        classes: {
-            sorting: 'sorting',
-            sortable: 'sortable',
-            asc: 'asc',
-            desc: 'desc',
-            stripe: 'even'
-        },
+    headRow: 0,
+    columns: {
+    0: { type: 'html' },
+    1: { type: 'number' },
+    2: { type: 'date' },
+    3: { type: 'number' },
+    4: { type: 'number' },
+    5: { type: 'number' },
+    },
+    stripe: true,
+    classes: {
+    sorting: 'sorting',
+    sortable: 'sortable',
+    asc: 'asc',
+    desc: 'desc',
+    stripe: 'even'
+    },
     });
 {% endblock %}
 
 {% block content %}
-	<h1><a href="/">VoteFinder</a>: Players</h1><hr>
+    <h1><a href="/">VoteFinder</a>: Players</h1>
+    <hr>
 
-	<table class="game-list">
-	<thead>
-		<tr>
-			<td class="asc">Player Name</td>
-			<td>Alive in Games</td>
-			<td>Last Post</td>
-			<td>Games Played</td>
-			<td>Games Run</td>
-			<td>Posts/Game</td>
-		</tr>
-	</thead>
-	<tbody>
-		{% for p in players %}
-		<tr>
-			<td><a href="/player/{{p.slug}}">{{ p.name }}</a></td>
-			<td>{{p.alive}}</td>
-			<td>{{p.last_post|date}}</td>
-			<td>{{p.total_games_played}}</td>
-			<td>{{p.total_games_run}}</td>
-			<td>{{p.posts_per_game|floatformat}}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-	</table>
-	
+    <table class="game-list table-striped">
+        <thead>
+        <tr>
+            <td class="asc">Player Name</td>
+            <td>Alive in Games</td>
+            <td>Last Post</td>
+            <td>Games Played</td>
+            <td>Games Run</td>
+            <td>Posts/Game</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in players %}
+            <tr>
+                <td><a href="/player/{{ p.slug }}">{{ p.name }}</a></td>
+                <td>{{ p.alive }}</td>
+                <td>{{ p.last_post|date }}</td>
+                <td>{{ p.total_games_played }}</td>
+                <td>{{ p.total_games_run }}</td>
+                <td>{{ p.posts_per_game|floatformat }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
 
 {% endblock %}

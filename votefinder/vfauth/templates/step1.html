@@ -2,16 +2,18 @@
 {% block title %}VoteFinder: Register Account, Step 1{% endblock %}
 
 {% block onready %}
-	$('#next').button().click(function(event) { location.href='/auth/create/2/'; });
+    $('#next').button().click(function(event) { location.href='/auth/create/2/'; });
 {% endblock %}
 
 {% block content %}
-	<h1><a href="/">VoteFinder</a>: Create Account</h1><hr>
-	
-	<p>Open your <a href="http://forums.somethingawful.com/member.php?action=editprofile" target="_blank">SA Forums Profile</a> (link opens a new window).</p>
-	
-	<p>In the Location, Interests, or Occupation field, paste this value: <strong>{{profileKey}}</strong><br/>
-	Save your profile then press Next on this page to continue to step 2.</p>
-	
-	<a href="/auth/create/2/" id="next">Step 2 &raquo;</a>
+    <h1><a href="/">VoteFinder</a>: Create Account</h1>
+    <hr>
+
+    <p>Open your <a href="http://forums.somethingawful.com/member.php?action=editprofile" target="_blank">SA Forums
+        Profile</a> (link opens a new window).</p>
+
+    <p>In the Location, Interests, or Occupation field, paste this value: <strong>{{ profileKey }}</strong><br/>
+        Save your profile then press Next on this page to continue to step 2.</p>
+
+    <a href="/auth/create/2/" id="next">Step 2 &raquo;</a>
 {% endblock %}

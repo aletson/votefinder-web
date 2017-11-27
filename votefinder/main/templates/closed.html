@@ -2,59 +2,61 @@
 {% block title %}VoteFinder: Closed Games{% endblock %}
 
 {% block header %}
-	<script type="text/javascript" src="/static/jquery.tablesort.js"></script> 
+    <script type="text/javascript" src="/static/jquery.tablesort.js"></script>
 {% endblock %}
 
 {% block onready %}
-	$('table.game-list').tableSort({
-		headRow: 0,
-		columns: {
-			0: { type: 'html' },
-			1: { type: 'html' },
-			2: { type: 'string' },
-			3: { type: 'number' },
-			4: { type: 'date' },
-			5: { type: 'date' }
-		},
-		stripe: true,
-		classes: {
-			sorting: 'sorting',
-			sortable: 'sortable',
-			asc: 'asc',
-			desc: 'desc',
-			stripe: 'even'
-		},
-	});
+    $('table.game-list').tableSort({
+    headRow: 0,
+    columns: {
+    0: { type: 'html' },
+    1: { type: 'html' },
+    2: { type: 'string' },
+    3: { type: 'number' },
+    4: { type: 'date' },
+    5: { type: 'date' }
+    },
+    stripe: true,
+    classes: {
+    sorting: 'sorting',
+    sortable: 'sortable',
+    asc: 'asc',
+    desc: 'desc',
+    stripe: 'even'
+    },
+    });
 {% endblock %}
 
 {% block content %}
-  <h1><a href="/">VoteFinder</a>: Closed Games</h1><hr>
-  
-  <p>There are currently <strong>{{total}}</strong> closed game{{total|pluralize}} that are not being tracked.  Click on a column name to sort by that column.</p>
-  
-  <table class="game-list">
-    <thead>
-      <tr>
-        <td class="asc">Game Name</td>
-        <td>Moderator</td>
-        <td>Size</td>
-	<td>Players</td>
-	<td>Created</td>
-        <td>Last Post</td>
-      </tr>
-    </thead>
-    <tbody>
-      {% for game in games %}
+    <h1><a href="/">VoteFinder</a>: Closed Games</h1>
+    <hr>
+
+    <p>There are currently <strong>{{ total }}</strong> closed game{{ total|pluralize }} that are not being tracked.
+        Click on a column name to sort by that column.</p>
+
+    <table class="game-list table-striped">
+        <thead>
         <tr>
-          <td><a href="{{game.get_absolute_url}}">{{game.name|safe}}</a></td>
-          <td><a href="{{game.moderator.get_absolute_url}}">{{game.moderator}}</a></td>
-          <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
-          <td>{{game.players_count}}</td>
-          <td>{{game.first_post|date}}</td>
-          <td>{{game.last_post|date}}</td>
+            <td class="asc">Game Name</td>
+            <td>Moderator</td>
+            <td>Size</td>
+            <td>Players</td>
+            <td>Created</td>
+            <td>Last Post</td>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+        {% for game in games %}
+            <tr>
+                <td><a href="{{ game.get_absolute_url }}">{{ game.name|safe }}</a></td>
+                <td><a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator }}</a></td>
+                <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
+                <td>{{ game.players_count }}</td>
+                <td>{{ game.first_post|date }}</td>
+                <td>{{ game.last_post|date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
