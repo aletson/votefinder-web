@@ -12,13 +12,13 @@
     var name = $('.player-pm-name', pm);
     var preview = $('.player-pm-preview', pm);
 
-    if (checkbox.attr('checked')) {
-    checkbox.attr('checked', false);
+    if (checkbox.is(':checked')) {
+    checkbox.prop('checked', false);
     body.hide('slow');
     name.removeClass('player-pm-name-enabled');
     name.addClass('player-pm-name-disabled');
     } else {
-    checkbox.attr('checked', true);
+    checkbox.prop('checked', true);
     body.show('slow');
     name.removeClass('player-pm-name-disabled');
     name.addClass('player-pm-name-enabled');
