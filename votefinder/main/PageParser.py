@@ -113,7 +113,6 @@ class PageParser:
                 self.SearchLineForVotes(post, line)
 
     def ParsePage(self, data, threadid):
-        data = data.replace("<i>", "").replace("</i>", "")
         soup = BeautifulSoup(data)
 
         self.pageNumber = self.FindPageNumber(soup)
@@ -235,7 +234,7 @@ class PageParser:
             post.avatar = unicode(titleNode.find("img"))
 
         post.bodySoup = node.find("td", "postbody")
-        [quote.extract() for quote in post.bodySoup.findAll("div", "bbc-block")]
+        [quote['class'] = "quote well" for quote in post.bodySoup.findAll("div", "bbc-block")]
         [img.extract() for img in post.bodySoup.findAll("img")]
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
