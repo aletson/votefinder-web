@@ -11,11 +11,11 @@
     } else {
     str = '<a href="' + game.url + '">' + game.name + '</a>';
     }
-    $('#gameList>ul').append('
+    $('#gameList ul').append('
     <li>' + str + '</li>');
     });
     $('#gameListContainer').show('slow');
-    $('#gameList>ul>li>a').click(function (event) {
+    $('#gameList ul li a').click(function (event) {
     doAddGame(event.target.getAttribute("href"));
     event.preventDefault();
     });
