@@ -240,10 +240,8 @@ class PageParser:
         for quote in post.bodySoup.findAll("div", "bbc-block"):
 		    quote['class'] = "quote well"
         for img in post.bodySoup.findAll("img"):
-            image_url = img["src"]
-            tag = Tag(post.bodySoup, "div", [("class", "embedded-image not-loaded"), ("data-image", image_url)])
-            tag.insert(0, "Click to load image...")
-            img.replaceWith(tag)
+            image_url = str(img["src"])
+            img.replaceWith(BeautifulSoup('<div class="embedded-image not-loaded" data-image="' + image_url + '">Click to load image...</div>')
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
