@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup
 from BeautifulSoup import Comment
+from BeautifulSoup import Tag
 from ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import *
 
@@ -240,7 +241,9 @@ class PageParser:
 		    quote['class'] = "quote well"
         for img in post.bodySoup.findAll("img"):
             image_url = img["src"]
-            img.replaceWith(BeautifulSoup('<div class="embedded-image not-loaded" data-image="'+image_url+'">Click to load image...</div>', "html.parser"))
+            tag = Tag(post.bodySoup, "div", [("class", "embedded-image not-loaded"), ("data-image", image_url)])
+            tag.insert(0, "Click to load image...")
+            img.replaceWith(tag)
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
