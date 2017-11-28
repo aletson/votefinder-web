@@ -14,12 +14,12 @@ VF_SA_PASS = os.environ['VF_SA_PASS'] or 'SA forums account password'
 VF_EMAIL_HOST = os.environ['VF_EMAIL_HOST'] or 'Email server'
 VF_EMAIL_USER = os.environ['VF_EMAIL_USER'] or 'Email user'
 VF_EMAIL_PASS = os.environ['VF_EMAIL_PASS'] or 'Email password'
-VF_DOMAINS = os.environ['VF_DOMAINS'] or ['127.0.0.1']
+VF_DOMAINS = os.environ['VF_DOMAINS'] or '127.0.0.1 localhost'
 VF_FROM_EMAIL = os.environ['VF_FROM_EMAIL'] or 'reset@votefinder.org'
 VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
 VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
 
-ALLOWED_HOSTS = VF_DOMAINS
+ALLOWED_HOSTS = VF_DOMAINS.split()
 
 ADMINS = (
     (VF_ADMIN_NAME, VF_ADMIN_EMAIL)
