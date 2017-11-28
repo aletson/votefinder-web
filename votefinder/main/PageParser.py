@@ -107,7 +107,7 @@ class PageParser:
             match = pattern.search(line, match.end())
 
     def ReadVotes(self, post):
-        for quote in post.bodySoup.findAll("div", "bbc-block"):
+        for quote in post.bodySoup.findAll("div", "quote well"):
             quote.extract()
         for bold in post.bodySoup.findAll("b"):
             content = "".join([str(x) for x in bold.contents])
