@@ -558,7 +558,7 @@ a:active {
 }
 
 .quote {
-	width: 90%;
+	width: 90% !important;
 	border: 2px solid #c3c3c3 !important;
 	-webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05) !important;
     box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05) !important;
