@@ -241,7 +241,7 @@ class PageParser:
 		    quote['class'] = "quote well"
         for img in post.bodySoup.findAll("img"):
             image_url = img["src"]
-            tag = Tag(node, "div", [("class", "embedded-image not-loaded"), ("data-image", image_url)])
+            tag = Tag(post.bodySoup, "div", [("class", "embedded-image not-loaded"), ("data-image", image_url)])
             tag.insert(0, "Click to load image...")
             img.replaceWith(tag)
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
