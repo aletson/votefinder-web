@@ -557,6 +557,12 @@ a:active {
     border: 1px solid #ccc;
 }
 
+.quote {
+	border: 2px solid #c3c3c3;
+	-webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05);
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05);
+}
+
 .quote > h4 {
 	font-style: italic;
 	font-size: 14px;
