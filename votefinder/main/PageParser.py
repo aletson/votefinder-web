@@ -240,7 +240,7 @@ class PageParser:
 		    quote['class'] = "quote well"
         for img in post.bodySoup.findAll("img"):
             image_url = img["src"]
-            img.replaceWith(BeautifulSoup('<div class="embedded-image not-loaded" data-image="'+image_url+'">Click to load image...</div>', "html.parser")))
+            img.replaceWith(BeautifulSoup('<div class="embedded-image not-loaded" data-image="'+image_url+'">Click to load image...</div>', "html.parser"))
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
