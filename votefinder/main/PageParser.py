@@ -238,7 +238,9 @@ class PageParser:
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
 		    quote['class'] = "quote well"
-        [img.extract() for img in post.bodySoup.findAll("img")]
+        for img in post.bodySoup.findAll("img"):
+            image_url = img["src"]
+            img.replaceWith('<div class="embedded-image not-loaded" data-image="'+image_url+'">Click to load image...</div>')
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
