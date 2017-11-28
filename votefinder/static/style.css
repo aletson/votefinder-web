@@ -558,9 +558,9 @@ a:active {
 }
 
 .quote {
-	border: 2px solid #c3c3c3;
-	-webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05);
-    box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05);
+	border: 2px solid #c3c3c3 !important;
+	-webkit-box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05) !important;
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, .05) !important;
 }
 
 .quote > h4 {
