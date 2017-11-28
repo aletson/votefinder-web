@@ -1,6 +1,7 @@
 import time
-from bs4 import BeautifulSoup
-from bs4 import Comment
+from datetime import datetime
+from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import Comment
 from ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import *
 
@@ -114,7 +115,7 @@ class PageParser:
                 self.SearchLineForVotes(post, line)
 
     def ParsePage(self, data, threadid):
-        soup = BeautifulSoup(data, "lxml")
+        soup = BeautifulSoup(data)
 
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
@@ -237,15 +238,9 @@ class PageParser:
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
 		    quote['class'] = "quote well"
-        for img in post.bodySoup.findAll("img"):
-            soup = BeautifulSoup()
-            image_url = img["src"].encode('utf-8')
-            new_tag = soup.new_tag("div")
-            new_tag["class"] = "embedded-image not-loaded"
-            new_tag["data-image"] = image_url
-            img.replace_with(new_tag)
+        [img.extract() for img in post.bodySoup.findAll("img")]
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
-        post.body = "".join([str(x).encode('utf-8') for x in post.bodySoup.contents]).strip()
+        post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
         postDateNode = node.find("td", "postdate")
         if postDateNode:
