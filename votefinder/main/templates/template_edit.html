@@ -27,7 +27,7 @@
 
         <table class="template-form">
             <tr class="row-highlight">
-                <td class="label">Name:</td>
+                <td>Name:</td>
                 <td colspan="3">{{ form.name }}</td>
                 <td>{{ form.name.errors }}</td>
             </tr>
@@ -41,7 +41,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="label">Overall Template:</td>
+                <td>Overall Template:</td>
                 <td colspan="3">{{ form.overall }}</td>
                 <td>{{ form.overall.errors }}</td>
             </tr>
@@ -71,7 +71,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="label">Single Votecount Line:</td>
+                <td>Single Votecount Line:</td>
                 <td colspan="3">{{ form.single_line }}</td>
                 <td>{{ form.single_line.errors }}</td>
             </tr>
@@ -99,12 +99,12 @@
                 <td></td>
             </tr>
             <tr class="row-highlight">
-                <td class="label">Deadline Text (when deadline is set):</td>
+                <td>Deadline Text (when deadline is set):</td>
                 <td colspan="3">{{ form.deadline_exists }}</td>
                 <td>{{ form.deadline_exists.errors }}</td>
             </tr>
             <tr class="row-highlight">
-                <td class="label">Deadline Text (no deadline set):</td>
+                <td>Deadline Text (no deadline set):</td>
                 <td colspan="3">{{ form.deadline_not_set }}</td>
                 <td>{{ form.deadline_not_set.errors }}</td>
             </tr>
@@ -126,23 +126,23 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="label">Before Votes:</td>
+                <td>Before Votes:</td>
                 <td>{{ form.before_vote }}</td>
-                <td class="label">After Votes:</td>
+                <td>After Votes:</td>
                 <td>{{ form.after_vote }}</td>
                 <td>{{ form.before_vote.errors }}{{ form.after_vote.errors }}</td>
             </tr>
             <tr>
-                <td class="label">Before Unvotes:</td>
+                <td>Before Unvotes:</td>
                 <td>{{ form.before_unvote }}</td>
-                <td class="label">After Unvotes:</td>
+                <td>After Unvotes:</td>
                 <td>{{ form.after_unvote }}</td>
                 <td>{{ form.before_unvote.errors }}{{ form.after_unvote.errors }}</td>
             </tr>
             <tr>
-                <td class="label">Before Unvoted Votes:</td>
+                <td>Before Unvoted Votes:</td>
                 <td>{{ form.before_unvoted_vote }}</td>
-                <td class="label">After Unvoted Votes:</td>
+                <td>After Unvoted Votes:</td>
                 <td>{{ form.after_unvoted_vote }}</td>
                 <td>{{ form.before_unvoted_vote.errors }}{{ form.after_unvoted_vote.errors }}</td>
             </tr>
@@ -158,12 +158,12 @@
                 <td></td>
             </tr>
             <tr class="row-highlight">
-                <td class="label">Image for Empty Ticks:</td>
+                <td>Image for Empty Ticks:</td>
                 <td colspan="3">{{ form.empty_tick }}</td>
                 <td>{{ form.empty_tick.errors }}</td>
             </tr>
             <tr class="row-highlight">
-                <td class="label">Image for Full Ticks:</td>
+                <td>Image for Full Ticks:</td>
                 <td colspan="3">{{ form.full_tick }}</td>
                 <td>{{ form.full_tick.errors }}</td>
             </tr>
@@ -178,9 +178,9 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="label">Detail Level:</td>
+                <td>Detail Level:</td>
                 <td>{{ form.detail_level }}</td>
-                <td class="label">Hide Players with Zero Votes?</td>
+                <td>Hide Players with Zero Votes?</td>
                 <td>{{ form.hide_zero_votes }}{{ form.detail_level.errors }}</td>
             </tr>
             <tr class="instructions">
@@ -206,7 +206,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td class="label">Share This Template with Others?</td>
+                <td>Share This Template with Others?</td>
                 <td colspan="3">{{ form.shared }}</td>
                 <td>{{ form.hide_zero_votes.errors }}{{ form.shared.errors }}</td>
             </tr>
@@ -222,7 +222,7 @@
                 <td>{% if edit %}
                     <a class="button" href="/delete_template/{{ template.id }}" id="deleteButton">Delete This
                         Template!</a>{% endif %}</td>
-                <td colspan="4" class="label">
+                <td colspan="4">
                     <input class="button" type="reset" value="Reset!">
                     <input type="submit" class="button" value="{% if edit %}Update{% else %}Create{% endif %}!">
                 </td>
