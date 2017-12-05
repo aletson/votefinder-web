@@ -1,7 +1,5 @@
 # Django settings for votefinder project.
 
-DEBUG = True 
-
 import os
 
 # Import sensitive data from envvars
@@ -18,6 +16,12 @@ VF_DOMAINS = os.environ['VF_DOMAINS'] or '127.0.0.1 localhost'
 VF_FROM_EMAIL = os.environ['VF_FROM_EMAIL'] or 'reset@votefinder.org'
 VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
 VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
+VF_DEBUG_STR = os.environ['VF_DEBUG_STR'] or False
+
+if VF_DEBUG_STR == 'True':
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = VF_DOMAINS.split()
 
@@ -45,13 +49,12 @@ LOGIN_REDIRECT_URL = '/'
 SA_LOGIN = VF_SA_USER
 SA_PASSWORD = VF_SA_PASS
 
-if DEBUG:
-        EMAIL_HOST = VF_EMAIL_HOST
-        EMAIL_PORT = 25
-        EMAIL_HOST_USER = VF_EMAIL_USER
-        EMAIL_HOST_PASSWORD = VF_EMAIL_PASS
-        EMAIL_USE_TLS = True
-        DEFAULT_FROM_EMAIL = VF_FROM_EMAIL
+EMAIL_HOST = VF_EMAIL_HOST
+EMAIL_PORT = 25
+EMAIL_HOST_USER = VF_EMAIL_USER
+EMAIL_HOST_PASSWORD = VF_EMAIL_PASS
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = VF_FROM_EMAIL
 
 WEB_ROOT = 'votefinder/'
 REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
