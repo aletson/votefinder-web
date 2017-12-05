@@ -298,12 +298,12 @@ class GameStatusUpdate(models.Model):
             postUrl = "http://forums.somethingawful.com/showthread.php?goto=post&postid=%s" % \
                       self.game.posts.all().order_by("-id")[0].postId
             try:
-                url
-            except NameError:
                 if url == None:
                     self.url = postUrl
-                else: 
+                else:
                     self.url = url
+            except NameError:
+                self.url = postUrl
 
         super(GameStatusUpdate, self).save(*args, **kwargs)
 
