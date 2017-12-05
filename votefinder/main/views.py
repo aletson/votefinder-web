@@ -279,7 +279,7 @@ def votecount(request, gameid):
     v.go()
 
     if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(
-            minutes=60) or game.deadline - datetime.now() <= timedelta(minutes=60)):
+            minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
         post_vc_button = True
     else:
         post_vc_button = False
