@@ -48,7 +48,7 @@
         });
         {% if moderator and not game.closed %}
         {% if post_vc_button %}
-        $('#post-vc-button').on('click', function() {
+        $(document).on('click', '#post-vc-button', function() {
             if (pushed == false) {
                 pushed = true;
                 $('#post-vc-button').attr('disabled', 'disabled');
