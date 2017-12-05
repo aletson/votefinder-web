@@ -56,7 +56,7 @@
             }
         });
         {% endif %}
-        $('.post-action').on('change', function(obj) {
+        $(document).on('change', '.post-action', function(obj) {
             var action = $(this).val();
             var id = $(this).attr("id");
             location.href = '/'+action+'/'+id;
