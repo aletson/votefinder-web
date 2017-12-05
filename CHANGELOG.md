@@ -22,6 +22,10 @@
 - Parses italics and quotes in posts
 - Add stylesheet easter egg
 - Miscellaneous style fixes
+- Fixes for non-working buttons after 2.0 release
+- Fixes for inconsistent votecount post
+- Fixes for "NameError" when setting deadlines
+- Fixes for 500 error on game creation
 
 ### 2.0
 - Redevelop into responsive design using Bootstrap
