@@ -107,7 +107,7 @@
         $('#submitReplacePlayer').click(function() {
             var outgoing = $('#replacePlayer').val();
             var incoming = $('#incomingPlayerName').val();
-            var clear = $("input[@name='clearVotes']:checked").val();
+            var clear = $('input[name="clearVotes"]:checked').val();
             location.href = '/replace/{{ game.id }}/'+clear+'/'+outgoing+'/'+incoming;
         });
         {% endif %}
