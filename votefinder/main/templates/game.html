@@ -99,6 +99,21 @@
             location.href='/add_vote/{{ game.id }}/' + $('#addVotePlayer').val() + '/' + $('#addVoteType').val() + '/' +
                 $('#addVoteTarget').val();
         });
+        $('#submitGlobalAnonVote').click(function() {
+            var totalPlayers = $('#addVoteTarget option').length;
+            var count = 0;
+            $('#addVoteTarget').each(function() {
+
+            $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Applying anonymous votes... (' + round(count / totalPlayers) + '%)');
+	
+            if(!$('#myModal').hasClass('in')){
+                $('#dialog').modal('show');
+            }
+                $.get('/add_vote/{{ game.id }}/-1/votes/' + $(this).val();
+                count++;
+            }
+            location.reload();
+        });
         $('#submitNewDay').click(function() {
             var day = $('#dayNumber').val();
             $('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
@@ -484,6 +499,9 @@
                     {% endfor %}
                 </select>
                 <button type="button" class="button btn btn-default" id="submitAddVote">Go</button>
+		<br />
+		<br />
+		You can also add a Hated stack globally to all players: <button type="button" class="button btn btn-default" id="submitGlobalAnonVote">Add Global Hated</button>
             </div>
         </div>
     </div>
