@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^closed/*$', votefinder.main.views.closed_games),
     url(r'^add_vote/(?P<gameid>\d+)/(?P<player>[\d-]+)/(?P<votes>\w+)/(?P<target>\d+)$',
         votefinder.main.views.add_vote),
+    url(r'^add_vote_global/(?P<gameid>\d+)$',votefinder.main.views.add_vote_global),
     url(r'^delete_vote/(?P<voteid>\d+)$', votefinder.main.views.delete_vote),
     url(r'^img/(?P<slug>[\w-]+)/*$', votefinder.main.views.votecount_image),
     url(r'^autoupdate$', votefinder.main.views.autoupdate),
