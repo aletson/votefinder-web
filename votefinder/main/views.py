@@ -328,7 +328,7 @@ def posts(request, gameid, page):
     game = get_object_or_404(Game, id=gameid)
     posts = game.posts.select_related().filter(pageNumber=page).order_by('id')
     page = int(page)
-    gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
+    gameday = game.days.select_related().last()
     moderator = game.is_user_mod(request.user)
 
     return render(request, 'posts.html',
@@ -675,7 +675,7 @@ def add_vote(request, gameid, player, votes, target):
     if not game.is_user_mod(request.user):
         return HttpResponseNotFound
 
-    gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
+    gameday = game.days.select_related().last()
     v = Vote(manual=True, post=gameday.startPost, game=game)
     if player == '-1':
         v.author = Player.objects.get(uid=0)  # anonymous
@@ -697,7 +697,7 @@ def add_vote_global(request, gameid):
     if not game.is_user_mod(request.user):
         return HttpResponseNotFound
     
-    gameday = game.days.select.related().all().order_by('-dayNumber')[:1][0]
+    gameday = game.days.select_related().last()
     playerlist = get_object_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
