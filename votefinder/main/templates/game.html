@@ -103,15 +103,14 @@
             var totalPlayers = $('#addVoteTarget option').length;
             var count = 0;
             $('#addVoteTarget').each(function() {
-
-            $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Applying anonymous votes... (' + round(count / totalPlayers) + '%)');
+                $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Applying anonymous votes... (' + round(count / totalPlayers) + '%)');
 	
-            if(!$('#myModal').hasClass('in')){
-                $('#dialog').modal('show');
-            }
+                if(!$('#myModal').hasClass('in')){
+                    $('#dialog').modal('show');
+                }
                 $.get('/add_vote/{{ game.id }}/-1/votes/' + $(this).val());
                 count++;
-            }
+            });
             location.reload();
         });
         $('#submitNewDay').click(function() {
