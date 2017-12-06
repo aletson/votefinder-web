@@ -101,6 +101,7 @@
         });
         $('#submitGlobalAnonVote').click(function() {
             var totalPlayers = $('#addVoteTarget option').length;
+            console.log(totalPlayers);
             var count = 0;
             $('#addVoteTarget option').each(function() {
                 $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Applying anonymous votes... (' + Math.round(count / totalPlayers) + '%)');
