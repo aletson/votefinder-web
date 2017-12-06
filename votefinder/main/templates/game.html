@@ -100,19 +100,7 @@
                 $('#addVoteTarget').val();
         });
         $('#submitGlobalAnonVote').click(function() {
-            var totalPlayers = $('#addVoteTarget option').length;
-            var count = 0;
-            $('#addVoteTarget option').each(function() {
-                $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Applying anonymous votes... (' + Math.round(count / totalPlayers) + '%)');
-	
-                if(!$('#myModal').hasClass('in')){
-                    $('#dialog').modal('show');
-                }
-                console.log($(this).val());
-                $.get('/add_vote/{{ game.id }}/-1/votes/' + $(this).val());
-                count++;
-            });
-            location.reload();
+            location.href='/add_vote_global/{{ game.id }}';
         });
         $('#submitNewDay').click(function() {
             var day = $('#dayNumber').val();
