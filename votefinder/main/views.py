@@ -691,6 +691,21 @@ def add_vote(request, gameid, player, votes, target):
     messages.add_message(request, messages.SUCCESS, 'Success! A new manual vote was saved.')
     return HttpResponseRedirect(game.get_absolute_url())
 
+@login_required
+def add_vote_global(request, gameid):
+    game = get_object_or_404(Game, id=gameid)
+    if not game.is_user_mod(request.user):
+        return HttpResponseNotFound
+    
+    gameday = game.days.select.related().all().order_by('-dayNumber')[:1][0]
+    playerlist = get_object_or_404(PlayerState, game=game)
+    for indiv_player in playerlist:
+        target = get_object_or_404(Player, id=indiv_player.player_id)
+        v=Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0),target=target)
+        v.save()
+    messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
+    return HttpResponseRedirect(game.get_absolute_url())
+
 
 @login_required
 def delete_vote(request, voteid):
