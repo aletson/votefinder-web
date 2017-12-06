@@ -698,7 +698,7 @@ def add_vote_global(request, gameid):
         return HttpResponseNotFound
     
     gameday = game.days.select_related().last()
-    playerlist = get_object_or_404(PlayerState, game=game)
+    playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
         v=Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0),target=target)
