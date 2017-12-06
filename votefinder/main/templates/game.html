@@ -130,7 +130,7 @@
         {% if moderator %}
         $('.collapse').collapse();
         {% endif %}
-        $('#pageJump').on('change', function(obj) {
+        $(document).on('change', '#pageJump', function(obj) {
             loadPage($(this).val());
         });
         $('#refreshbutton').button();
