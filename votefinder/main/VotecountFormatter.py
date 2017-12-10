@@ -119,6 +119,6 @@ class VotecountFormatter:
                                                                                                                 "<li>")
 
         results = re.compile(r"\[img\](.*?)\[/img\]", re.I | re.S).sub(r'<img src="\1">', results)
-        results = re.compile(r"\[url=(.*?)\](.*?)\[/url\]", re.I | re.S).sub(r'<a href="\1">\2</a>', results)
+        results = re.compile(r"\[url=(.*?)\](.*?)\[/url\]", re.I | re.S).sub(r'<b><a href="\1">\2</a></b>', results)
 
         return results
