@@ -982,7 +982,7 @@ def post_vc(request, gameid):
     if not game.is_user_mod(request.user):
         return HttpResponseForbidden
 
-    if game.last_vc_post != None and datetime.now() - game.last_vc_post < timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() > timedelta(minutes=60)):
+    if game.last_vc_post != None and datetime.now() - game.last_vc_post < timedelta(minutes=60) and (game.deadline and game.deadline - datetime.now() > timedelta(minutes=60)):
         messages.add_message(request, messages.ERROR, 'Votefinder has posted too recently in that game.')
     else:
         game.last_vc_post = datetime.now()
