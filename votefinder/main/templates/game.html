@@ -70,7 +70,12 @@
             receive: function(event, ui) {
                 var uid = $(ui.item.html()).attr("href").match(/\d+$/);
                 var state = $(this).attr('id');
-                $.ajax({ url: '/player_state/{{ game.id }}/'+uid+'/'+state});
+                $.ajax({ url: '/player_state/{{ game.id }}/'+uid+'/'+state})
+                    .done(function() {
+                        $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
+                            $('.button').button();
+                        });
+                    };
             }
         });
         $("#id_name").autocomplete({ source: "/player_list/", select: function(event, ui) {
