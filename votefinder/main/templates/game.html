@@ -75,7 +75,7 @@
                         $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
                             $('.button').button();
                         });
-                    };
+                    });
             }
         });
         $("#id_name").autocomplete({ source: "/player_list/", select: function(event, ui) {
