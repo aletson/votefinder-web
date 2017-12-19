@@ -75,6 +75,9 @@
                         $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
                             $('.button').button();
                         });
+                        $.get('/post_histories/{{ game.id }}', function(data) {
+                            $('#playerPostHistories').html(data);
+                        });
                     });
             }
         });
