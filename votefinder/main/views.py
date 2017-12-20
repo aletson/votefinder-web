@@ -312,7 +312,7 @@ def resolve(request, voteid, resolution):
         if created:
             alias.save()
 
-    key = "%s-vc-image" % v.game.slug
+    key = "%s-vc-image" % vote.game.slug
     cache.delete(key)
 
     newVotes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
