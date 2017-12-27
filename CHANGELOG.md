@@ -16,6 +16,19 @@
 - Fix performance on closed game list page
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.0.3
+- Refresh player list and votecount when players are removed or added
+- Fix for #51
+
+### 2.0.2
+- Add debug mode to environment-set settings
+- Feature: Add anonymous vote to all players
+- Fix broken components on posts tab
+- Remove deprecated code
+- Simplify some queries
+- Brings back underline styling for active votes
+
+
 ### 2.0.1
 - Remove URL shortening code (unused)
 - Migrate to environment variables for site configuration
