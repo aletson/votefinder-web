@@ -18,6 +18,8 @@ VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
 VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
 VF_DEBUG_STR = os.environ['VF_DEBUG_STR'] or False
 SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL'] or ''
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID'] or ''
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY'] or ''
 
 if VF_DEBUG_STR == 'True':
     DEBUG = True
