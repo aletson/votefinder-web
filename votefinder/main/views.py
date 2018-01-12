@@ -4,6 +4,7 @@ import re
 import urllib
 from datetime import timedelta, datetime
 from math import ceil
+import boto3
 
 from django.conf import settings
 from django.contrib import messages
