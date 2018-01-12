@@ -73,7 +73,7 @@ def add_game(request, threadid):
             data['url'] = game.get_absolute_url()
             game.status_update("A new game was created by %s!" % game.moderator)
             sqs = boto3.client('sqs')
-            queue_url = SQS_QUEUE_URL # implement this in settings.py
+            queue_url = settings.SQS_QUEUE_URL
             response = sqs.send_message(
                 QueueUrl=queue_url,
                 DelaySeconds=10,
