@@ -101,7 +101,6 @@ def add_game(request, threadid):
 
     return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
-
 @login_required
 def game_list(request, page):
     p = GameListDownloader()
