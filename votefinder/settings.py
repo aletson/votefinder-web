@@ -17,6 +17,7 @@ VF_FROM_EMAIL = os.environ['VF_FROM_EMAIL'] or 'reset@votefinder.org'
 VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
 VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
 VF_DEBUG_STR = os.environ['VF_DEBUG_STR'] or False
+SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL'] or ''
 
 if VF_DEBUG_STR == 'True':
     DEBUG = True
