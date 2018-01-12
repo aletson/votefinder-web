@@ -71,6 +71,29 @@ def add_game(request, threadid):
         if game:
             data['url'] = game.get_absolute_url()
             game.status_update("A new game was created by %s!" % game.moderator)
+            sqs = boto3.client('sqs')
+            queue_url = SQS_QUEUE_URL # implement this in settings.py
+            response = sqs.send_message(
+                QueueUrl=queue_url,
+                DelaySeconds=10,
+                MessageAttributes={
+                    'GameTitle': {
+                        'DataType': 'String',
+                        'StringValue': game.name
+                    },
+                    'Moderator': {
+                    'DataType': 'String',
+                    'StringValue': game.moderator
+                    },
+                    'threadId': {
+                    'DataType': 'Number',
+                    'StringValue': game.threadId
+                    },
+                },
+                MessageBody=(
+                    'New game announcement'
+                )
+            )
         else:
             data['success'] = False
             data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
