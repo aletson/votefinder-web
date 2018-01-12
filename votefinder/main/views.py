@@ -84,7 +84,7 @@ def add_game(request, threadid):
                     },
                     'Moderator': {
                     'DataType': 'String',
-                    'StringValue': game.moderator
+                    'StringValue': game.moderator.name
                     },
                     'threadId': {
                     'DataType': 'Number',
