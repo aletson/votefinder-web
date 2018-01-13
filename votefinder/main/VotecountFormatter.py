@@ -26,7 +26,7 @@ class VotecountFormatter:
         if game_template is None:
             game_template = VotecountTemplate.objects.get(system_default=True)
 
-        gameday = self.game.days.select_related().all().order_by('-dayNumber')[:1][0]
+        gameday = self.game.days.select_related().last()
         living_players = [ps.player for ps in self.game.living_players()]
         alive = len(living_players)
         if self.game.deadline:
