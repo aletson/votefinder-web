@@ -50,7 +50,9 @@ class CreateUserForm(forms.Form):
                     except UserProfile.DoesNotExist:
                         pass
                     except Player.DoesNotExist:
-                        pass                        
+                        pass
+                    except User.DoesNotExist:
+                        pass
                     matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(data)
                     if matcher:
                         login = matcher.group('login')
