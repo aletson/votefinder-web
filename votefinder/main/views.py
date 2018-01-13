@@ -83,12 +83,12 @@ def add_game(request, threadid):
                         'StringValue': game.name
                     },
                     'Moderator': {
-                    'DataType': 'String',
-                    'StringValue': game.moderator.name
+                        'DataType': 'String',
+                        'StringValue': game.moderator.name
                     },
                     'threadId': {
-                    'DataType': 'Number',
-                    'StringValue': game.threadId
+                        'DataType': 'Number',
+                        'StringValue': game.threadId
                     },
                 },
                 MessageBody=(
