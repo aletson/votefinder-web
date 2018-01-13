@@ -508,7 +508,8 @@ CREATE TABLE `main_post` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `postId` (`postId`),
   KEY `main_post_337b96ff` (`author_id`),
-  KEY `main_post_7b333d1e` (`game_id`)
+  KEY `main_post_7b333d1e` (`game_id`),
+  KEY `closed_games` (`game_id`, `timestamp`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1017386 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
