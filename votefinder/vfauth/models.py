@@ -28,8 +28,6 @@ class CreateUserForm(forms.Form):
         except User.DoesNotExist:
             pass
         
-        try:
-
         if self.required_key:
             downloader = ForumPageDownloader()
             data = downloader.download(
