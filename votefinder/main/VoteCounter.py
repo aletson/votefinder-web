@@ -16,7 +16,7 @@ class VoteCounter:
         self.show_only_active_votes = False
 
     def run(self, game):
-        gameday = game.days.select_related().all().order_by('-dayNumber')[:1][0]
+        gameday = game.days.select_related().last()
 
         try:
             votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=False,
