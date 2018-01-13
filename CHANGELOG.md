@@ -9,12 +9,14 @@
 - Moderators are able to add loved/hated stacks to a player
 - Moderators can add votes that are only moderator-visible until hammer
 - Adds support for players with multiple votes natively
-
-### 2.1 _(planned)_
-- Fix cases where the application fails silently
-- Add filtering to player and closed game list
-- Fix performance on closed game list page
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
+- Add filtering to player and closed game list
+
+### 2.1
+- FEATURE: Post to Amazon SQS when a game is opened
+- Fix a bug where users could reregister after a SA forums name change
+- Fix performance on closed game list page
+- Fix 500 errors on manual vote resolution
 
 ### 2.0.3
 - Refresh player list and votecount when players are removed or added
