@@ -75,7 +75,6 @@ def add_game(request, threadid):
             sqs = boto3.client('sqs', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
             queue_url = settings.SQS_QUEUE_URL
             response = sqs.send_message(
-                debug=2,
                 QueueUrl=queue_url,
                 DelaySeconds=10,
                 MessageAttributes={
