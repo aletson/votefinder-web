@@ -72,7 +72,7 @@ def add_game(request, threadid):
         if game:
             data['url'] = game.get_absolute_url()
             game.status_update("A new game was created by %s!" % game.moderator)
-            sqs = boto3.client('sqs', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
+            sqs = boto3.client('sqs')
             queue_url = settings.SQS_QUEUE_URL
             response = sqs.send_message(
                 QueueUrl=queue_url,
