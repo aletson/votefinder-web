@@ -27,6 +27,8 @@ class CreateUserForm(forms.Form):
             raise forms.ValidationError("A user by that name already exists.")
         except User.DoesNotExist:
             pass
+        
+        try:
 
         if self.required_key:
             downloader = ForumPageDownloader()
@@ -40,7 +42,15 @@ class CreateUserForm(forms.Form):
                 matcher = re.compile('userid=(?P<userid>\d+)').search(data)
                 if matcher:
                     self.userid = matcher.group('userid')
-
+                    try:
+                        existingPlayer = Player.objects.all().get(uid=self.userid)
+                        existingUserProfile = UserProfile.objects.all().get(player_id=existingPlayer.id)
+                        existingUser = UserProfile.objects.all().get(id=existingUserProfile.user_id)
+                        raise forms.ValidationError("%s is already registered with that user ID. Has your forum name changed?" % existingUser.username)
+                    except UserProfile.DoesNotExist:
+                        pass
+                    except Player.DoesNotExist:
+                        pass                        
                     matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(data)
                     if matcher:
                         login = matcher.group('login')
