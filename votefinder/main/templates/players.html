@@ -7,17 +7,17 @@
 {% endblock %}
 
 {% block onready %}
-    $('table.game-list').DataTable()
+    $('#game-list').DataTable({"order":[[0, "asc"]]});
 {% endblock %}
 
 {% block content %}
     <h1><a href="/">VoteFinder</a>: Players</h1>
     <hr>
 
-    <table class="game-list table-striped">
+    <table class="table table-striped" id="game-list">
         <thead>
         <tr>
-            <td class="asc">Player Name</td>
+            <td>Player Name</td>
             <td>Alive in Games</td>
             <td>Last Post</td>
             <td>Games Played</td>
