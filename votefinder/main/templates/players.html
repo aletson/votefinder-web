@@ -17,14 +17,24 @@
     <table class="table table-striped" id="game-list">
         <thead>
         <tr>
-            <td>Player Name</td>
-            <td>Alive in Games</td>
-            <td>Last Post</td>
-            <td>Games Played</td>
-            <td>Games Run</td>
-            <td>Posts/Game</td>
+            <th>Player Name</th>
+            <th>Alive in Games</th>
+            <th>Last Post</th>
+            <th>Games Played</th>
+            <th>Games Run</th>
+            <th>Posts/Game</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <th>Player Name</th>
+            <th>Alive in Games</th>
+            <th>Last Post</th>
+            <th>Games Played</th>
+            <th>Games Run</th>
+            <th>Posts/Game</th>
+        </tr>
+        </tfoot>
         <tbody>
         {% for p in players %}
             <tr>
