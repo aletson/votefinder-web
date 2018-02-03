@@ -7,25 +7,7 @@
 {% endblock %}
 
 {% block onready %}
-    $('table.game-list').tableSort({
-    headRow: 0,
-    columns: {
-    0: { type: 'html' },
-    1: { type: 'number' },
-    2: { type: 'date' },
-    3: { type: 'number' },
-    4: { type: 'number' },
-    5: { type: 'number' },
-    },
-    stripe: true,
-    classes: {
-    sorting: 'sorting',
-    sortable: 'sortable',
-    asc: 'asc',
-    desc: 'desc',
-    stripe: 'even'
-    },
-    });
+    $('table.game-list').DataTable()
 {% endblock %}
 
 {% block content %}
