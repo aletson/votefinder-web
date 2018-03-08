@@ -5,18 +5,17 @@
     <script type="text/javascript" src="/static/jquery.datatables.js"></script>
     <link href="/static/jquery.datatables.min.css" type="text/css" rel="stylesheet" />
     <style>
-        .dataTables_filter {
-            text-align: left !important;
+        .dataTables_wrapper .myfilter .dataTables_filter {
+            float:left
         }
-        
-        .dataTables_length {
-            text-align: right !important;
+        .dataTables_wrapper .mylength .dataTables_length {
+            float:right
         }
     </style>
 {% endblock %}
 
 {% block onready %}
-    $('#game-list').DataTable({"order":[[0, "asc"]]});<style>
+    $('#game-list').DataTable({"order":[[0, "asc"]],"dom":"<'myfilter'f><'mylength'l>t"});
 {% endblock %}
 
 {% block content %}
