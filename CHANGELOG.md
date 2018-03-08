@@ -10,7 +10,11 @@
 - Moderators can add votes that are only moderator-visible until hammer
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
-- Add filtering to player and closed game list
+- Add filtering closed game list
+
+### 2.1.1
+- Fix styling issues on jQuery UI related elements
+- Add filtering to player list
 
 ### 2.1
 - FEATURE: Post to Amazon SQS when a game is opened
