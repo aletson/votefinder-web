@@ -4,10 +4,18 @@
 {% block header %}
     <script type="text/javascript" src="/static/jquery.datatables.js"></script>
     <link href="/static/jquery.datatables.min.css" type="text/css" rel="stylesheet" />
+    <style>
+        .dataTables_wrapper .myfilter .dataTables_filter {
+            float:left
+        }
+        .dataTables_wrapper .mylength .dataTables_length {
+            float:right
+        }
+    </style>
 {% endblock %}
 
 {% block onready %}
-    $('#game-list').DataTable({"order":[[0, "asc"]]});
+    $('#game-list').DataTable({"order":[[0, "asc"]], "dom":"<'myfilter'f><'mylength'l>t"});<style>
 {% endblock %}
 
 {% block content %}
