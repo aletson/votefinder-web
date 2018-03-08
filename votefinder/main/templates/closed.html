@@ -2,29 +2,20 @@
 {% block title %}VoteFinder: Closed Games{% endblock %}
 
 {% block header %}
-    <script type="text/javascript" src="/static/jquery.tablesort.js"></script>
+    <script type="text/javascript" src="/static/jquery.datatables.js"></script>
+    <link href="/static/jquery.datatables.min.css" type="text/css" rel="stylesheet" />
+    <style>
+        .dataTables_wrapper .myfilter .dataTables_filter {
+            float:left
+        }
+        .dataTables_wrapper .mylength .dataTables_length {
+            float:right
+        }
+    </style>
 {% endblock %}
 
 {% block onready %}
-    $('table.game-list').tableSort({
-    headRow: 0,
-    columns: {
-    0: { type: 'html' },
-    1: { type: 'html' },
-    2: { type: 'string' },
-    3: { type: 'number' },
-    4: { type: 'date' },
-    5: { type: 'date' }
-    },
-    stripe: true,
-    classes: {
-    sorting: 'sorting',
-    sortable: 'sortable',
-    asc: 'asc',
-    desc: 'desc',
-    stripe: 'even'
-    },
-    });
+    $('#game-list').DataTable({"order":[[0, "asc"]],"dom":"<'myfilter'f><'mylength'l>t"});
 {% endblock %}
 
 {% block content %}
@@ -34,17 +25,27 @@
     <p>There are currently <strong>{{ total }}</strong> closed game{{ total|pluralize }} that are not being tracked.
         Click on a column name to sort by that column.</p>
 
-    <table class="game-list table-striped">
+    <table class="game-list">
         <thead>
         <tr>
-            <td class="asc">Game Name</td>
-            <td>Moderator</td>
-            <td>Size</td>
-            <td>Players</td>
-            <td>Created</td>
-            <td>Last Post</td>
+            <th>Game Name</th>
+            <th>Moderator</th>
+            <th>Size</th>
+            <th>Players</th>
+            <th>Created</th>
+            <th>Last Post</th>
         </tr>
         </thead>
+        <tfoot>
+        <tr>
+            <th>Game Name</th>
+            <th>Moderator</th>
+            <th>Size</th>
+            <th>Players</th>
+            <th>Created</th>
+            <th>Last Post</th>
+        </tr>
+        </tfoot>
         <tbody>
         {% for game in games %}
             <tr>
