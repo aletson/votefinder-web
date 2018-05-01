@@ -11,6 +11,9 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.1.2
+- Fixes no pagination on players and closed games tables
+
 ### 2.1.1
 - Fix styling issues on jQuery UI related elements
 - Add filtering to player list and closed games list
