@@ -13,6 +13,7 @@
 
 ### 2.1.3
 - Fixes incorrect redirection after performing certain actions in Votefinder (#60)
+- Fixes the wrong tab being active by default on game page (#65)
 
 ### 2.1.2
 - Fixes no pagination on players and closed games tables
