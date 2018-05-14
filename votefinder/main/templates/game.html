@@ -575,7 +575,7 @@
                     {% endif %}
 
         {% endif %}
-    <div id="votecount" class="tab-pane fade{% if not game.closed or not moderator %} in active">
+    <div id="votecount" class="tab-pane fade{% if not game.closed or not moderator %} in active{% endif %}">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
