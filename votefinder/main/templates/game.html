@@ -204,8 +204,8 @@
     <div id="tabs">
         <ul class="nav nav-pills">
             {% if moderator %}
-            <li class="single-tab"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
-            <li class="single-tab active"><a data-toggle="pill" href="#votecount">Votecount</a></li>
+            <li class="single-tab{% if game.closed %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab{% if not moderator and not game.closed %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#updates">Game Updates</a></li>
@@ -214,7 +214,7 @@
         <hr />
         <div class="tab-content">
         {% if moderator %}
-            <div id="moderator" class="tab-pane fade">
+            <div id="moderator" class="tab-pane fade{% if game.closed %} in active{% endif %}">
                     {% if game.closed %}
                 <div class="panel-group" id="moderator-closed-game-accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
@@ -575,7 +575,7 @@
                     {% endif %}
 
         {% endif %}
-    <div id="votecount" class="tab-pane fade in active">
+    <div id="votecount" class="tab-pane fade{% if not game.closed or not moderator %} in active">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
