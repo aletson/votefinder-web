@@ -325,6 +325,7 @@ class UserProfile(models.Model):
     player = models.ForeignKey(Player, unique=True)
     user = models.OneToOneField(User, related_name="profile")
     registered = models.DateTimeField(auto_now=True)
+    theme = models.CharField(max_length=10, default="default");
 
     def __unicode__(self):
         return self.player.name
