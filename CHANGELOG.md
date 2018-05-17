@@ -11,6 +11,10 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.1.4
+- Fixes global theme display errors with Font Awesome. (#78)
+- Changes default tab state based on closed / open game when a moderator.
+
 ### 2.1.3
 - Fixes incorrect redirection after performing certain actions in Votefinder (#60)
 - Fixes the wrong tab being active by default on game page (#65)
