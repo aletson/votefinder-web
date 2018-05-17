@@ -547,6 +547,7 @@ CREATE TABLE `main_userprofile` (
   `player_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `registered` datetime NOT NULL,
+  `theme` varchar(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `player_id` (`player_id`),
   UNIQUE KEY `user_id` (`user_id`)
