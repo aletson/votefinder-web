@@ -320,16 +320,20 @@ class BlogPost(models.Model):
     def get_absolute_url(self):
         return '/'
 
-
 class UserProfile(models.Model):
     player = models.ForeignKey(Player, unique=True)
     user = models.OneToOneField(User, related_name="profile")
     registered = models.DateTimeField(auto_now=True)
-    theme = models.CharField(max_length=10, default="default");
+    theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT);
 
     def __unicode__(self):
         return self.player.name
 
+class Theme(models.Model):
+    name = models.CharField(max_length=10, default="default")
+    
+    def __unicode__(self):
+        return self.name
 
 class GameDay(models.Model):
     game = models.ForeignKey(Game, related_name='days', db_index=True)
