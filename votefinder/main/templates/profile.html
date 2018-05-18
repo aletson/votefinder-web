@@ -2,6 +2,7 @@
 {% block title %}VoteFinder: Your Profile{% endblock %}
 
 {% block onready %}
+ // Code goes here to switch theme when dropdown is updated
 {% endblock %}
 
 {% block content %}
@@ -20,6 +21,13 @@
             <td>Change Password:</td>
             <td><a href="/auth/password_change">Click here</a></td>
         </tr>
+        <tr>
+            <td>Theme Select:</td>
+            <td><select class="form-control">
+                {% for t in themes %}
+                <option value="{{ t.id }}" {% if t.id == userprofile.theme %} selected="selected" {% endif %}>{{ t.name }}</option>
+                {% endfor %}
+                </select></td>
     </table></p>
 
     <hr>
