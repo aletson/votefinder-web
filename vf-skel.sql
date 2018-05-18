@@ -536,6 +536,20 @@ CREATE TABLE `main_privmsg` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `main_theme`
+--
+
+DROP TABLE IF EXISTS `main_theme`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `main_theme` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `main_userprofile`
 --
 
@@ -547,7 +561,7 @@ CREATE TABLE `main_userprofile` (
   `player_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `registered` datetime NOT NULL,
-  `theme` varchar(10) NOT NULL,
+  `theme` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `player_id` (`player_id`),
   UNIQUE KEY `user_id` (`user_id`)
