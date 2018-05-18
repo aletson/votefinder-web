@@ -330,7 +330,7 @@ class UserProfile(models.Model):
     player = models.ForeignKey(Player, unique=True)
     user = models.OneToOneField(User, related_name="profile")
     registered = models.DateTimeField(auto_now=True)
-    theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT);
+    theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
 
     def __unicode__(self):
         return self.player.name
