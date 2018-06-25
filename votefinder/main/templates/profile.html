@@ -4,9 +4,11 @@
 {% block onready %}
  // Code goes here to switch theme when dropdown is updated -- update schema via ajax then update CSS
     $("#theme-selector").on("change", function() {
-        $.post("update-user-theme", {t: $("#theme-selector").val()}) //TODO better path
+        $(this).prop("disabled", true);
+        $.post("update-user-theme", {t: $(this).val()}) //TODO better path
             .done(function() {
-                //TODO update theme in CSS
+                $("#theme-css").attr("href", "/static/style-" + $("this option:selected").text() + ".css");
+                $(this).prop("disabled", false);t
             })
             .fail(function() {
                 alert("Failed to contact the server. Please contact the developer.");
