@@ -1,9 +1,573 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+html, body {
+    background-color: #000;
+    color: #57FF57;
+    font-weight: 100;
+    margin: 0;
+}
+
+body {
+    padding-bottom: 60px;
+}
+
+.navbar {
+    background-color: #222;
+}
+
+.navbar-brand {
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.navbar a:not(.navbar-brand) {
+    color: #57FF57;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1rem;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.dropdown-submenu .dropdown-submenu-right {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+}
+
+.dropdown-submenu-right > .dropdown-menu-right {
+    top: 0;
+    right: 100%;
+    margin-top: -6px;
+    margin-right: -1px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu-right:hover > .dropdown-menu-right {
+    display: block;
+}
+
+.dropdown-submenu > a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #cccccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu-right > a:after {
+    display: block;
+    content: " ";
+    float: left;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 5px 5px 0;
+    border-right-color: #cccccc;
+    margin-top: 5px;
+    margin-left: -10px;
+}
+
+.dropdown-submenu:hover > a:after {
+    border-left-color: #ffffff;
+}
+
+.dropdown-submenu-right:hover > a:after {
+    border-right-color: #ffffff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+}
+
+.content {
+    text-align: center;
+}
+
+.title {
+    font-size: 48px;
+}
+
+.games a {
+    text-decoration: none;
+}
+
+.game h3 {
+    margin-top: 0px;
+}
+
+.footer {
+    position: absolute; /* Override */
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+}
+
+#aboveContainer {
+    text-align: right;
+    padding: 0.2em;
+    margin-top: 2em;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+#belowContainer {
+    padding: 0.2em;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+#belowText {
+    color: #57FF57;
+    float: left;
+    font-size: small;
+}
+
+#belowText a {
+    text-decoration: none;
+    color: #57FF57;
+}
+
+#belowText a:hover {
+    text-decoration: underline;
+}
+
+#belowIcons {
+    vertical-align: middle;
+    float: right;
+}
+
+#aboveContainer a {
+    text-decoration: none;
+}
+
+#mainContainer {
+    background: #000;
+    border: 2px solid black;
+    padding: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+#mainContainer hr {
+    color: #57FF57;
+    background-color: #333;
+    height: 2px;
+    border: none;
+}
+
+.blogPost {
+    margin-top: 1em;
+    padding: 0.5em;
+}
+
+.blogPostTitle {
+    font-size: 1.4em;
+    /*font-weight: bold;*/
+}
+
+.blogPostBody {
+    margin: 1em;
+}
+
+.invisible {
+    display: none;
+    visible: false;
+}
+
+.visible {
+    display: block;
+    visible: true;
+}
+
+#loading {
+    margin: 1em;
+    padding: 0.5em;
+}
+
+.loadingImg {
+    margin-right: 1em;
+}
+
+.addGameResult {
+    font-size: 1.2em;
+}
+
+#closeWindow {
+    width: 100%;
+    text-align: right;
+}
+
+.grayed {
+    color: #57FF57;
+    font-style: italic;
+}
+
+.postList {
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.playerList {
+    background: #000;
+
+    border: 2px solid #ddd;
+    padding: 0.5em;
+    margin: 0.5em;
+    width: 25%;
+    vertical-align: top;
+
+}
+
+.player {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.player a {
+    text-decoration: none;
+    display: block;
+}
+
+.player a:hover {
+    color: #68FF68;
+}
+
+.player:hover {
+    background-color: #111;
+}
+
+#mod {
+    background-color: #ffffdd;
+}
+
+#alive {
+    background-color: #ddffdd;
+}
+
+#dead {
+    background-color: #ffddaa;
+}
+
+#spectator {
+    background-color: #f5f5f5;
+}
+
+.blackOutline {
+    border: 1px solid black;
+}
+
+.creator {
+    font-style: italic;
+}
+
+.ui-tabs .ui-tabs-hide {
+    display: none;
+}
+
+.postsTable {
+    width: 100%;
+}
+
+.postRowEven {
+    background: #000;
+}
+
+.postRowOdd {
+    background: #222;
+}
+
+#postList {
+    width: 100%;
+    height: 30em;
+    overflow: auto;
+}
+
+#disabled-navigation {
+    align: center;
+    border: 1px solid #888;
+    background: #000;
+    padding: 0.5em;
+    display: inline;
+}
+
+.post {
+    border: 1px solid #888;
+    padding: 0.5em;
+    margin: 0.5em;
+}
+
+.comment-poster {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.messages {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#topMenu {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    padding: 0;
+}
+
+#deadlineHour, #deadlineMinute {
+    width: 2em;
+}
+
+#votecount-results {
+    padding: 0.5em;
+// filter: progid: DXImageTransform . Microsoft . Gradient(StartColorStr = '#EEDEAD', EndColorStr = '#FEEEBD', GradientType = 0);
+}
+
+.middle {
+    vertical-align: top;
+}
+
+#bbcode {
+    width: 100%;
+    height: 100%;
+}
+
+.template-form {
+    border: 0;
+    width: 95%;
+    border-spacing: 0;
+    x
+}
+
+.template-form tr td {
+    padding: 0.33em;
+    margin: 0;
+}
+
+.template-form tr td input[type="text"], .template-form tr td textarea {
+    width: 100%;
+}
+
+td.label {
+    text-align: right;
+    margin-right: 1em;
+}
+
+tr.row-highlight {
+    background-color: #222;
+}
+
+tr.instructions {
+    display: none;
+    font-size: smaller;
+    color: #57FF57;
+}
+
+tr.instructions td.text {
+    background: #000;
+    vertical-align: top;
+}
+
+.game {
+    display: block;
+    float: left;
+    border: 1px solid #bbb;
+    padding: 0.5em 1em 0.5em 1em;
+    margin: 0.2em;
+    width: 40%;
+}
+
+.mini {
+    background: #000;
+}
+
+.big {
+    background: #111;
+}
+
+.game:hover {
+    border: 1px solid black;
+    background-color: #111 !important;
+    cursor: pointer;
+}
+
+.game-title {
+    text-decoration: none;
+    font-size: 1.2em;
+    color: #57FF57;
+}
+
+.game-updated {
+}
+
+.second-line, .game-mod {
+    font-style: italic;
+    filter: alpha(opacity=60);
+    opacity: 0.6;
+    font-size: 0.9em;
+}
+
+.game-mod {
+    float: right;
+}
+
+.game-mod a {
+    text-decoration: none;
+}
+
+table.game-list {
+    border: 0;
+    width: 95%;
+    border-spacing: 0;
+}
+
+table.game-list tbody tr td {
+    padding: 0.2em;
+    margin: 0px;
+}
+
+.game-list a {
+    text-decoration: none;
+}
+
+table.game-list thead tr {
+    cursor: pointer;
+    font-size: 1.2em;
+    text-decoration: underline;
+}
+
+.even {
+    background: #111;
+}
+
+.asc {
+    padding-left: 11px;
+    background: url('/static/up-arrow.png') no-repeat left center;
+}
+
+.desc {
+    padding-left: 11px;
+    background: url('/static/down-arrow.png') no-repeat left center;
+}
+
+.player-pm {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    width: 90%;
+}
+
+.player-pm-name-disabled {
+    font-weight: normal;
+    font-style: italic;
+    margin-bottom: 0;
+}
+
+.player-pm-name-enabled {
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.player-pm-body {
+    padding-left: 2em;
+}
+
+.player-pm-body textarea {
+    width: 95%;
+    height: 10em;
+}
+
+/* remove halo effect in firefox   */
+a:active {
+    outline: none;
+}
+
+.nav-pills > li {
+    border: 1px solid #ccc;
+}
+
+.quote {
+	width: 90% !important;
+	border: 2px solid #c3c3c3 !important;
+}
+
+.quote > h4 {
+	font-style: italic;
+	font-size: 14px;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;   
+    padding: 4px 0;
+    margin: 0 0 10px 25px;
+    list-style: none;
+    background-color: #000;
+    border-color: #ccc;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+}
+
+.ui-menu-item > a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #57FF57;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.ui-state-hover, .ui-state-active {
+    color: #57FF57;
+    text-decoration: none;
+    background-color: #000;
+    background-image: none;
+}
+
 *:not(.fa) {
-    text-shadow: none!important;
-    box-shadow: none!important;
-    border-radius: 0!important;
     font-family: "Consolas", "Monaco", monospace !important;
     color: #57FF57 !important;
-	background-color: #000000 !important;
-	background: #000000 !important;
 }
