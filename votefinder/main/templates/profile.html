@@ -8,7 +8,7 @@
         $.post("/update_user_theme", {t: $(this).val()}) //TODO better path
             .done(function() {
                 $("#theme-css").attr("href", "/static/style-" + $("this option:selected").text() + ".css");
-                $(this).prop("disabled", false);t
+                $(this).prop("disabled", false);
             })
             .fail(function() {
                 alert("Failed to contact the server. Please contact the developer.");
