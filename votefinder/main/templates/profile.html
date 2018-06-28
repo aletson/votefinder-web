@@ -12,7 +12,7 @@
             .done(function() {
                 console.log($("#theme-selector option:selected").text())
                 $("#theme-css").attr("href", "/static/style-" + $("#theme-selector option:selected").text() + ".css");
-                $(this).prop("disabled", false);
+                $("#theme-selector").prop("disabled", false);
             })
             .fail(function() {
                 alert("Failed to contact the server. Please contact the developer.");
