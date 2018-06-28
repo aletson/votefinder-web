@@ -7,7 +7,7 @@
     <!-- These tags must come first. -->
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link id="theme-css" type="text/css" rel="stylesheet" media="all" href="/static/style-{% firstof profile.theme.name "default" %}.css"/>
+    <link id="theme-css" type="text/css" rel="stylesheet" media="all" href="/static/style-{% firstof user.profile.theme.name "default" %}.css"/>
     <link type="text/css" rel="stylesheet" href="/static/jquery-ui.css"/>
     <link href="/static/bootstrap.css" rel="stylesheet"/>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"
