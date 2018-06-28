@@ -193,7 +193,8 @@ def update_user_theme(request):
     if request.method == "POST":
         profile = request.user.profile
         theme_id = request.POST.get('t')
-        profile.theme = theme_id # This might not work check it afterwards.
+        theme = Theme.objects.get(id=theme_id)
+        profile.theme = theme # This might not work check it afterwards.
         profile.save()
         return HttpResponse(simplejson.dumps({'success': True}))
 
