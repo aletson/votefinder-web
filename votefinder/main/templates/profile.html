@@ -2,6 +2,19 @@
 {% block title %}VoteFinder: Your Profile{% endblock %}
 
 {% block onready %}
+ // Code goes here to switch theme when dropdown is updated -- update schema via ajax then update CSS
+    $("#theme-selector").on("change", function() {
+        $(this).prop("disabled", true);
+        $.post("/update_user_theme", {t: $(this).val()}) //TODO better path
+            .done(function() {
+                $("#theme-css").attr("href", "/static/style-" + $("this option:selected").text() + ".css");
+                $(this).prop("disabled", false);
+            })
+            .fail(function() {
+                alert("Failed to contact the server. Please contact the developer.");
+                //TODO more elegant
+            });
+    });
 {% endblock %}
 
 {% block content %}
@@ -20,6 +33,13 @@
             <td>Change Password:</td>
             <td><a href="/auth/password_change">Click here</a></td>
         </tr>
+        <tr>
+            <td>Theme Select:</td>
+            <td><select class="form-control" id="theme-selector">
+                {% for t in themes %}
+                <option value="{{ t.id }}" {% if t.id == profile.theme %} selected="selected" {% endif %}>{{ t.name }}</option>
+                {% endfor %}
+                </select></td>
     </table></p>
 
     <hr>

@@ -180,12 +180,21 @@ def update(request, gameid):
 def profile(request):
     player = request.user.profile.player
     games = player.games.select_related().all()
+    themes = Theme.objects.all()
 
     return render(request, 'profile.html',
-                  {'player': player, 'games': games, 'profile': request.user.profile,
+                  {'player': player, 'games': games, 'profile': request.user.profile, 'themes': themes,
                    'show_delete': True}
                   )
 
+@login_required
+def update_user_theme(request):
+    if request.method == "POST":
+        profile = request.user.profile
+        theme_id = request.POST.get('t')
+        profile.theme = theme_id # This might not work check it afterwards.
+        profile.save()
+        return HttpResponse(simplejson.dumps({'success': True}))
 
 def player(request, slug):
     try:
