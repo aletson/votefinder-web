@@ -7,7 +7,7 @@
     <!-- These tags must come first. -->
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" media="all" href="/static/style.css"/>
+    <link id="theme-css" type="text/css" rel="stylesheet" media="all" href="/static/style-{% firstof profile.theme "default" %}.css"/>
     <link type="text/css" rel="stylesheet" href="/static/jquery-ui.css"/>
     <link href="/static/bootstrap.css" rel="stylesheet"/>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"
@@ -23,13 +23,6 @@
     <script type="text/javascript">{% block script %}{% endblock %}</script>
     <script type="text/javascript">
         $(document).ready(function () { {% block onready %}{% endblock %}
-		    $("#219").click(function() {
-			    if($("#css-219").length) {
-			        $("#css-219").remove();
-				} else {
-				    $("head").append('<link rel="stylesheet" id="css-219" href="/static/219.css" type="text/css" />');
-				}
-			});
             {% if messages %}if ($('hr').length > 0) {
                 $('hr:first').after(messages);
             } else if ($('h1').length > 0) {
@@ -146,7 +139,7 @@
         &copy; 2016-18 Andrew Letson.
         Powered by <a href="http://python.org/">Python</a>, <a href="http://www.djangoproject.com/">Django</a>, and <a
             href="http://jquery.com/">jQuery</a>.
-        Hosted on <a href="http://aws.amazon.com/">Amazon Web Services</a>. <a id="219">?</a>
+        Hosted on <a href="http://aws.amazon.com/">Amazon Web Services</a>.
     </div>
 </div>
 </body>

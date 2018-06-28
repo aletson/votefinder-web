@@ -61,5 +61,6 @@ urlpatterns = [
     url(r'^post_vc/(?P<gameid>\d+)$', votefinder.main.views.post_vc),
     url(r'^votechart/(?P<gameslug>[\w-]+)$', votefinder.main.views.votechart_all),
     url(r'^votechart/(?P<gameslug>[\w-]+)/(?P<playerslug>[\w-]+)$', votefinder.main.views.votechart_player),
-    url(r'^gamechart$', votefinder.main.views.gamechart)
+    url(r'^gamechart$', votefinder.main.views.gamechart),
+    url(r'^update_user_theme$', votefinder.main.views.update_user_theme)
 ]
