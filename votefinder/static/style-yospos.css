@@ -570,4 +570,5 @@ a:active {
 *:not(.fa) {
     font-family: "Consolas", "Monaco", monospace !important;
     color: #57FF57 !important;
+    background-color: #000 !important;
 }
