@@ -11,6 +11,10 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.2.0
+- Adds theming! Now you can select themes from your profile page. Currently "default" and "yospos" available, more to come... (#53, #87)
+- Various cosmetic fixes. (#47, #49, #66, #45)
+
 ### 2.1.4
 - Fixes global theme display errors with Font Awesome. (#78)
 - Changes default tab state based on closed / open game when a moderator.
@@ -24,7 +28,7 @@
 
 ### 2.1.1
 - Fix styling issues on jQuery UI related elements
-- Add filtering to player list and closed games list
+- Add filtering to player list and closed games list (#41)
 
 ### 2.1
 - FEATURE: Post to Amazon SQS when a game is opened
