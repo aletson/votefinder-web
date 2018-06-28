@@ -10,6 +10,7 @@
         $(this).prop("disabled", true);
         $.post("/update_user_theme", {t: $(this).val()}) //TODO better path
             .done(function() {
+                console.log($("#theme-selector option:selected").text())
                 $("#theme-css").attr("href", "/static/style-" + $("#theme-selector option:selected").text() + ".css");
                 $(this).prop("disabled", false);
             })
