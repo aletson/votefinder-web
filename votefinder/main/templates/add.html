@@ -2,6 +2,7 @@
 {% block title %}VoteFinder: Add Game{% endblock %}
 
 {% block onready %}
+
     function dataReceived(data) {
     $('#loading').hide();
     var str = "";
@@ -21,8 +22,8 @@
     }
 
     $('#addButton').button();
-    $('#dialog').dialog({modal: true, autoOpen: false});
     $('#gameListContainer').hide();
+    $('#dialog').modal('hide');
     $.getJSON('/game_list/1', dataReceived);
     $.getJSON('/game_list/2', dataReceived);
     $('#addButton').click(function() { doAddGame($('#textUrl').val()); });
@@ -31,15 +32,15 @@
     var thread = url.replace(/threadid=(\d+)/);
     var result = RegExp.$1;
     if (result) {
-    $("#message").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
-    $("#dialog").dialog("option", "buttons", {} );
-    $('#dialog').dialog("open");
+    $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
+    if(!$('#dialog').hasClass('in')) {
+        $('#dialog').modal('show');
+    }
     $.getJSON( '/add_game/' + result, function(data) {
     if (data.success == true) {
     location.href = data.url;
     } else {
-    $("#message").html(data.message);
-    $("#dialog").dialog("option", "buttons", { "Ok": function() { $(this).dialog("close"); } } )
+    $("#dialog-content").html(data.message);
     }
     });
     } else {
@@ -67,7 +68,17 @@
         </div>
     </div>
 
-    <div id="dialog" title="Adding Game">
-        <div id="message"></div>
+<!-- DIALOG MODAL FOR MANUAL UPDATE -->
+    <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-label">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="dialog-label">Adding Game</h4>
+              </div>
+          <div class="modal-body" id="dialog-content">
+              </div>
+          </div>
+        </div>
     </div>
 {% endblock %}

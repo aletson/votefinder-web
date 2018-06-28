@@ -38,7 +38,7 @@
             var page = (curPage < maxPages) ? curPage + 1 : curPage;
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
 	
-            if(!$('#myModal').hasClass('in')){
+            if(!$('#dialog').hasClass('in')){
                 $('#dialog').modal('show');
             }
             $.getJSON('/update/{{ game.id }}/', dataReceived);
