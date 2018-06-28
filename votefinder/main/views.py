@@ -182,7 +182,6 @@ def profile(request):
     games = player.games.select_related().all()
     themes = Theme.objects.all()
 
-    print (themes)
     return render(request, 'profile.html',
                   {'player': player, 'games': games, 'profile': request.user.profile, 'themes': themes,
                    'show_delete': True}
