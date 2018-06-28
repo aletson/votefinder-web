@@ -3,7 +3,7 @@
 
 {% block onready %}
     $.ajaxSetup({
-        headers: { "X-CSRFToken": $.cookie("csrftoken") }
+        headers: { "X-CSRFToken": Cookies.get("csrftoken") }
     });
  // Code goes here to switch theme when dropdown is updated -- update schema via ajax then update CSS
     $("#theme-selector").on("change", function() {
