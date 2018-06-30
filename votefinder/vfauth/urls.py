@@ -21,7 +21,7 @@ urlpatterns = [
         django.contrib.auth.views.password_reset_done, {'template_name': 'password_reset_done.html'}),
     url(r'^password_reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
         django.contrib.auth.views.password_reset_confirm,
-        {'post_reset_redirect': '/password_reset/complete/', 'template_name': 'password_reset_confirm.html'},
+        {'post_reset_redirect': '/auth/password_reset/complete/', 'template_name': 'password_reset_confirm.html'},
         name="password_reset_confirm"),
     url(r'^password_reset/complete/$',
         django.contrib.auth.views.password_reset_complete, {'template_name': 'password_reset_complete.html'}),
