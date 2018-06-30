@@ -11,6 +11,9 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.2.1
+- Fixed a bug where the "password reset complete" page would 404
+
 ### 2.2.0
 - Adds theming! Now you can select themes from your profile page. Currently "default" and "yospos" available, more to come... (#53, #87)
 - Various cosmetic fixes. (#47, #49, #66, #45)
