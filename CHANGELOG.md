@@ -11,6 +11,9 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.2.2
+- Security fixes & package updates
+
 ### 2.2.1
 - Fixed a bug where the "password reset complete" page would 404
 
