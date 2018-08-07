@@ -71,7 +71,7 @@ class VoteCounter:
             gameday.save()
 
             if len(lynched) == 1:
-                game.status_update("%s was lynched on day %s!" % (lynched[0].name, gameday.dayNumber))
+                game.status_update("%s was executed on day %s!" % (lynched[0].name, gameday.dayNumber))
                 self.PostLynchedMessage(game, lynched[0].name)
 
     def PostLynchedMessage(self, game, name):
