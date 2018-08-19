@@ -233,6 +233,7 @@ def player_state(request, gameid, playerid, state):
 
     if state == 'dead':
         current_state.set_dead()
+        game.status_update("%s died." % player.name)
     elif state == 'alive':
         current_state.set_alive()
     elif state == 'spectator':
