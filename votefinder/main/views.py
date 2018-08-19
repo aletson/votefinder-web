@@ -829,7 +829,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
     bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
     try:
-        tid = int(game.template.id)
+        tid = int(game.template_id)
     except TypeError:
         tid = 11  # Default template
     game.template = VotecountTemplate.objects.get(id=tid)  # Or id=tid, if we go to custom image templates.
