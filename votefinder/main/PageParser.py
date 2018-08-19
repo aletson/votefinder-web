@@ -79,7 +79,8 @@ class PageParser:
 
         return None
 
-    def SearchLineForVotes(self, post, line):
+    def SearchLineForActions(self, post, line):
+        # Votes
         pattern = re.compile("##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)", re.I)
         pos = 0
         match = pattern.search(line, pos)
@@ -105,6 +106,19 @@ class PageParser:
                 v.save()
                 pass
             match = pattern.search(line, match.end())
+            # Other actions?
+            if post.game.is_user_mod(post.author)
+                # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
+                # pattern search for ##deadline and # of hours
+                pattern = re.compile("##\\s*deadline[:\\s+]([^<\\r\\n]+)", re.I)
+                while match:
+                        (numHrs,) = match.groups()
+                        if numHrs:
+                                numHrs = int(numHrs)
+                                newDeadline = post.timestamp + timedelta(hours=numHrs)
+                                post.game.deadline = newDeadline
+                                post.game.save()
+                                
 
     def ReadVotes(self, post):
         for quote in post.bodySoup.findAll("div", "quote well"):
