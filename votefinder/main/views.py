@@ -354,7 +354,7 @@ def resolve(request, voteid, resolution):
                                    ignored=False, nolynch=False)
 
     if len(votes) == 1 and len(newVotes) > 0:
-        refreh = False
+        refresh = False
     else:
         refresh = True
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
@@ -829,10 +829,10 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
     bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
     try:
-        tid = int(game.template_id)
+        tid = int(game.template.id)
     except TypeError:
-        tid = 2  # Default template
-    game.template = VotecountTemplate.objects.get(id=11)  # Or id=tid, if we go to custom image templates.
+        tid = 11  # Default template
+    game.template = VotecountTemplate.objects.get(id=tid)  # Or id=tid, if we go to custom image templates.
     vc = VotecountFormatter(game)
     vc.go(show_comment=False)
     split_vc = re.compile("\[.*?\]").sub('', vc.bbcode_votecount).split("\r\n")
