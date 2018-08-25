@@ -636,4 +636,9 @@ CREATE TABLE `main_votecounttemplate` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+DROP TABLE IF EXISTS `migration_version`;
+CREATE TABLE `migration_version` (
+  `version` int(11) NOT NULL AUTO_INCREMENT
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO `migration_version` VALUES (1);
 -- Dump completed on 2016-11-29 12:45:48
