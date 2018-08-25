@@ -508,3 +508,492 @@ table.game-list thead tr {
 a:active{
 	outline: none !important;
 }		
+
+/*
+* jQuery UI CSS Framework
+* Copyright (c) 2010 AUTHORS.txt (http://jqueryui.com/about)
+* Dual licensed under the MIT (MIT-LICENSE.txt) and GPL (GPL-LICENSE.txt) licenses.
+*/
+
+/* Layout helpers
+----------------------------------*/
+.ui-helper-hidden { display: none !important; }
+.ui-helper-hidden-accessible { position: absolute !important; left: -99999999px !important; }
+.ui-helper-reset { margin: 0 !important; padding: 0 !important; border: 0 !important; outline: 0 !important; line-height: 1.3 !important; text-decoration: none !important; font-size: 100% !important; list-style: none !important; }
+.ui-helper-clearfix:after { content: "." !important; display: block !important; height: 0 !important; clear: both !important; visibility: hidden !important; }
+.ui-helper-clearfix { display: inline-block !important; }
+/* required comment for clearfix to work in Opera \*/
+* html .ui-helper-clearfix { height:1% !important; }
+.ui-helper-clearfix { display:block !important; }
+/* end clearfix */
+.ui-helper-zfix { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; position: absolute !important; opacity: 0 !important; filter:Alpha(Opacity=0) !important; }
+
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-disabled { cursor: default !important !important; }
+
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon { display: block !important; text-indent: -99999px !important; overflow: hidden !important; background-repeat: no-repeat !important; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Overlays */
+.ui-widget-overlay { position: absolute !important; top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; }
+
+
+/*
+* jQuery UI CSS Framework
+* Copyright (c) 2010 AUTHORS.txt (http://jqueryui.com/about)
+* Dual licensed under the MIT (MIT-LICENSE.txt) and GPL (GPL-LICENSE.txt) licenses.
+* To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Cambria,%20Georgia,%20serif&fwDefault=normal&fsDefault=1.0em&cornerRadius=8px&bgColorHeader=817865&bgTextureHeader=12_gloss_wave.png&bgImgOpacityHeader=45&borderColorHeader=494437&fcHeader=ffffff&iconColorHeader=fadc7a&bgColorContent=feeebd&bgTextureContent=03_highlight_soft.png&bgImgOpacityContent=100&borderColorContent=8e846b&fcContent=383838&iconColorContent=d19405&bgColorDefault=fece2f&bgTextureDefault=12_gloss_wave.png&bgImgOpacityDefault=60&borderColorDefault=d19405&fcDefault=4c3000&iconColorDefault=3d3d3d&bgColorHover=ffdd57&bgTextureHover=12_gloss_wave.png&bgImgOpacityHover=70&borderColorHover=a45b13&fcHover=381f00&iconColorHover=bd7b00&bgColorActive=ffffff&bgTextureActive=05_inset_soft.png&bgImgOpacityActive=30&borderColorActive=655e4e&fcActive=0074c7&iconColorActive=eb990f&bgColorHighlight=fff9e5&bgTextureHighlight=12_gloss_wave.png&bgImgOpacityHighlight=90&borderColorHighlight=eeb420&fcHighlight=1f1f1f&iconColorHighlight=ed9f26&bgColorError=d34d17&bgTextureError=07_diagonals_medium.png&bgImgOpacityError=20&borderColorError=ffb73d&fcError=ffffff&iconColorError=ffe180&bgColorOverlay=5c5c5c&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=50&opacityOverlay=80&bgColorShadow=cccccc&bgTextureShadow=01_flat.png&bgImgOpacityShadow=30&opacityShadow=60&thicknessShadow=7px&offsetTopShadow=-7px&offsetLeftShadow=-7px&cornerRadiusShadow=8px
+*/
+
+
+/* Component containers
+----------------------------------*/
+.ui-widget { font-family: Cambria, Georgia, serif !important; font-size: 1.0em !important; }
+.ui-widget .ui-widget { font-size: 1em !important; }
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Cambria, Georgia, serif !important; font-size: 1em !important; }
+.ui-widget-content { border: 1px solid #8e846b !important; background: #feeebd url(images/ui-bg_highlight-soft_100_feeebd_1x100.png) 50% top repeat-x !important; color: #383838 !important; }
+.ui-widget-content a { color: #383838 !important; }
+.ui-widget-header { border: 1px solid #494437 !important; background: #817865 url(images/ui-bg_gloss-wave_45_817865_500x100.png) 50% 50% repeat-x !important; color: #ffffff !important; font-weight: bold !important; }
+.ui-widget-header a { color: #ffffff !important; }
+
+/* Interaction states
+----------------------------------*/
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default { border: 1px solid #d19405 !important; background: #fece2f url(images/ui-bg_gloss-wave_60_fece2f_500x100.png) 50% 50% repeat-x !important; font-weight: normal !important; color: #4c3000 !important; }
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #4c3000 !important; text-decoration: none !important; }
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #a45b13 !important; background: #ffdd57 url(images/ui-bg_gloss-wave_70_ffdd57_500x100.png) 50% 50% repeat-x !important; font-weight: normal !important; color: #381f00 !important; }
+.ui-state-hover a, .ui-state-hover a:hover { color: #381f00 !important; text-decoration: none !important; }
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #655e4e !important; background: #ffffff url(images/ui-bg_inset-soft_30_ffffff_1x100.png) 50% 50% repeat-x !important; font-weight: normal !important; color: #0074c7 !important; }
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #0074c7 !important; text-decoration: none !important; }
+.ui-widget :active { outline: none !important; }
+
+/* Interaction Cues
+----------------------------------*/
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #eeb420 !important; background: #fff9e5 url(images/ui-bg_gloss-wave_90_fff9e5_500x100.png) 50% top repeat-x !important; color: #1f1f1f !important; }
+.ui-state-highlight a, .ui-widget-content .ui-state-highlight a,.ui-widget-header .ui-state-highlight a { color: #1f1f1f !important; }
+.ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error {border: 1px solid #ffb73d !important; background: #d34d17 url(images/ui-bg_diagonals-medium_20_d34d17_40x40.png) 50% 50% repeat !important; color: #ffffff !important; }
+.ui-state-error a, .ui-widget-content .ui-state-error a, .ui-widget-header .ui-state-error a { color: #ffffff !important; }
+.ui-state-error-text, .ui-widget-content .ui-state-error-text, .ui-widget-header .ui-state-error-text { color: #ffffff !important; }
+.ui-priority-primary, .ui-widget-content .ui-priority-primary, .ui-widget-header .ui-priority-primary { font-weight: bold !important; }
+.ui-priority-secondary, .ui-widget-content .ui-priority-secondary,  .ui-widget-header .ui-priority-secondary { opacity: .7 !important; filter:Alpha(Opacity=70) !important; font-weight: normal !important; }
+.ui-state-disabled, .ui-widget-content .ui-state-disabled, .ui-widget-header .ui-state-disabled { opacity: .35 !important; filter:Alpha(Opacity=35) !important; background-image: none !important; }
+
+/* Icons
+----------------------------------*/
+
+/* states and images */
+.ui-icon { width: 16px !important; height: 16px !important; background-image: url(images/ui-icons_d19405_256x240.png) !important; }
+.ui-widget-content .ui-icon {background-image: url(images/ui-icons_d19405_256x240.png) !important; }
+.ui-widget-header .ui-icon {background-image: url(images/ui-icons_fadc7a_256x240.png) !important; }
+.ui-state-default .ui-icon { background-image: url(images/ui-icons_3d3d3d_256x240.png) !important; }
+.ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(images/ui-icons_bd7b00_256x240.png) !important; }
+.ui-state-active .ui-icon {background-image: url(images/ui-icons_eb990f_256x240.png) !important; }
+.ui-state-highlight .ui-icon {background-image: url(images/ui-icons_ed9f26_256x240.png) !important; }
+.ui-state-error .ui-icon, .ui-state-error-text .ui-icon {background-image: url(images/ui-icons_ffe180_256x240.png) !important; }
+
+/* positioning */
+.ui-icon-carat-1-n { background-position: 0 0 !important; }
+.ui-icon-carat-1-ne { background-position: -16px 0 !important; }
+.ui-icon-carat-1-e { background-position: -32px 0 !important; }
+.ui-icon-carat-1-se { background-position: -48px 0 !important; }
+.ui-icon-carat-1-s { background-position: -64px 0 !important; }
+.ui-icon-carat-1-sw { background-position: -80px 0 !important; }
+.ui-icon-carat-1-w { background-position: -96px 0 !important; }
+.ui-icon-carat-1-nw { background-position: -112px 0 !important; }
+.ui-icon-carat-2-n-s { background-position: -128px 0 !important; }
+.ui-icon-carat-2-e-w { background-position: -144px 0 !important; }
+.ui-icon-triangle-1-n { background-position: 0 -16px !important; }
+.ui-icon-triangle-1-ne { background-position: -16px -16px !important; }
+.ui-icon-triangle-1-e { background-position: -32px -16px !important; }
+.ui-icon-triangle-1-se { background-position: -48px -16px !important; }
+.ui-icon-triangle-1-s { background-position: -64px -16px !important; }
+.ui-icon-triangle-1-sw { background-position: -80px -16px !important; }
+.ui-icon-triangle-1-w { background-position: -96px -16px !important; }
+.ui-icon-triangle-1-nw { background-position: -112px -16px !important; }
+.ui-icon-triangle-2-n-s { background-position: -128px -16px !important; }
+.ui-icon-triangle-2-e-w { background-position: -144px -16px !important; }
+.ui-icon-arrow-1-n { background-position: 0 -32px !important; }
+.ui-icon-arrow-1-ne { background-position: -16px -32px !important; }
+.ui-icon-arrow-1-e { background-position: -32px -32px !important; }
+.ui-icon-arrow-1-se { background-position: -48px -32px !important; }
+.ui-icon-arrow-1-s { background-position: -64px -32px !important; }
+.ui-icon-arrow-1-sw { background-position: -80px -32px !important; }
+.ui-icon-arrow-1-w { background-position: -96px -32px !important; }
+.ui-icon-arrow-1-nw { background-position: -112px -32px !important; }
+.ui-icon-arrow-2-n-s { background-position: -128px -32px !important; }
+.ui-icon-arrow-2-ne-sw { background-position: -144px -32px !important; }
+.ui-icon-arrow-2-e-w { background-position: -160px -32px !important; }
+.ui-icon-arrow-2-se-nw { background-position: -176px -32px !important; }
+.ui-icon-arrowstop-1-n { background-position: -192px -32px !important; }
+.ui-icon-arrowstop-1-e { background-position: -208px -32px !important; }
+.ui-icon-arrowstop-1-s { background-position: -224px -32px !important; }
+.ui-icon-arrowstop-1-w { background-position: -240px -32px !important; }
+.ui-icon-arrowthick-1-n { background-position: 0 -48px !important; }
+.ui-icon-arrowthick-1-ne { background-position: -16px -48px !important; }
+.ui-icon-arrowthick-1-e { background-position: -32px -48px !important; }
+.ui-icon-arrowthick-1-se { background-position: -48px -48px !important; }
+.ui-icon-arrowthick-1-s { background-position: -64px -48px !important; }
+.ui-icon-arrowthick-1-sw { background-position: -80px -48px !important; }
+.ui-icon-arrowthick-1-w { background-position: -96px -48px !important; }
+.ui-icon-arrowthick-1-nw { background-position: -112px -48px !important; }
+.ui-icon-arrowthick-2-n-s { background-position: -128px -48px !important; }
+.ui-icon-arrowthick-2-ne-sw { background-position: -144px -48px !important; }
+.ui-icon-arrowthick-2-e-w { background-position: -160px -48px !important; }
+.ui-icon-arrowthick-2-se-nw { background-position: -176px -48px !important; }
+.ui-icon-arrowthickstop-1-n { background-position: -192px -48px !important; }
+.ui-icon-arrowthickstop-1-e { background-position: -208px -48px !important; }
+.ui-icon-arrowthickstop-1-s { background-position: -224px -48px !important; }
+.ui-icon-arrowthickstop-1-w { background-position: -240px -48px !important; }
+.ui-icon-arrowreturnthick-1-w { background-position: 0 -64px !important; }
+.ui-icon-arrowreturnthick-1-n { background-position: -16px -64px !important; }
+.ui-icon-arrowreturnthick-1-e { background-position: -32px -64px !important; }
+.ui-icon-arrowreturnthick-1-s { background-position: -48px -64px !important; }
+.ui-icon-arrowreturn-1-w { background-position: -64px -64px !important; }
+.ui-icon-arrowreturn-1-n { background-position: -80px -64px !important; }
+.ui-icon-arrowreturn-1-e { background-position: -96px -64px !important; }
+.ui-icon-arrowreturn-1-s { background-position: -112px -64px !important; }
+.ui-icon-arrowrefresh-1-w { background-position: -128px -64px !important; }
+.ui-icon-arrowrefresh-1-n { background-position: -144px -64px !important; }
+.ui-icon-arrowrefresh-1-e { background-position: -160px -64px !important; }
+.ui-icon-arrowrefresh-1-s { background-position: -176px -64px !important; }
+.ui-icon-arrow-4 { background-position: 0 -80px !important; }
+.ui-icon-arrow-4-diag { background-position: -16px -80px !important; }
+.ui-icon-extlink { background-position: -32px -80px !important; }
+.ui-icon-newwin { background-position: -48px -80px !important; }
+.ui-icon-refresh { background-position: -64px -80px !important; }
+.ui-icon-shuffle { background-position: -80px -80px !important; }
+.ui-icon-transfer-e-w { background-position: -96px -80px !important; }
+.ui-icon-transferthick-e-w { background-position: -112px -80px !important; }
+.ui-icon-folder-collapsed { background-position: 0 -96px !important; }
+.ui-icon-folder-open { background-position: -16px -96px !important; }
+.ui-icon-document { background-position: -32px -96px !important; }
+.ui-icon-document-b { background-position: -48px -96px !important; }
+.ui-icon-note { background-position: -64px -96px !important; }
+.ui-icon-mail-closed { background-position: -80px -96px !important; }
+.ui-icon-mail-open { background-position: -96px -96px !important; }
+.ui-icon-suitcase { background-position: -112px -96px !important; }
+.ui-icon-comment { background-position: -128px -96px !important; }
+.ui-icon-person { background-position: -144px -96px !important; }
+.ui-icon-print { background-position: -160px -96px !important; }
+.ui-icon-trash { background-position: -176px -96px !important; }
+.ui-icon-locked { background-position: -192px -96px !important; }
+.ui-icon-unlocked { background-position: -208px -96px !important; }
+.ui-icon-bookmark { background-position: -224px -96px !important; }
+.ui-icon-tag { background-position: -240px -96px !important; }
+.ui-icon-home { background-position: 0 -112px !important; }
+.ui-icon-flag { background-position: -16px -112px !important; }
+.ui-icon-calendar { background-position: -32px -112px !important; }
+.ui-icon-cart { background-position: -48px -112px !important; }
+.ui-icon-pencil { background-position: -64px -112px !important; }
+.ui-icon-clock { background-position: -80px -112px !important; }
+.ui-icon-disk { background-position: -96px -112px !important; }
+.ui-icon-calculator { background-position: -112px -112px !important; }
+.ui-icon-zoomin { background-position: -128px -112px !important; }
+.ui-icon-zoomout { background-position: -144px -112px !important; }
+.ui-icon-search { background-position: -160px -112px !important; }
+.ui-icon-wrench { background-position: -176px -112px !important; }
+.ui-icon-gear { background-position: -192px -112px !important; }
+.ui-icon-heart { background-position: -208px -112px !important; }
+.ui-icon-star { background-position: -224px -112px !important; }
+.ui-icon-link { background-position: -240px -112px !important; }
+.ui-icon-cancel { background-position: 0 -128px !important; }
+.ui-icon-plus { background-position: -16px -128px !important; }
+.ui-icon-plusthick { background-position: -32px -128px !important; }
+.ui-icon-minus { background-position: -48px -128px !important; }
+.ui-icon-minusthick { background-position: -64px -128px !important; }
+.ui-icon-close { background-position: -80px -128px !important; }
+.ui-icon-closethick { background-position: -96px -128px !important; }
+.ui-icon-key { background-position: -112px -128px !important; }
+.ui-icon-lightbulb { background-position: -128px -128px !important; }
+.ui-icon-scissors { background-position: -144px -128px !important; }
+.ui-icon-clipboard { background-position: -160px -128px !important; }
+.ui-icon-copy { background-position: -176px -128px !important; }
+.ui-icon-contact { background-position: -192px -128px !important; }
+.ui-icon-image { background-position: -208px -128px !important; }
+.ui-icon-video { background-position: -224px -128px !important; }
+.ui-icon-script { background-position: -240px -128px !important; }
+.ui-icon-alert { background-position: 0 -144px !important; }
+.ui-icon-info { background-position: -16px -144px !important; }
+.ui-icon-notice { background-position: -32px -144px !important; }
+.ui-icon-help { background-position: -48px -144px !important; }
+.ui-icon-check { background-position: -64px -144px !important; }
+.ui-icon-bullet { background-position: -80px -144px !important; }
+.ui-icon-radio-off { background-position: -96px -144px !important; }
+.ui-icon-radio-on { background-position: -112px -144px !important; }
+.ui-icon-pin-w { background-position: -128px -144px !important; }
+.ui-icon-pin-s { background-position: -144px -144px !important; }
+.ui-icon-play { background-position: 0 -160px !important; }
+.ui-icon-pause { background-position: -16px -160px !important; }
+.ui-icon-seek-next { background-position: -32px -160px !important; }
+.ui-icon-seek-prev { background-position: -48px -160px !important; }
+.ui-icon-seek-end { background-position: -64px -160px !important; }
+.ui-icon-seek-start { background-position: -80px -160px !important; }
+/* ui-icon-seek-first is deprecated, use ui-icon-seek-start instead */
+.ui-icon-seek-first { background-position: -80px -160px !important; }
+.ui-icon-stop { background-position: -96px -160px !important; }
+.ui-icon-eject { background-position: -112px -160px !important; }
+.ui-icon-volume-off { background-position: -128px -160px !important; }
+.ui-icon-volume-on { background-position: -144px -160px !important; }
+.ui-icon-power { background-position: 0 -176px !important; }
+.ui-icon-signal-diag { background-position: -16px -176px !important; }
+.ui-icon-signal { background-position: -32px -176px !important; }
+.ui-icon-battery-0 { background-position: -48px -176px !important; }
+.ui-icon-battery-1 { background-position: -64px -176px !important; }
+.ui-icon-battery-2 { background-position: -80px -176px !important; }
+.ui-icon-battery-3 { background-position: -96px -176px !important; }
+.ui-icon-circle-plus { background-position: 0 -192px !important; }
+.ui-icon-circle-minus { background-position: -16px -192px !important; }
+.ui-icon-circle-close { background-position: -32px -192px !important; }
+.ui-icon-circle-triangle-e { background-position: -48px -192px !important; }
+.ui-icon-circle-triangle-s { background-position: -64px -192px !important; }
+.ui-icon-circle-triangle-w { background-position: -80px -192px !important; }
+.ui-icon-circle-triangle-n { background-position: -96px -192px !important; }
+.ui-icon-circle-arrow-e { background-position: -112px -192px !important; }
+.ui-icon-circle-arrow-s { background-position: -128px -192px !important; }
+.ui-icon-circle-arrow-w { background-position: -144px -192px !important; }
+.ui-icon-circle-arrow-n { background-position: -160px -192px !important; }
+.ui-icon-circle-zoomin { background-position: -176px -192px !important; }
+.ui-icon-circle-zoomout { background-position: -192px -192px !important; }
+.ui-icon-circle-check { background-position: -208px -192px !important; }
+.ui-icon-circlesmall-plus { background-position: 0 -208px !important; }
+.ui-icon-circlesmall-minus { background-position: -16px -208px !important; }
+.ui-icon-circlesmall-close { background-position: -32px -208px !important; }
+.ui-icon-squaresmall-plus { background-position: -48px -208px !important; }
+.ui-icon-squaresmall-minus { background-position: -64px -208px !important; }
+.ui-icon-squaresmall-close { background-position: -80px -208px !important; }
+.ui-icon-grip-dotted-vertical { background-position: 0 -224px !important; }
+.ui-icon-grip-dotted-horizontal { background-position: -16px -224px !important; }
+.ui-icon-grip-solid-vertical { background-position: -32px -224px !important; }
+.ui-icon-grip-solid-horizontal { background-position: -48px -224px !important; }
+.ui-icon-gripsmall-diagonal-se { background-position: -64px -224px !important; }
+.ui-icon-grip-diagonal-se { background-position: -80px -224px !important; }
+
+
+/* Misc visuals
+----------------------------------*/
+
+/* Corner radius */
+.ui-corner-tl { -moz-border-radius-topleft: 8px !important; -webkit-border-top-left-radius: 8px !important; border-top-left-radius: 8px !important; }
+.ui-corner-tr { -moz-border-radius-topright: 8px !important; -webkit-border-top-right-radius: 8px !important; border-top-right-radius: 8px !important; }
+.ui-corner-bl { -moz-border-radius-bottomleft: 8px !important; -webkit-border-bottom-left-radius: 8px !important; border-bottom-left-radius: 8px !important; }
+.ui-corner-br { -moz-border-radius-bottomright: 8px !important; -webkit-border-bottom-right-radius: 8px !important; border-bottom-right-radius: 8px !important; }
+.ui-corner-top { -moz-border-radius-topleft: 8px !important; -webkit-border-top-left-radius: 8px !important; border-top-left-radius: 8px !important; -moz-border-radius-topright: 8px !important; -webkit-border-top-right-radius: 8px !important; border-top-right-radius: 8px !important; }
+.ui-corner-bottom { -moz-border-radius-bottomleft: 8px !important; -webkit-border-bottom-left-radius: 8px !important; border-bottom-left-radius: 8px !important; -moz-border-radius-bottomright: 8px !important; -webkit-border-bottom-right-radius: 8px !important; border-bottom-right-radius: 8px !important; }
+.ui-corner-right {  -moz-border-radius-topright: 8px !important; -webkit-border-top-right-radius: 8px !important; border-top-right-radius: 8px !important; -moz-border-radius-bottomright: 8px !important; -webkit-border-bottom-right-radius: 8px !important; border-bottom-right-radius: 8px !important; }
+.ui-corner-left { -moz-border-radius-topleft: 8px !important; -webkit-border-top-left-radius: 8px !important; border-top-left-radius: 8px !important; -moz-border-radius-bottomleft: 8px !important; -webkit-border-bottom-left-radius: 8px !important; border-bottom-left-radius: 8px !important; }
+.ui-corner-all { -moz-border-radius: 8px !important; -webkit-border-radius: 8px !important; border-radius: 8px !important; }
+
+/* Overlays */
+.ui-widget-overlay { background: #5c5c5c url(images/ui-bg_flat_50_5c5c5c_40x100.png) 50% 50% repeat-x !important; opacity: .80 !important;filter:Alpha(Opacity=80) !important; }
+.ui-widget-shadow { margin: -7px 0 0 -7px !important; padding: 7px !important; background: #cccccc url(images/ui-bg_flat_30_cccccc_40x100.png) 50% 50% repeat-x !important; opacity: .60 !important;filter:Alpha(Opacity=60) !important; -moz-border-radius: 8px !important; -webkit-border-radius: 8px !important; border-radius: 8px !important; }/* Resizable
+----------------------------------*/
+.ui-resizable { position: relative !important;}
+.ui-resizable-handle { position: absolute !important;font-size: 0.1px !important;z-index: 99999 !important; display: block !important;}
+.ui-resizable-disabled .ui-resizable-handle, .ui-resizable-autohide .ui-resizable-handle { display: none !important; }
+.ui-resizable-n { cursor: n-resize !important; height: 7px !important; width: 100% !important; top: -5px !important; left: 0 !important; }
+.ui-resizable-s { cursor: s-resize !important; height: 7px !important; width: 100% !important; bottom: -5px !important; left: 0 !important; }
+.ui-resizable-e { cursor: e-resize !important; width: 7px !important; right: -5px !important; top: 0 !important; height: 100% !important; }
+.ui-resizable-w { cursor: w-resize !important; width: 7px !important; left: -5px !important; top: 0 !important; height: 100% !important; }
+.ui-resizable-se { cursor: se-resize !important; width: 12px !important; height: 12px !important; right: 1px !important; bottom: 1px !important; }
+.ui-resizable-sw { cursor: sw-resize !important; width: 9px !important; height: 9px !important; left: -5px !important; bottom: -5px !important; }
+.ui-resizable-nw { cursor: nw-resize !important; width: 9px !important; height: 9px !important; left: -5px !important; top: -5px !important; }
+.ui-resizable-ne { cursor: ne-resize !important; width: 9px !important; height: 9px !important; right: -5px !important; top: -5px !important;}/* Accordion
+----------------------------------*/
+.ui-accordion .ui-accordion-header { cursor: pointer !important; position: relative !important; margin-top: 1px !important; zoom: 1 !important; }
+.ui-accordion .ui-accordion-li-fix { display: inline !important; }
+.ui-accordion .ui-accordion-header-active { border-bottom: 0 !important !important; }
+.ui-accordion .ui-accordion-header a { display: block !important; font-size: 1em !important; padding: .5em .5em .5em .7em !important; }
+/* IE7-/Win - Fix extra vertical space in lists */
+.ui-accordion a { zoom: 1 !important; }
+.ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em !important; }
+.ui-accordion .ui-accordion-header .ui-icon { position: absolute !important; left: .5em !important; top: 50% !important; margin-top: -8px !important; }
+.ui-accordion .ui-accordion-content { padding: 1em 2.2em !important; border-top: 0 !important; margin-top: -2px !important; position: relative !important; top: 1px !important; margin-bottom: 2px !important; overflow: auto !important; display: none !important; zoom: 1 !important; }
+.ui-accordion .ui-accordion-content-active { display: block !important; }/* Autocomplete
+----------------------------------*/
+.ui-autocomplete { position: absolute !important; cursor: default !important; }	
+.ui-autocomplete-loading { background: white url('images/ui-anim_basic_16x16.gif') right center no-repeat !important; }
+
+/* workarounds */
+* html .ui-autocomplete { width:1px !important; } /* without this, the menu expands to 100% in IE6 */
+
+/* Menu
+----------------------------------*/
+.ui-menu {
+	list-style:none !important;
+	padding: 2px !important;
+	margin: 0 !important;
+	display:block !important;
+}
+.ui-menu .ui-menu {
+	margin-top: -3px !important;
+}
+.ui-menu .ui-menu-item {
+	margin:0 !important;
+	padding: 0 !important;
+	zoom: 1 !important;
+	float: left !important;
+	clear: left !important;
+	width: 100% !important;
+}
+.ui-menu .ui-menu-item a {
+	text-decoration:none !important;
+	display:block !important;
+	padding:.2em .4em !important;
+	line-height:1.5 !important;
+	zoom:1 !important;
+}
+.ui-menu .ui-menu-item a.ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-active {
+	font-weight: normal !important;
+	margin: -1px !important;
+}
+/* Button
+----------------------------------*/
+
+.ui-button { display: inline-block !important; position: relative !important; padding: 0 !important; margin-right: .1em !important; text-decoration: none !important !important; cursor: pointer !important; text-align: center !important; zoom: 1 !important; overflow: visible !important; } /* the overflow property removes extra width in IE */
+.ui-button-icon-only { width: 2.2em !important; } /* to make room for the icon, a width needs to be set here */
+button.ui-button-icon-only { width: 2.4em !important; } /* button elements seem to need a little more width */
+.ui-button-icons-only { width: 3.4em !important; } 
+button.ui-button-icons-only { width: 3.7em !important; } 
+
+/*button text element */
+.ui-button .ui-button-text { display: block !important; line-height: 1.4 !important;  }
+.ui-button-text-only .ui-button-text { padding: .4em 1em !important; }
+.ui-button-icon-only .ui-button-text, .ui-button-icons-only .ui-button-text { padding: .4em !important; text-indent: -9999999px !important; }
+.ui-button-text-icon .ui-button-text, .ui-button-text-icons .ui-button-text { padding: .4em 1em .4em 2.1em !important; }
+.ui-button-text-icons .ui-button-text { padding-left: 2.1em !important; padding-right: 2.1em !important; }
+/* no icon support for input elements, provide padding by default */
+input.ui-button { padding: .4em 1em !important; }
+
+/*button icon element(s) */
+.ui-button-icon-only .ui-icon, .ui-button-text-icon .ui-icon, .ui-button-text-icons .ui-icon, .ui-button-icons-only .ui-icon { position: absolute !important; top: 50% !important; margin-top: -8px !important; }
+.ui-button-icon-only .ui-icon { left: 50% !important; margin-left: -8px !important; }
+.ui-button-text-icon .ui-button-icon-primary, .ui-button-text-icons .ui-button-icon-primary, .ui-button-icons-only .ui-button-icon-primary { left: .5em !important; }
+.ui-button-text-icons .ui-button-icon-secondary, .ui-button-icons-only .ui-button-icon-secondary { right: .5em !important; }
+
+/*button sets*/
+.ui-buttonset { margin-right: 7px !important; }
+.ui-buttonset .ui-button { margin-left: 0 !important; margin-right: -.3em !important; }
+
+/* workarounds */
+button.ui-button::-moz-focus-inner { border: 0 !important; padding: 0 !important; } /* reset extra padding in Firefox */
+
+
+
+
+
+/* Dialog
+----------------------------------*/
+.ui-dialog { position: absolute !important; padding: .2em !important; width: 300px !important; overflow: hidden !important; }
+.ui-dialog .ui-dialog-titlebar { padding: .5em 1em .3em !important; position: relative !important;  }
+.ui-dialog .ui-dialog-title { float: left !important; margin: .1em 16px .2em 0 !important; } 
+.ui-dialog .ui-dialog-titlebar-close { position: absolute !important; right: .3em !important; top: 50% !important; width: 19px !important; margin: -10px 0 0 0 !important; padding: 1px !important; height: 18px !important; }
+.ui-dialog .ui-dialog-titlebar-close span { display: block !important; margin: 1px !important; }
+.ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0 !important; }
+.ui-dialog .ui-dialog-content { border: 0 !important; padding: .5em 1em !important; background: none !important; overflow: auto !important; zoom: 1 !important; }
+.ui-dialog .ui-dialog-buttonpane { text-align: left !important; border-width: 1px 0 0 0 !important; background-image: none !important; margin: .5em 0 0 0 !important; padding: .3em 1em .5em .4em !important; }
+.ui-dialog .ui-dialog-buttonpane button { float: right !important; margin: .5em .4em .5em 0 !important; cursor: pointer !important; padding: .2em .6em .3em .6em !important; line-height: 1.4em !important; width:auto !important; overflow:visible !important; }
+.ui-dialog .ui-resizable-se { width: 14px !important; height: 14px !important; right: 3px !important; bottom: 3px !important; }
+.ui-draggable .ui-dialog-titlebar { cursor: move !important; }
+/* Slider
+----------------------------------*/
+.ui-slider { position: relative !important; text-align: left !important; }
+.ui-slider .ui-slider-handle { position: absolute !important; z-index: 2 !important; width: 1.2em !important; height: 1.2em !important; cursor: default !important; }
+.ui-slider .ui-slider-range { position: absolute !important; z-index: 1 !important; font-size: .7em !important; display: block !important; border: 0 !important; background-position: 0 0 !important; }
+
+.ui-slider-horizontal { height: .8em !important; }
+.ui-slider-horizontal .ui-slider-handle { top: -.3em !important; margin-left: -.6em !important; }
+.ui-slider-horizontal .ui-slider-range { top: 0 !important; height: 100% !important; }
+.ui-slider-horizontal .ui-slider-range-min { left: 0 !important; }
+.ui-slider-horizontal .ui-slider-range-max { right: 0 !important; }
+
+.ui-slider-vertical { width: .8em !important; height: 100px !important; }
+.ui-slider-vertical .ui-slider-handle { left: -.3em !important; margin-left: 0 !important; margin-bottom: -.6em !important; }
+.ui-slider-vertical .ui-slider-range { left: 0 !important; width: 100% !important; }
+.ui-slider-vertical .ui-slider-range-min { bottom: 0 !important; }
+.ui-slider-vertical .ui-slider-range-max { top: 0 !important; }/* Tabs
+----------------------------------*/
+.ui-tabs { position: relative !important; padding: .2em !important; zoom: 1 !important; } /* position: relative prevents IE scroll bug (element with position: relative inside container with overflow: auto appear as "fixed") */
+.ui-tabs .ui-tabs-nav { margin: 0 !important; padding: .2em .2em 0 !important; }
+.ui-tabs .ui-tabs-nav li { list-style: none !important; float: left !important; position: relative !important; top: 1px !important; margin: 0 .2em 1px 0 !important; border-bottom: 0 !important !important; padding: 0 !important; white-space: nowrap !important; }
+.ui-tabs .ui-tabs-nav li a { float: left !important; padding: .5em 1em !important; text-decoration: none !important; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0 !important; padding-bottom: 1px !important; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text !important; }
+.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer !important; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
+.ui-tabs .ui-tabs-panel { display: block !important; border-width: 0 !important; padding: 1em 1.4em !important; background: none !important; }
+.ui-tabs .ui-tabs-hide { display: none !important !important; }
+/* Datepicker
+----------------------------------*/
+.ui-datepicker { width: 17em !important; padding: .2em .2em 0 !important; }
+.ui-datepicker .ui-datepicker-header { position:relative !important; padding:.2em 0 !important; }
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { position:absolute !important; top: 2px !important; width: 1.8em !important; height: 1.8em !important; }
+.ui-datepicker .ui-datepicker-prev-hover, .ui-datepicker .ui-datepicker-next-hover { top: 1px !important; }
+.ui-datepicker .ui-datepicker-prev { left:2px !important; }
+.ui-datepicker .ui-datepicker-next { right:2px !important; }
+.ui-datepicker .ui-datepicker-prev-hover { left:1px !important; }
+.ui-datepicker .ui-datepicker-next-hover { right:1px !important; }
+.ui-datepicker .ui-datepicker-prev span, .ui-datepicker .ui-datepicker-next span { display: block !important; position: absolute !important; left: 50% !important; margin-left: -8px !important; top: 50% !important; margin-top: -8px !important;  }
+.ui-datepicker .ui-datepicker-title { margin: 0 2.3em !important; line-height: 1.8em !important; text-align: center !important; }
+.ui-datepicker .ui-datepicker-title select { font-size:1em !important; margin:1px 0 !important; }
+.ui-datepicker select.ui-datepicker-month-year {width: 100% !important;}
+.ui-datepicker select.ui-datepicker-month, 
+.ui-datepicker select.ui-datepicker-year { width: 49% !important;}
+.ui-datepicker table {width: 100% !important; font-size: .9em !important; border-collapse: collapse !important; margin:0 0 .4em !important; }
+.ui-datepicker th { padding: .7em .3em !important; text-align: center !important; font-weight: bold !important; border: 0 !important;  }
+.ui-datepicker td { border: 0 !important; padding: 1px !important; }
+.ui-datepicker td span, .ui-datepicker td a { display: block !important; padding: .2em !important; text-align: right !important; text-decoration: none !important; }
+.ui-datepicker .ui-datepicker-buttonpane { background-image: none !important; margin: .7em 0 0 0 !important; padding:0 .2em !important; border-left: 0 !important; border-right: 0 !important; border-bottom: 0 !important; }
+.ui-datepicker .ui-datepicker-buttonpane button { float: right !important; margin: .5em .2em .4em !important; cursor: pointer !important; padding: .2em .6em .3em .6em !important; width:auto !important; overflow:visible !important; }
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current { float:left !important; }
+
+/* with multiple calendars */
+.ui-datepicker.ui-datepicker-multi { width:auto !important; }
+.ui-datepicker-multi .ui-datepicker-group { float:left !important; }
+.ui-datepicker-multi .ui-datepicker-group table { width:95% !important; margin:0 auto .4em !important; }
+.ui-datepicker-multi-2 .ui-datepicker-group { width:50% !important; }
+.ui-datepicker-multi-3 .ui-datepicker-group { width:33.3% !important; }
+.ui-datepicker-multi-4 .ui-datepicker-group { width:25% !important; }
+.ui-datepicker-multi .ui-datepicker-group-last .ui-datepicker-header { border-left-width:0 !important; }
+.ui-datepicker-multi .ui-datepicker-group-middle .ui-datepicker-header { border-left-width:0 !important; }
+.ui-datepicker-multi .ui-datepicker-buttonpane { clear:left !important; }
+.ui-datepicker-row-break { clear:both !important; width:100% !important; }
+
+/* RTL support */
+.ui-datepicker-rtl { direction: rtl !important; }
+.ui-datepicker-rtl .ui-datepicker-prev { right: 2px !important; left: auto !important; }
+.ui-datepicker-rtl .ui-datepicker-next { left: 2px !important; right: auto !important; }
+.ui-datepicker-rtl .ui-datepicker-prev:hover { right: 1px !important; left: auto !important; }
+.ui-datepicker-rtl .ui-datepicker-next:hover { left: 1px !important; right: auto !important; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane { clear:right !important; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane button { float: left !important; }
+.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current { float:right !important; }
+.ui-datepicker-rtl .ui-datepicker-group { float:right !important; }
+.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header { border-right-width:0 !important; border-left-width:1px !important; }
+.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header { border-right-width:0 !important; border-left-width:1px !important; }
+
+/* IE6 IFRAME FIX (taken from datepicker 1.5.3 */
+.ui-datepicker-cover {
+    display: none !important; /*sorry for IE5*/
+    display/**/: block !important; /*sorry for IE5*/
+    position: absolute !important; /*must have*/
+    z-index: -1 !important; /*must have*/
+    filter: mask() !important; /*must have*/
+    top: -4px !important; /*must have*/
+    left: -4px !important; /*must have*/
+    width: 200px !important; /*must have*/
+    height: 200px !important; /*must have*/
+}/* Progressbar
+----------------------------------*/
+.ui-progressbar { height:2em !important; text-align: left !important; }
+.ui-progressbar .ui-progressbar-value {margin: -1px !important; height:100% !important; }
+
+
