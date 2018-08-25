@@ -638,7 +638,7 @@ CREATE TABLE `main_votecounttemplate` (
 
 DROP TABLE IF EXISTS `migration_version`;
 CREATE TABLE `migration_version` (
-  `version` int(11) NOT NULL AUTO_INCREMENT
+  `version` int(11) NOT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 INSERT INTO `migration_version` VALUES (1);
 -- Dump completed on 2016-11-29 12:45:48
