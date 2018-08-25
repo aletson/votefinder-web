@@ -1,435 +1,435 @@
 body {
-	background: #eeeeee;
-	font-family: Cambria, Georgia, serif;
+	background: #eeeeee !important;
+	font-family: Cambria, Georgia, serif !important;
 }
 
 body h1 {
-    font-weight: normal;
-    font-size: 2em;
+    font-weight: normal !important;
+    font-size: 2em !important;
 }
 
 h1 a {
-	text-decoration: none;
-	color: black;	
+	text-decoration: none !important;
+	color: black !important;	
 }
 
 body h2 {
-    font-weight: normal;
-    font-size: 1.2em;
+    font-weight: normal !important;
+    font-size: 1.2em !important;
 }
 
 #aboveContainer { 
-	text-align: right;
-	padding: 0.2em;
-	margin-top: 2em;
-	margin-bottom: 0;
-	margin-left: auto;
-	margin-right: auto;
-	width: 80%;
+	text-align: right !important;
+	padding: 0.2em !important;
+	margin-top: 2em !important;
+	margin-bottom: 0 !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	width: 80% !important;
 }
 
 #belowContainer { 
-	padding: 0.2em;
-	margin-top: 0;
-	margin-bottom: 0;
-	margin-left: auto;
-	margin-right: auto;
-	width: 80%;
+	padding: 0.2em !important;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	width: 80% !important;
 }
 
 #belowText {
-	color: #888;
-	float: left;
-	font-size: small;
+	color: #888 !important;
+	float: left !important;
+	font-size: small !important;
 }
 
 #belowText a {
-	text-decoration: none;
-	color: #88A;
+	text-decoration: none !important;
+	color: #88A !important;
 }
 
 #belowText a:hover {
-	text-decoration: underline;
+	text-decoration: underline !important;
 }
 
 #belowIcons {
-	vertical-align: middle;
-	float: right;
+	vertical-align: middle !important;
+	float: right !important;
 }
 
 #aboveContainer a {
-	text-decoration: none;
+	text-decoration: none !important;
 }
 
 #mainContainer {
-	background: white;
-	border: 2px solid black;
-	padding: 1em;
-	margin-left: auto;
-	margin-right: auto;
-	width: 80%;
+	background: white !important;
+	border: 2px solid black !important;
+	padding: 1em !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	width: 80% !important;
 }
 
 #mainContainer hr {
-	color: black;
-	background-color: #ddd;
-	height: 2px;
-	border: none;
+	color: black !important;
+	background-color: #ddd !important;
+	height: 2px !important;
+	border: none !important;
 }
 
 .blogPost {
-	margin-top: 1em;
-	padding: 0.5em;
+	margin-top: 1em !important;
+	padding: 0.5em !important;
 }
 
 .blogPostTitle {
-	font-size: 1.4em;
-	/*font-weight: bold;*/
+	font-size: 1.4em !important;
+	/*font-weight: bold !important;*/
 }
 
 .blogPostBody {
-	margin: 1em;
+	margin: 1em !important;
 }
 
 .invisible {
-	display: none;
-	visible: false;
+	display: none !important;
+	visible: false !important;
 }
 
 .visible {
-	display: block;
-	visible: true;
+	display: block !important;
+	visible: true !important;
 }
 
 #loading {
-	margin: 1em;
-	padding: 0.5em; 
+	margin: 1em !important;
+	padding: 0.5em !important; 
 }
 
 .loadingImg {
-	margin-right: 1em;
+	margin-right: 1em !important;
 }
 
 .addGameResult {
-	font-size: 1.2em;
+	font-size: 1.2em !important;
 }
 
 #closeWindow {
-	width: 100%;
-	text-align: right;
+	width: 100% !important;
+	text-align: right !important;
 }
 
 .grayed {
-	color: #aaa;
-	font-style: italic;
+	color: #aaa !important;
+	font-style: italic !important;
 }
 
 .postList {
-	padding-left: 2em;
-	padding-right: 2em;
+	padding-left: 2em !important;
+	padding-right: 2em !important;
 }
 
 .playerList {
-	background: red;
+	background: red !important;
 
-	border: 2px solid #ddd;
-	padding: 0.5em;
-	margin: 0.5em;
-	width: 25%;
-	vertical-align: top;
+	border: 2px solid #ddd !important;
+	padding: 0.5em !important;
+	margin: 0.5em !important;
+	width: 25% !important;
+	vertical-align: top !important;
 	
 }
 
 .player {
-	padding-left: 0.5em;
-	padding-right: 0.5em;
+	padding-left: 0.5em !important;
+	padding-right: 0.5em !important;
 }
 .player a {
-	text-decoration: none;
-	display: block;
+	text-decoration: none !important;
+	display: block !important;
 }
 
 .player a:hover {
-	color: white;
+	color: white !important;
 }
 
 .player:hover {
-	background-color: #8888ff;
+	background-color: #8888ff !important;
 }
 
 #mod {
-	background-color: #ffffdd;
+	background-color: #ffffdd !important;
 }
 
 #alive {
-	background-color: #ddffdd;
+	background-color: #ddffdd !important;
 }
 
 #dead {
-	background-color: #ffddaa;
+	background-color: #ffddaa !important;
 }
 
 #spectator {
-	background-color: #f5f5f5;
+	background-color: #f5f5f5 !important;
 }
 
 .blackOutline {
-	border: 1px solid black;
+	border: 1px solid black !important;
 }
 
 .creator {
-	font-style: italic;
+	font-style: italic !important;
 }
 
 .ui-tabs .ui-tabs-hide {
-     display: none;
+     display: none !important;
 }
 
 .postsTable {
-	width: 100%;
+	width: 100% !important;
 }
 
 .postRowEven {
-	background: #e8e8e8;
+	background: #e8e8e8 !important;
 }
 
 .postRowOdd {
-	background: #f4f4f4;
+	background: #f4f4f4 !important;
 }
 
 #postList {
-	width: 100%;
-	height: 30em;
-	overflow: auto;
+	width: 100% !important;
+	height: 30em !important;
+	overflow: auto !important;
 }
 
 #disabled-navigation {
-	align: center;
-	border: 1px solid #888;
-	background: white;
-	padding: 0.5em;
-	display: inline;
- 	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	align: center !important;
+	border: 1px solid #888 !important;
+	background: white !important;
+	padding: 0.5em !important;
+	display: inline !important;
+ 	-moz-border-radius: 4px !important;
+	-webkit-border-radius: 4px !important;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
+	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
+	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
 }
 
 .post {
-	border: 1px solid #888;
-	padding: 0.5em;
-	margin: 0.5em;
- 	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+	border: 1px solid #888 !important;
+	padding: 0.5em !important;
+	margin: 0.5em !important;
+ 	-moz-border-radius: 4px !important;
+	-webkit-border-radius: 4px !important;
+	box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
+	-moz-box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
+	-webkit-box-shadow: 2px 2px 6px rgba(0,0,0,0.6) !important;
 }
 
 .comment-poster {
-	font-weight: bold;
-	font-size: 1.1em;
+	font-weight: bold !important;
+	font-size: 1.1em !important;
 }
 
 .messages {
-	width: 50%;
-	margin-left: auto;
-	margin-right: auto;
+	width: 50% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
 }
 
 #topMenu {
-	width: 80%;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 0;
-	padding: 0;
+	width: 80% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	margin-top: 0 !important;
+	padding: 0 !important;
 }
 
-#deadlineHour, #deadlineMinute { width: 2em; }
+#deadlineHour, #deadlineMinute { width: 2em !important; }
 
 #votecount-results {
-	padding: 0.5em;
+	padding: 0.5em !important;
     
-    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD) !important;
     background: -webkit-gradient(linear,
-                left top, left bottom, from(#EEDEAD), to(#FEEEBD));
+                left top, left bottom, from(#EEDEAD), to(#FEEEBD)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0);
- 	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0) !important;
+ 	-moz-border-radius: 8px !important;
+	-webkit-border-radius: 8px !important;
 }
 
-.middle { vertical-align: top; }
+.middle { vertical-align: top !important; }
 
 #bbcode {
-	width: 100%;
-	height: 100%;
+	width: 100% !important;
+	height: 100% !important;
 }
 
 .template-form {
-	border: 0;
-	width: 95%;
-	border-spacing: 0;
+	border: 0 !important;
+	width: 95% !important;
+	border-spacing: 0 !important;
 x
 }
 
 .template-form tr td {
-	padding: 0.33em;
-	margin: 0;
+	padding: 0.33em !important;
+	margin: 0 !important;
 }
 
 .template-form tr td input[type="text"], .template-form tr td textarea {
-	width: 100%;
+	width: 100% !important;
 }
 
 td.label {
-	text-align: right;
-	margin-right: 1em;
+	text-align: right !important;
+	margin-right: 1em !important;
 }
 
 tr.row-highlight {
-	background-color: #e5e5e5;
+	background-color: #e5e5e5 !important;
 }
 
 tr.instructions {
-	display: none;
-	font-size: smaller;
-	color: #777;
+	display: none !important;
+	font-size: smaller !important;
+	color: #777 !important;
 }
 
 tr.instructions td.text {
-	background: #ffffcc;
-	vertical-align: top;
+	background: #ffffcc !important;
+	vertical-align: top !important;
 }
 
 .game {
-	display: block;
-	float: left;
-	border: 1px solid #bbb;
-	padding: 0.5em 1em 0.5em 1em;
-	margin: 0.2em;
-	width: 40%;
- 	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+	display: block !important;
+	float: left !important;
+	border: 1px solid #bbb !important;
+	padding: 0.5em 1em 0.5em 1em !important;
+	margin: 0.2em !important;
+	width: 40% !important;
+ 	-moz-border-radius: 8px !important;
+	-webkit-border-radius: 8px !important;
 }
 
 .mini {
-	background: #feb;
-        background: -moz-linear-gradient(top, #fEeEbD, #ffffd6);
-        background: -webkit-gradient(linear, left top, left bottom, from(#fEeEbD), to(#ffffd6));
-        filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#fEeEbD', EndColorStr='#ffffd6', GradientType=0);
+	background: #feb !important;
+        background: -moz-linear-gradient(top, #fEeEbD, #ffffd6) !important;
+        background: -webkit-gradient(linear, left top, left bottom, from(#fEeEbD), to(#ffffd6)) !important;
+        filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#fEeEbD', EndColorStr='#ffffd6', GradientType=0) !important;
 }
 
 .big {
-	background: #ff5;
-	background: -moz-linear-gradient(top, #ffff44, #ffffd6);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffff44), color-stop(1, #ffffd6));
-	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#ffff44', EndColorStr='#ffffd6', GradientType=0);
+	background: #ff5 !important;
+	background: -moz-linear-gradient(top, #ffff44, #ffffd6) !important;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffff44), color-stop(1, #ffffd6)) !important;
+	filter: progid:DXImageTransform.Microsoft.Gradient(StartColorStr='#ffff44', EndColorStr='#ffffd6', GradientType=0) !important;
 }
 
 .game:hover {
-	border: 1px solid black;
-	cursor: pointer;
+	border: 1px solid black !important;
+	cursor: pointer !important;
 }
 
 .game-title {
-	text-decoration: none;
-	font-size: 1.2em;
-	color: black;
+	text-decoration: none !important;
+	font-size: 1.2em !important;
+	color: black !important;
 }
 
 .game-updated {
 }
 
 .second-line, .game-mod {
-	font-style: italic;
-	filter:alpha(opacity=60);
-	opacity:0.6;
-	font-size: 0.9em;
+	font-style: italic !important;
+	filter:alpha(opacity=60) !important;
+	opacity:0.6 !important;
+	font-size: 0.9em !important;
 }
 
 .game-mod {
-	float: right;
+	float: right !important;
 }
 
 .game-mod a {
-	text-decoration: none;
+	text-decoration: none !important;
 }
 
 table.game-list {
-        border: 0;
-        width: 95%;
-        border-spacing: 0;
+        border: 0 !important;
+        width: 95% !important;
+        border-spacing: 0 !important;
 }
 
 table.game-list tbody tr td {
-	padding: 0.2em;
-	margin: 0px;
+	padding: 0.2em !important;
+	margin: 0px !important;
 }
 
 .game-list a {
-	text-decoration: none;
+	text-decoration: none !important;
 }
 
 table.game-list thead tr {
-	cursor: pointer;
-	font-size: 1.2em;
-	text-decoration: underline;
+	cursor: pointer !important;
+	font-size: 1.2em !important;
+	text-decoration: underline !important;
 }
 
 .even { 
-	background: #f8f8f8; 
+	background: #f8f8f8 !important; 
 }
 
 .asc {
-	padding-left: 11px;
-	background: url('/static/up-arrow.png') no-repeat left center;
+	padding-left: 11px !important;
+	background: url('/static/up-arrow.png') no-repeat left center !important;
 }
 
 .desc {
-	padding-left: 11px;
-	background: url('/static/down-arrow.png') no-repeat left center;
+	padding-left: 11px !important;
+	background: url('/static/down-arrow.png') no-repeat left center !important;
 }
 
 .player-pm {
-	border: 1px solid #ccc;
-	padding: 0.5em;
-	margin-bottom: 1em;
-	width: 90%;
+	border: 1px solid #ccc !important;
+	padding: 0.5em !important;
+	margin-bottom: 1em !important;
+	width: 90% !important;
     
-    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD);
+    background: -moz-linear-gradient(top, #EEDEAD, #FEEEBD) !important;
     background: -webkit-gradient(linear,
-                left top, left bottom, from(#FFEFBE), to(#FEEEBD));
+                left top, left bottom, from(#FFEFBE), to(#FEEEBD)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient(
-                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0);
- 	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px;
+                StartColorStr='#EEDEAD', EndColorStr='#FEEEBD', GradientType=0) !important;
+ 	-moz-border-radius: 8px !important;
+	-webkit-border-radius: 8px !important;
 }
 
 .player-pm-name-disabled {
-	font-weight: normal;
-	font-style: italic;
-	margin-bottom: 0;
+	font-weight: normal !important;
+	font-style: italic !important;
+	margin-bottom: 0 !important;
 }
 
 .player-pm-name-enabled {
-	font-weight: bold;
-	margin-bottom: 1em;
+	font-weight: bold !important;
+	margin-bottom: 1em !important;
 }
 
 .player-pm-body {
-	padding-left: 2em;
+	padding-left: 2em !important;
 }
 
 .player-pm-body textarea {
-	width: 95%;
-	height: 10em;
+	width: 95% !important;
+	height: 10em !important;
 }
 
 /* remove halo effect in firefox   */
 a:active{
-	outline: none;
+	outline: none !important;
 }		
 
 *:not(.fa) {
