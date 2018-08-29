@@ -128,7 +128,7 @@ class PageParser:
         for bold in post.bodySoup.findAll("b"):
             content = "".join([str(x) for x in bold.contents])
             for line in content.splitlines():
-                self.SearchLineForVotes(post, line)
+                self.SearchLineForActions(post, line)
 
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data)
