@@ -2,7 +2,7 @@ boto3==1.5.13
 chardet==3.0.4
 ConfigArgParse==0.13.0
 configobj==5.0.6
-Django==1.11.14
+Django==1.11.15
 django-contrib-comments
 image==1.5.19
 ipaddress==1.0.22
@@ -11,5 +11,5 @@ parsedatetime==2.4
 Pillow==3.2.0
 poster==0.8.1
 pytz==2018.5
-requests==2.19.1
+requests==2.20.0
 simplejson==3.16.0
