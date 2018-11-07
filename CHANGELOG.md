@@ -11,6 +11,9 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.2.5
+- Critical bugfix
+
 ### 2.2.4
 - Added ability to set deadline via in-thread post
 - Security fixes and package updates
