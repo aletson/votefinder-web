@@ -115,7 +115,7 @@ class PageParser:
             match = pattern.search(line,pos)
             while match:
                 (numHrs,) = match.groups()
-                if numHrs:
+                if numHrs and numHrs > 0:
                     numHrs = int(numHrs)
                     newDeadline = post.timestamp + timedelta(hours=numHrs)
                     post.game.deadline = newDeadline
