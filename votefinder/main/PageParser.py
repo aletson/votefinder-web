@@ -107,7 +107,7 @@ class PageParser:
                 pass
             match = pattern.search(line, match.end())
 
-        if post.game.is_user_mod(post.author):
+        if post.game.is_player_mod(post.author):
             # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
             # pattern search for ##deadline and # of hours
             pattern = re.compile("##\\s*deadline[:\\s+](\\d+)", re.I)
