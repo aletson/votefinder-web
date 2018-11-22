@@ -93,7 +93,7 @@ class PageParser:
                 v.target = self.AutoResolveVote(v.targetString)
                 v.unvote = False
 
-                if v.target == None and (v.targetString.lower() == "nolynch" or v.targetString.lower() == "no lynch" or v.targetString.lower() == "no execute" or v.targetString.lower() == "no cuddle"):
+                if v.target == None and (v.targetString.lower() == "nolynch" or v.targetString.lower() == "no lynch" or v.targetString.lower() == "no execute" or v.targetString.lower() == "no hang" or v.targetString.lower() == "no cuddle"):
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
