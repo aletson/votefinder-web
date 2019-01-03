@@ -679,8 +679,7 @@ def active_games_style(request, style):
 
         return render(request, "wiki_games.html", {'big_games': big_games, 'mini_games': mini_games, 'style': style})
     elif style == "closedmonthly":
-        game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(
-            select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id"}).order_by(
+        game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('posts__timestamp')).order_by(
             "-last_post")
         game_list = filter(lambda g: datetime.now() - g.last_post < timedelta(days=31), game_list)
 
