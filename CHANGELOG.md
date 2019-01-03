@@ -11,6 +11,18 @@
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
 
+### 2.2.8
+- Please welcome 2019 into your hearts
+- Some really heckin' neat query optimization
+- Behind-the-scenes work to prep for the Send PMs feature
+- One missed http-to-https conversion
+
+### 2.2.7
+- Fixes sorting on Closed Games tab
+
+### 2.2.6
+- Fixes issue with new page parser stuff
+
 ### 2.2.5
 - Critical bugfix
 
