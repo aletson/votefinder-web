@@ -698,7 +698,7 @@ def active_games_json(request):
 
 
 def closed_games(request):
-    game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max(post__timestamp),first_post=Min(post__timestamp))
+    game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('post__timestamp'),first_post=Min('post__timestamp'))
     return render(request, "closed.html", {'games': game_list, 'total': len(game_list)})
 
 
