@@ -705,6 +705,11 @@ def closed_games(request):
     return render(request, "closed.html", {'games': game_list, 'total': len(game_list)})
 
 
+def games_calendar(request, year=datetime(datetime.today().year), month=datetime(datetime.today().month)):
+    game_list = Game.objects.filter(last_post__lt=) | Game.objects.filter(first_post__gt=)
+    game_list = game_list.order_by("name").annotate(last_post=max("post__timestamp"), first_post=min("post__timestamp")
+
+
 @login_required
 def add_vote(request, gameid, player, votes, target):
     game = get_object_or_404(Game, id=gameid)
