@@ -11,7 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import connections
-from django.db.models import Q
+from django.db.models import Q, Max, Min
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
@@ -698,10 +698,7 @@ def active_games_json(request):
 
 
 def closed_games(request):
-    game_list = Game.objects.select_related().filter(closed=True).order_by("name").extra(
-        select={'last_post': "select max(timestamp) from main_post where main_post.game_id=main_game.id",
-                'first_post': "select min(timestamp) from main_post where main_post.game_id=main_game.id"})
-
+    game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('posts__timestamp'),first_post=Min('posts__timestamp'))
     return render(request, "closed.html", {'games': game_list, 'total': len(game_list)})
 
 
