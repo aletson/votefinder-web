@@ -12,6 +12,7 @@
         var curPage = {{ game.currentPage }};
         var maxPages = {{ game.maxPages }};
         var pushed = false;
+        $(document).tooltip();
         $('#dialog').modal('hide');
         $('#liveThread').button();
         $('#updateButton').button().click(function() {
@@ -44,7 +45,7 @@
             $.getJSON('/update/{{ game.id }}/', dataReceived);
         }
         $('#voteImgButton').click(function() {
-            prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=http://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
+            prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
         });
         {% if moderator and not game.closed %}
         {% if post_vc_button %}
