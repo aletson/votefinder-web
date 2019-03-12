@@ -69,7 +69,7 @@ class VotecountFormatter:
                         votelist.append(thisvote.replace("{{url}}", v['url']))
 
                 if len(votelist) > 0:
-                    this_line = game_template.single_line.replace("{{target}}", str(item['target'])).replace(
+                    this_line = game_template.single_line.replace("{{target}}", str(item['target'].name)).replace(
                         "{{count}}", str(item['count'])).replace("{{votelist}}", ', '.join(votelist))
                     votecount_lines.append(
                         this_line.replace("{{ticks}}", self.build_ticks(item['count'], self.tolynch)))
