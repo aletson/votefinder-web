@@ -50,7 +50,7 @@
         {% for game in games %}
             <tr>
                 <td><a href="{{ game.get_absolute_url }}">{{ game.name|safe }}</a></td>
-                <td><a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator }}</a></td>
+                <td><a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></td>
                 <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
                 <td>{{ game.players_count }}</td>
                 <td data-sort="{{ game.first_post|date:"U" }}">{{ game.first_post|date }}</td>
