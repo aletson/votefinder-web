@@ -54,7 +54,7 @@
                                             {% if v.unvote %}
                                                 <li>unvote</li>
                                             {% else %}
-                                                <li>vote: {% firstof v.target v.targetString %}
+                                                <li>vote: {% firstof v.target.name v.targetString %}
                                                     {% if not v.target %}
                                                         <i>(unresolved!)</i>
                                                     {% endif %}
