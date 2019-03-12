@@ -4,12 +4,18 @@
 - Migrate to Python 3 and more modern libraries
 - Images are now parsed into click-to-show format in posts.
 
-### 2.2 _(planned)_
+### 2.3 _(planned)_
 - Send PM's through the Votefinder application
 - Moderators are able to add loved/hated stacks to a player
 - Moderators can add votes that are only moderator-visible until hammer
 - Adds support for players with multiple votes natively
 - Generate "games in signup" image and provide a mechanism for automatically signing up for games
+
+### 2.3.0
+- Support for virtualenvs in passenger
+- Update to Django 1.11.20
+- Update to Python 3
+- Remove deprecated libraries & add new ones
 
 ### 2.2.8
 - Please welcome 2019 into your hearts
