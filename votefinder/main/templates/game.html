@@ -603,22 +603,22 @@
                 <td id="mod" class="playerList">
                     {% for p in game.moderators %}
                         <div class="player{% ifequal p.player game.moderator %} creator{% endifequal %}"><a
-                                href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                                href="/p:{{ p.player.id }}">{{ p.player.name|safe }}</a></div>
                     {% endfor %}
                 </td>
                 <td id="alive" class="playerList">
                     {% for p in game.living_players %}
-                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player.name|safe }}</a></div>
                     {% endfor %}
                 </td>
                 <td id="dead" class="playerList">
                     {% for p in game.dead_players %}
-                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player.name|safe }}</a></div>
                     {% endfor %}
                 </td>
                 <td id="spectator" class="playerList">
                     {% for p in game.spectators %}
-                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player|safe }}</a></div>
+                        <div class="player"><a href="/p:{{ p.player.id }}">{{ p.player.name|safe }}</a></div>
                     {% endfor %}
                 </td>
                 {% if moderator %}
