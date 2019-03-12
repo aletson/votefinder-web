@@ -66,11 +66,11 @@ class VoteCounter:
         tolynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
         lynched = filter(lambda key: self.results[key]['count'] >= tolynch, self.results)
 
-        if len(lynched) > 0:
+        if len(list(lynched)) > 0:
             gameday.notified = True
             gameday.save()
 
-            if len(lynched) == 1:
+            if len(list(lynched)) == 1:
                 game.status_update("%s was executed on day %s!" % (lynched[0].name, gameday.dayNumber))
                 self.PostLynchedMessage(game, lynched[0].name)
 
