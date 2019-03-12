@@ -1,8 +1,11 @@
 ## Changelog
 
 ### 3.0 _(planned)_
-- Migrate to Python 3 and more modern libraries
 - Images are now parsed into click-to-show format in posts.
+
+### 2.4 _(planned)_
+- Update to Python 3
+- Remove deprecated libraries & add new ones
 
 ### 2.3 _(planned)_
 - Send PM's through the Votefinder application
@@ -14,8 +17,6 @@
 ### 2.3.0
 - Support for virtualenvs in passenger
 - Update to Django 1.11.20
-- Update to Python 3
-- Remove deprecated libraries & add new ones
 
 ### 2.2.8
 - Please welcome 2019 into your hearts
