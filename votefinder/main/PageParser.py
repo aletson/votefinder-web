@@ -1,8 +1,7 @@
 import time
 from datetime import datetime, timedelta
-from BeautifulSoup import BeautifulSoup
-from BeautifulSoup import Comment
-from ForumPageDownloader import ForumPageDownloader
+from bs4 import BeautifulSoup, Comment
+from . import ForumPageDownloader
 from votefinder.main.models import *
 
 
@@ -253,7 +252,7 @@ class PageParser:
 
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
-		    quote['class'] = "quote well"
+            quote['class'] = "quote well"
         [img.extract() for img in post.bodySoup.findAll("img")]
         [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()

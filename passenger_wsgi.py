@@ -9,8 +9,8 @@ if sys.executable != PYTHON_BIN:
     
 cwd = os.getcwd()
 sys.path.append(cwd)
-sys.path.append(os.path.join(cwd, 'votefinder'))
-sys.path.insert(0,'{v}/lib/python2.7/site-packages'.format(v=VENV))
+sys.path.append(os.path.join(cwd, '/votefinder'))
+sys.path.insert(0,'{v}/lib/python3.5/site-packages'.format(v=VENV))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "votefinder.settings"
 

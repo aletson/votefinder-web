@@ -7,7 +7,7 @@ from django.utils.dateformat import format
 from django.utils.timesince import timeuntil
 from pytz import timezone
 
-import VoteCounter
+from . import VoteCounter
 from votefinder.main.models import *
 
 

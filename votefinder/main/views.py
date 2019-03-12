@@ -23,20 +23,18 @@ from django.template.context_processors import csrf
 from PIL import Image, ImageDraw, ImageFont
 from pytz import timezone, common_timezones
 
-from ForumPageDownloader import ForumPageDownloader
-from GameListDownloader import GameListDownloader
-from PageParser import PageParser
-from VoteCounter import VoteCounter
-from VotecountFormatter import VotecountFormatter
+
+from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, VotecountFormatter
 from votefinder.main.models import *
 
 
 def index(request):
     game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
-    big_games = filter(lambda g: g.is_big == True, game_list)
-    mini_games = filter(lambda g: g.is_big == False, game_list)
-
+#    big_games = filter(lambda g: g.is_big == True, game_list)
+#    mini_games = filter(lambda g: g.is_big == False, game_list)
+    big_games = [g for g in game_list if g.is_big == True]
+    mini_games = [g for g in game_list if g.is_big == False]
     posts = BlogPost.objects.all().order_by("-timestamp")[:5]
 
     game_count = Game.objects.count()
