@@ -64,7 +64,7 @@ def add_game(request, threadid):
         game = Game.objects.get(threadId=threadid)
         data['url'] = game.get_absolute_url()
     except Game.DoesNotExist:
-        p = PageParser()
+        p = PageParser.PageParser()
         p.user = request.user
         game = p.Add(threadid)
         if game:
@@ -157,7 +157,7 @@ def update(request, gameid):
     else:
         game.lock()
     try:
-        p = PageParser()
+        p = PageParser.PageParser()
         newGame = p.Update(game)
         if newGame:
             return HttpResponse(
@@ -309,7 +309,7 @@ def votecount(request, gameid):
     except Vote.DoesNotExist:
         pass
 
-    v = VotecountFormatter(game)
+    v = VotecountFormatter.VotecountFormatter(game)
     v.go()
 
     if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(
@@ -827,7 +827,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     except TypeError:
         tid = 11  # Default template
     game.template = VotecountTemplate.objects.get(id=11)  # Or id=tid, if we go to custom image templates.
-    vc = VotecountFormatter(game)
+    vc = VotecountFormatter.VotecountFormatter(game)
     vc.go(show_comment=False)
     split_vc = re.compile("\[.*?\]").sub('', vc.bbcode_votecount).split("\r\n")
     header_text = split_vc[0]  # Explicitly take the first and last elements in case of multiline templates
@@ -864,7 +864,7 @@ def check_update_game(game):
         game.lock()
 
     try:
-        p = PageParser()
+        p = PageParser.PageParser()
         newGame = p.Update(game)
         if newGame:
             return newGame
@@ -1019,10 +1019,10 @@ def post_vc(request, gameid):
 
         game = check_update_game(game)
 
-        v = VotecountFormatter(game)
+        v = VotecountFormatter.VotecountFormatter(game)
         v.go()
 
-        dl = ForumPageDownloader()
+        dl = ForumPageDownloader.ForumPageDownloader()
         dl.ReplyToThread(game.threadId, v.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
@@ -1034,7 +1034,7 @@ def votechart_all(request, gameslug):
     day = GameDay.objects.get(game=game, dayNumber=game.current_day)
     toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
-    vc = VoteCounter()
+    vc = VoteCounter.VoteCounter()
     vc.run(game)
     voteLog = vc.GetVoteLog()
 
@@ -1053,7 +1053,7 @@ def votechart_player(request, gameslug, playerslug):
     day = GameDay.objects.get(game=game, dayNumber=game.current_day)
     toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
-    vc = VoteCounter()
+    vc = VoteCounter.VoteCounter()
     vc.run(game)
     voteLog = filter(lambda v: v['player'] == player.name, vc.GetVoteLog())
 
