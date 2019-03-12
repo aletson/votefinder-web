@@ -1,24 +1,19 @@
-import cPickle as pickle
-import cookielib
-import urllib
-import urllib2
+import _pickle as pickle
+import http.cookiejar as cookielib
+from urllib.request import build_opener, HTTPCookieProcessor, Request, urlopen
 from datetime import datetime
 
 from django.conf import settings
-from poster import poster
 from pytz import timezone
 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from votefinder.main.models import *
 
 
 class ForumPageDownloader():
     def __init__(self):
         self.cj = cookielib.CookieJar()
-        # self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
-        self.opener = poster.streaminghttp.register_openers()
-        self.opener.addheaders = [('User-Agent', 'Mozilla/5.0')]
-        self.opener.add_handler(urllib2.HTTPCookieProcessor(self.cj))
+        self.opener = build_opener(HTTPCookieProcessor(self.cj))
         self.LoadCookies()
 
     def download(self, page):
@@ -58,7 +53,7 @@ class ForumPageDownloader():
                                               secure_login="")))
             data = usock.read()
             usock.close()
-        except URLError, e:
+        except URLError:
             return False
 
         if self.IsLoggedInCorrectlyPage(data):
@@ -117,9 +112,10 @@ class ForumPageDownloader():
         del inputs['disablesmilies']
         del inputs['preview']
 
-        datagen, headers = poster.encode.multipart_encode(inputs)
-        request = urllib2.Request(postUrl, datagen, headers)
-        result = urllib2.urlopen(request).read()
+        r = requests.post(postUrl, data = inputs)
+
+        request = Request(postUrl, datagen, headers)
+        result = request.content
 
 
 if __name__ == "__main__":

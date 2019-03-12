@@ -1,5 +1,5 @@
-from BeautifulSoup import BeautifulSoup
-from ForumPageDownloader import ForumPageDownloader
+from bs4 import BeautifulSoup
+from . import ForumPageDownloader
 from votefinder.main.models import *
 
 
