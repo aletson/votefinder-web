@@ -48,7 +48,7 @@
             <tr>
                 <td><a href="/player/{{ p.slug }}">{{ p.name }}</a></td>
                 <td>{{ p.alive }}</td>
-                <td>{{ p.last_post|date:"U" }}</td>
+                <td data-sort="{{ p.last_post|date:"U" }}>{{ p.last_post }}</td>
                 <td>{{ p.total_games_played }}</td>
                 <td>{{ p.total_games_run }}</td>
                 <td>{{ p.posts_per_game|floatformat }}</td>
