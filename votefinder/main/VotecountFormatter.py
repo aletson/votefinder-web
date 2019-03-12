@@ -57,13 +57,13 @@ class VotecountFormatter:
                     if v['unvote']:
                         if detail_level == 3:
                             thisvote = ''.join(
-                                [game_template.before_unvote, str(v['author']), game_template.after_unvote])
+                                [game_template.before_unvote, str(v['author'].name), game_template.after_unvote])
                     elif v['enabled']:
-                        thisvote = ''.join([game_template.before_vote, str(v['author']), game_template.after_vote])
+                        thisvote = ''.join([game_template.before_vote, str(v['author'].name), game_template.after_vote])
                     else:
                         if detail_level >= 2:
                             thisvote = ''.join(
-                                [game_template.before_unvoted_vote, str(v['author']), game_template.after_unvoted_vote])
+                                [game_template.before_unvoted_vote, str(v['author'].name), game_template.after_unvoted_vote])
 
                     if thisvote:
                         votelist.append(thisvote.replace("{{url}}", v['url']))
