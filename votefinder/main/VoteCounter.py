@@ -1,8 +1,8 @@
 import math
 import random
 
-import VotecountFormatter
-from ForumPageDownloader import ForumPageDownloader
+from . import VotecountFormatter
+from . import ForumPageDownloader
 from votefinder.main.models import *
 
 
