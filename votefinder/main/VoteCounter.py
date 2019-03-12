@@ -89,7 +89,7 @@ class VoteCounter:
     def BuildResultList(self):
         list = []
         for key, val in self.results.items():
-            list.append({'target': key.name, 'count': val['count'], 'votes': val['votes']})
+            list.append({'target': key, 'count': val['count'], 'votes': val['votes']})
 
         list.sort(key=lambda i: i['count'], reverse=True)
 
