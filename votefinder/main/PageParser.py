@@ -131,7 +131,8 @@ class PageParser:
 
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data, 'html.parser')
-
+        comments = soup.find_all(text=lambda text:isinstance(text, Comment))
+        [comment.extract() for comment in comments]
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
         self.gameName = re.compile(r"\[.*?\]").sub("", self.ReadThreadTitle(soup)).strip()
