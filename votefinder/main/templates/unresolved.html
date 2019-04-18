@@ -6,7 +6,7 @@
 <table cellpadding="2" cellspacing="2" border="0" id="unresolved">
     {% for v in votes %}
         <tr>
-            <td>{{ v.author }} votes {{ v.targetString|safe }}</td>
+            <td>{{ v.author.name }} votes {{ v.targetString|safe }}</td>
             <td><select class="resolver" id="{{ v.id }}">
                 <option value="-1">Ignore</option>
                 <option value="-2">No Execute</option>
