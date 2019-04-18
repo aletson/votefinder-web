@@ -8,7 +8,7 @@ django-contrib-comments
 html5lib==1.0.1
 image==1.5.19
 ipaddress==1.0.22
-mysqlclient==1.3.10
+mysqlclient
 parsedatetime==2.4
 Pillow==4.3.0
 pytz==2018.5
