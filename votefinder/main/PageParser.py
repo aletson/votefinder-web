@@ -248,7 +248,7 @@ class PageParser:
         post.postId = postId
         titleNode = node.find("dd", "title")
         if titleNode:
-            post.avatar = unicode(titleNode.find("img"))
+            post.avatar = str(titleNode.find("img"))
 
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
