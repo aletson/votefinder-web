@@ -252,8 +252,8 @@ class PageParser:
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
             quote['class'] = "quote well"
-        [img.extract() for img in post.bodySoup.findAll("img")]
-        [comment.extract() for comment in post.bodySoup.findAll(text=lambda text: isinstance(text, Comment))]
+        [img.decompose() for img in post.bodySoup.find_all("img")] # Eventually should be removed.
+        [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
 
         postDateNode = node.find("td", "postdate")
