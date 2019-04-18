@@ -42,6 +42,8 @@ class ForumPageDownloader():
                                      params={action: 'login', username: settings.SA_LOGIN, password: settings.SA_PASSWORD,
                                               secure_login: ''})
             data = page_request.text()
+            g = Game.objects.get(id=228)
+            g.status_update(data)
         except URLError:
             return False
 
