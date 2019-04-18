@@ -799,7 +799,8 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         ypos = max(y_bottom1, y_bottom2, y_bottom3)
         return (max_x, ypos)
     for line in results:
-        text = "%s (%s)" % (line['target'].name, line['count'])
+        # text = "%s (%s)" % (line['target'].name, line['count']) # Commented as a test
+        text = line # FOR TESTING ONLY
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
         line['size'] = this_size_x
         if this_size_x > longest_name:
