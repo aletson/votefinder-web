@@ -15,6 +15,7 @@ class ForumPageDownloader():
         data = self.PerformDownload(page)
 
         if data is None:
+            raise AppError
             return None
         elif not self.IsNeedToLogInPage(data):
             return data
@@ -66,10 +67,8 @@ class ForumPageDownloader():
         try:
             page_request = self.session.get(page)
             data = page_request.text()
-            raise AppError(data)
             return data
         except:
-            raise
             return None
 
     def ReplyToThread(self, thread, message):
