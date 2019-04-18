@@ -1,6 +1,5 @@
 import _pickle as pickle
-import http.cookiejar as cookielib
-from urllib.request import build_opener, HTTPCookieProcessor, Request, urlopen
+import requests
 from datetime import datetime
 
 from django.conf import settings
@@ -12,9 +11,7 @@ from votefinder.main.models import *
 
 class ForumPageDownloader():
     def __init__(self):
-        self.cj = cookielib.CookieJar()
-        self.opener = build_opener(HTTPCookieProcessor(self.cj))
-        self.LoadCookies()
+        self.session = requests.Session()
 
     def download(self, page):
         data = self.PerformDownload(page)
@@ -47,17 +44,14 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         try:
-            usock = self.opener.open("https://forums.somethingawful.com/account.php",
-                                     urllib.urlencode(
-                                         dict(action='login', username=settings.SA_LOGIN, password=settings.SA_PASSWORD,
-                                              secure_login="")))
-            data = usock.read()
-            usock.close()
+            page_request = self.session.get("https://forums.somethingawful.com/account.php",
+                                     params={action: 'login', username: settings.SA_LOGIN, password: settings.SA_PASSWORD,
+                                              secure_login: ''})
+            data = page_request.text()
         except URLError:
             return False
 
         if self.IsLoggedInCorrectlyPage(data):
-            self.SaveCookies()
             return True
         else:
             return False
@@ -76,24 +70,11 @@ class ForumPageDownloader():
 
     def PerformDownload(self, page):
         try:
-            usock = self.opener.open(page)
-            data = usock.read()
-            usock.close()
+            page_request = self.session.get(page)
+            data = page_request.text()
             return data
         except:
             return None
-
-    def LoadCookies(self):
-        for c in CookieStore.objects.all():
-            self.cj.set_cookie(pickle.loads(c.cookie.encode('utf8')))
-
-    def SaveCookies(self):
-        all_cookies = CookieStore.objects.all()
-        all_cookies.delete()
-
-        for cookie in self.cj:
-            new_cookie = CookieStore(cookie=pickle.dumps(cookie))
-            new_cookie.save()
 
     def ReplyToThread(self, thread, message):
         getUrl = "https://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s" % thread
@@ -103,7 +84,7 @@ class ForumPageDownloader():
         if data is None:
             return
 
-        soup = BeautifulSoup(data)
+        soup = BeautifulSoup(data, 'html.parser')
 
         inputs = {'message': message}
         for i in soup.findAll('input', {'value': True}):
@@ -112,10 +93,8 @@ class ForumPageDownloader():
         del inputs['disablesmilies']
         del inputs['preview']
 
-        r = requests.post(postUrl, data = inputs)
-
-        request = Request(postUrl, datagen, headers)
-        result = request.content
+        r = self.session.post(postUrl, data=inputs)
+        result = r.text()
 
 
 if __name__ == "__main__":
