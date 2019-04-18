@@ -790,6 +790,14 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(": ", font=font)
     max_x = 0
+    if results == None: # No votes found
+        text = "No votes found in vc.results~"
+        this_size_x, this_size_y = draw.textsize(text, font=bold_font)
+        line['size'] = this_size_x
+        (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
+        max_x = max(max_x, x_size3)
+        ypos = max(y_bottom1, y_bottom2, y_bottom3)
+        return (max_x, ypos)
     for line in results:
         text = "%s (%s)" % (line['target'].name, line['count'])
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
@@ -837,7 +845,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     draw.line([0, header_y_size - 2, header_x_size, header_y_size - 2], fill=(0, 0, 0, 255), width=2)
     ypos = 2 * header_y_size
 
-    (vc_x_size, ypos) = draw_votecount_text(draw, vc.html_votecount, 0, ypos, max_width, regular_font, bold_font)
+    (vc_x_size, ypos) = draw_votecount_text(draw, vc, 0, ypos, max_width, regular_font, bold_font)
     ypos += header_y_size
 
     (x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
