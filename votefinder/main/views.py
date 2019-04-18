@@ -787,7 +787,7 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
 
 def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
     # results = filter(lambda x: x['count'] > 0, vc.results)
-    results = vc.results
+    results = [x for x in vc.results if x['count'] > 0]
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(": ", font=font)
     max_x = 0
