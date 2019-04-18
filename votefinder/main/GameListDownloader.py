@@ -25,7 +25,7 @@ class GameListDownloader():
     def ParseGameList(self, data):
         soup = BeautifulSoup(data, 'html.parser')
 
-        for thread in soup.findAll("a", "thread_title"):
+        for thread in soup.find_all("a", "thread_title"):
             if thread.text.lower().find("mafia") != -1:
                 game = {'name': thread.text, 'url': thread["href"], 'tracked': self.IsGameTracked(thread["href"])}
                 self.GameList.append(game)
