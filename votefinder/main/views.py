@@ -31,8 +31,6 @@ from votefinder.main.models import *
 def index(request):
     game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
-#    big_games = filter(lambda g: g.is_big == True, game_list)
-#    mini_games = filter(lambda g: g.is_big == False, game_list)
     big_games = [g for g in game_list if g.is_big == True]
     mini_games = [g for g in game_list if g.is_big == False]
     posts = BlogPost.objects.all().order_by("-timestamp")[:5]
@@ -661,8 +659,8 @@ def game_template(request, gameid, templateid):
 def active_games(request):
     game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
-    big_games = filter(lambda g: g.is_big == True, game_list)
-    mini_games = filter(lambda g: g.is_big == False, game_list)
+    big_games = [g for g in game_list if g.is_big == True]
+    mini_games = [g for g in game_list if g.is_big == False]
 
     return render(request, "wiki_games.html",
                   {'big_games': big_games, 'mini_games': mini_games})
@@ -671,15 +669,14 @@ def active_games(request):
 def active_games_style(request, style):
     if style == "default" or style == "verbose":
         game_list = Game.objects.select_related().filter(closed=False).order_by("name")
-
-        big_games = filter(lambda g: g.is_big == True, game_list)
-        mini_games = filter(lambda g: g.is_big == False, game_list)
+        big_games = [g for g in game_list if g.is_big == True]
+        mini_games = [g for g in game_list if g.is_big == False]
 
         return render(request, "wiki_games.html", {'big_games': big_games, 'mini_games': mini_games, 'style': style})
     elif style == "closedmonthly":
         game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('posts__timestamp')).order_by(
             "-last_post")
-        game_list = filter(lambda g: datetime.now() - g.last_post < timedelta(days=31), game_list)
+        game_list = [ g for g in game_list if datetime.now() - g.last_post < timedelta(days=31) ]
 
         return render(request, "wiki_closed_games.html", {'game_list': game_list})
     else:
@@ -786,7 +783,6 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
 
 
 def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
-    # results = filter(lambda x: x['count'] > 0, vc.results)
     results = [x for x in vc.results if x['count'] > 0]
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(": ", font=font)
@@ -1053,8 +1049,8 @@ def votechart_all(request, gameslug):
                   {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
                    'now': datetime.now(), 'toLynch': toLynch,
                    'votes': voteLog, 'numVotes': len(voteLog),
-                   'players': map(lambda p: p.player.name, game.living_players()),
-                   'allPlayers': map(lambda p: p.player, game.living_players())},
+                   'players: [ p.player.name for p in game.living_players() ]
+                   'allPlayers = [ p.player for p in game.living_players() ]},
                   )
 
 
@@ -1066,13 +1062,13 @@ def votechart_player(request, gameslug, playerslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = filter(lambda v: v['player'] == player.name, vc.GetVoteLog())
+    voteLog = [ v for v in vc.getVoteLog() if v['player'] == player.name ]
 
     return render(request, "votechart.html",
                   {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
                    'now': datetime.now(), 'toLynch': toLynch,
                    'votes': voteLog, 'numVotes': len(voteLog),
-                   'allPlayers': map(lambda p: p.player, game.living_players()),
+                   'allPlayers = [p.player for p in game.living_players()],
                    'selectedPlayer': player.name,
                    'players': [player.name]},
                   )
