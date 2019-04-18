@@ -865,6 +865,8 @@ def check_update_game(game):
 
     try:
         p = PageParser.PageParser()
+        key = "%s-vc-image" % game.slug
+        cache.delete(key) # image will regenerate on next GET
         newGame = p.Update(game)
         if newGame:
             return newGame
@@ -897,15 +899,14 @@ def votecount_image(request, slug):
 
 def autoupdate(request):
     games = Game.objects.filter(closed=False).order_by("lastUpdated")[:1]
-    if len(games) == 1:
-        game = check_update_game(games[0])
+    for game in games:
+        game = check_update_game(game)
         post = game.posts.order_by('-timestamp')[:1][0]
 
         if datetime.now() - post.timestamp > timedelta(days=6):
             game.status_update("Closed automatically for inactivity.")
             game.closed = True
             game.save()
-
     return HttpResponse("Ok")
 
 
