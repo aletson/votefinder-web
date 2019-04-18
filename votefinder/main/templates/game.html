@@ -469,9 +469,9 @@
                     the votecount as voting all of them (unvotes will not be assumed).</p>
                 <ul>{% for v in manual_votes %}
                     {% if v.unvote %}
-                    <li>{{ v.author }} unvotes <sup>(<a href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
+                    <li>{{ v.author.name }} unvotes <sup>(<a href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
                     {% else %}
-                    <li>{{ v.author }} votes {{ v.target }} <sup>(<a
+                    <li>{{ v.author.name }} votes {{ v.target.name }} <sup>(<a
                             href="/delete_vote/{{ v.id }}">x</a>)</sup></li>
                     {% endif %}
                     {% empty %}
