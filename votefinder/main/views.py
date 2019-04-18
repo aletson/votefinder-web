@@ -102,7 +102,7 @@ def add_game(request, threadid):
 
 @login_required
 def game_list(request, page):
-    p = GameListDownloader()
+    p = GameListDownloader.GameListDownloader()
     p.GetGameList("http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber=%s" % page)
     return HttpResponse(simplejson.dumps(p.GameList), content_type='application/json')
 
