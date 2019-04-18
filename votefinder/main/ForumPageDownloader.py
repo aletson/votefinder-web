@@ -10,12 +10,12 @@ from votefinder.main.models import *
 class ForumPageDownloader():
     def __init__(self):
         self.session = requests.Session()
+        self.headers = { 'User-Agent': 'Mozilla/5.0'}
 
     def download(self, page):
         data = self.PerformDownload(page)
 
         if data is None:
-            raise AppError
             return None
         elif not self.IsNeedToLogInPage(data):
             return data
@@ -41,7 +41,7 @@ class ForumPageDownloader():
         try:
             page_request = self.session.get("https://forums.somethingawful.com/account.php",
                                      params={action: 'login', username: settings.SA_LOGIN, password: settings.SA_PASSWORD,
-                                              secure_login: ''})
+                                              secure_login: ''}, headers=self.headers)
             data = page_request.text()
         except URLError:
             return False
@@ -65,7 +65,7 @@ class ForumPageDownloader():
 
     def PerformDownload(self, page):
         try:
-            page_request = self.session.get(page)
+            page_request = self.session.get(page, headers=self.headers)
             data = page_request.text()
             return data
         except:
