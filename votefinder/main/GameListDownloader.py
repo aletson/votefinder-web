@@ -23,7 +23,7 @@ class GameListDownloader():
             "http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber=%s" % page)
 
     def ParseGameList(self, data):
-        soup = BeautifulSoup(data)
+        soup = BeautifulSoup(data, 'html.parser')
 
         for thread in soup.findAll("a", "thread_title"):
             if thread.text.lower().find("mafia") != -1:
