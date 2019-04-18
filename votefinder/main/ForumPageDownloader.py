@@ -31,7 +31,7 @@ class ForumPageDownloader():
             return None
 
     def LogLoginAttempt(self):
-        with open("./tmp/logins.txt", "a") as f:
+        with open("/tmp/logins.txt", "a") as f:
             f.write("%s\n" % timezone(settings.TIME_ZONE).localize(datetime.now()).astimezone(
                 timezone('US/Pacific')).ctime())
 
