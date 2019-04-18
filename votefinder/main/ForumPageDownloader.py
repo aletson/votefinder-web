@@ -1,4 +1,3 @@
-import _pickle as pickle
 import requests
 from datetime import datetime
 
