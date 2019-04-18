@@ -1,4 +1,5 @@
 import requests
+import logging, sys
 from datetime import datetime
 
 from django.conf import settings
@@ -10,6 +11,8 @@ from votefinder.main.models import *
 
 class ForumPageDownloader():
     def __init__(self):
+        self.handler = logging.StreamHandler(sys.stderr)
+        self.logger = logging.getLogger("my.logger")
         self.session = requests.Session()
 
     def download(self, page):
@@ -47,6 +50,7 @@ class ForumPageDownloader():
                                      params={action: 'login', username: settings.SA_LOGIN, password: settings.SA_PASSWORD,
                                               secure_login: ''})
             data = page_request.text()
+            self.logger.debug(data)
         except URLError:
             return False
 
