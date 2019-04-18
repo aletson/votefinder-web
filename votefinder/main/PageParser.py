@@ -1,4 +1,4 @@
-import time
+import time, re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
@@ -255,7 +255,7 @@ class PageParser:
         [img.decompose() for img in post.bodySoup.find_all("img")] # Eventually should be removed.
         [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
-
+        post.body = re.sub(r"google_ad_section_(start|end)", "", post.body) # Ridiculous dumb hack
         postDateNode = node.find("td", "postdate")
         if postDateNode:
             dateText = postDateNode.text.replace("#", "").replace("?", "").strip()
