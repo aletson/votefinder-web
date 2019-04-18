@@ -520,7 +520,7 @@
                         <td>
                             <select name="replacePlayer" id="replacePlayer">
                                 {% for p in game.living_players %}
-                                <option value="{{ p.player.id }}">{{ p.player|safe }}</option>
+                                <option value="{{ p.player.id }}">{{ p.player.name|safe }}</option>
                                 {% endfor %}
                             </select>
                         </td>
