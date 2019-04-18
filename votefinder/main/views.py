@@ -837,7 +837,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     draw.line([0, header_y_size - 2, header_x_size, header_y_size - 2], fill=(0, 0, 0, 255), width=2)
     ypos = 2 * header_y_size
 
-    (vc_x_size, ypos) = draw_votecount_text(draw, vc, 0, ypos, max_width, regular_font, bold_font)
+    (vc_x_size, ypos) = draw_votecount_text(draw, vc.html_votecount, 0, ypos, max_width, regular_font, bold_font)
     ypos += header_y_size
 
     (x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
@@ -853,6 +853,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
 
         (warning_x, ypos) = draw_wordwrap_text(draw, warning_text, 0, ypos, max_width, bold_font)
         x_size = max(x_size, warning_x)
+        
 
     return (max(header_x_size, vc_x_size, x_size), ypos)
 
