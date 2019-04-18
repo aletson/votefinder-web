@@ -66,10 +66,10 @@ class ForumPageDownloader():
         try:
             page_request = self.session.get(page)
             data = page_request.text()
-            g = Game.objects.get(id=228)
-            g.status_update(data)
+            raise AppError(data)
             return data
         except:
+            raise
             return None
 
     def ReplyToThread(self, thread, message):
