@@ -6,7 +6,7 @@ from votefinder.main.models import *
 class GameListDownloader():
     def __init__(self):
         self.GameList = []
-        self.downloader = ForumPageDownloader()
+        self.downloader = ForumPageDownloader.ForumPageDownloader()
 
     def GetGameList(self, page):
         data = self.DownloadList(page)
