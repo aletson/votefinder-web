@@ -2,7 +2,6 @@ import requests
 from datetime import datetime
 
 from django.conf import settings
-from pytz import timezone
 
 from bs4 import BeautifulSoup
 from votefinder.main.models import *
@@ -30,10 +29,6 @@ class ForumPageDownloader():
             return None
 
     def LogLoginAttempt(self):
-        with open("/tmp/logins.txt", "a") as f:
-            f.write("%s\n" % timezone(settings.TIME_ZONE).localize(datetime.now()).astimezone(
-                timezone('US/Pacific')).ctime())
-
         g = Game.objects.get(id=228)
         g.status_update("Trying to re-login to forums.  PM soru if this happens a lot.")
 
