@@ -42,7 +42,7 @@ class ForumPageDownloader():
             page_request = self.session.get("https://forums.somethingawful.com/account.php",
                                      params={action: 'login', username: settings.SA_LOGIN, password: settings.SA_PASSWORD,
                                               secure_login: ''})
-            data = page_request.text()
+            data = page_request.text
         except URLError:
             return False
 
@@ -66,7 +66,7 @@ class ForumPageDownloader():
     def PerformDownload(self, page):
         try:
             page_request = self.session.get(page)
-            data = page_request.text()
+            data = page_request.text
             return data
         except:
             return None
