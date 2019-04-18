@@ -1049,7 +1049,7 @@ def votechart_all(request, gameslug):
                   {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
                    'now': datetime.now(), 'toLynch': toLynch,
                    'votes': voteLog, 'numVotes': len(voteLog),
-                   'players': [ p.player.name for p in game.living_players() ]
+                   'players': [ p.player.name for p in game.living_players() ],
                    'allPlayers': [ p.player for p in game.living_players() ]},
                   )
 
