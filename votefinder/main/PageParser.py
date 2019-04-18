@@ -15,7 +15,7 @@ class PageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.downloader = ForumPageDownloader()
+        self.downloader = ForumPageDownloader.ForumPageDownloader()
 
     def Add(self, threadid):
         self.new_game = True
@@ -130,13 +130,13 @@ class PageParser:
                 self.SearchLineForActions(post, line)
 
     def ParsePage(self, data, threadid):
-        soup = BeautifulSoup(data)
+        soup = BeautifulSoup(data, 'html.parser')
 
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
         self.gameName = re.compile(r"\[.*?\]").sub("", self.ReadThreadTitle(soup)).strip()
 
-        posts = soup.findAll("table", "post")
+        posts = soup.find_all("table", "post")
         if not posts:
             return None
 
@@ -208,7 +208,7 @@ class PageParser:
     def FindMaxPages(self, soup):
         pages = soup.find("div", "pages")
         if pages:
-            option_tags = pages.findAll("option")
+            option_tags = pages.find_all("option")
             total_pages = len(option_tags)
             if total_pages == 0:
                 return 1
