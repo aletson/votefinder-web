@@ -40,10 +40,11 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         try:
-            page_request = self.session.post("https://forums.somethingawful.com/account.php",
+            page_request = self.session.get("https://forums.somethingawful.com/account.php",
                                      params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
                                               'secure_login': ''})
             data = page_request.text
+            raise ValueError(data)
         except URLError:
             return False
 
@@ -56,7 +57,6 @@ class ForumPageDownloader():
         if re.search(re.compile(r"Sorry, you must be a registered forums member to view this page"), data) == None:
             return False
         else:
-            raise ValueError(data)
             return True
 
     def IsLoggedInCorrectlyPage(self, data):
