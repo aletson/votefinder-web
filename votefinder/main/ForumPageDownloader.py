@@ -48,7 +48,6 @@ class ForumPageDownloader():
             return False
 
         if self.IsLoggedInCorrectlyPage(data):
-            raise ValueError(data)
             return True
         else:
             return False
@@ -61,6 +60,7 @@ class ForumPageDownloader():
 
     def IsLoggedInCorrectlyPage(self, data):
         if re.search(re.compile(r"Login with username and password"), data) == None:
+            raise ValueError(data)
             return True
         else:
             return False
