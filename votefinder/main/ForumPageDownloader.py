@@ -39,14 +39,15 @@ class ForumPageDownloader():
 
         self.LogLoginAttempt()
 
-        try:
-            page_request = self.session.get("https://forums.somethingawful.com/account.php",
-                                     params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
-                                              'secure_login': ''})
-            data = page_request.text
+        #try:
+        page_request = self.session.get("https://forums.somethingawful.com/account.php",
+                                 params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
+                                          'secure_login': ''})
+        data = page_request.text
+        raise ValueError(r.status_code)
             # This doesn't have anything in it!
-        except URLError:
-            return False
+        #except URLError:
+        #    return False
 
         if self.IsLoggedInCorrectlyPage(data):
             return True
