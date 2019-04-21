@@ -16,6 +16,7 @@ class ForumPageDownloader():
         data = self.PerformDownload(page)
 
         if data is None:
+            raise ValueError('No data returned on page download attempt.')
             return None
         elif not self.IsNeedToLogInPage(data):
             return data
@@ -25,6 +26,7 @@ class ForumPageDownloader():
             if not self.IsNeedToLogInPage(data):
                 return data
             else:
+                raise ValueError('Did the login, but the returned data was another login page.')
                 return None
         else:
             return None
