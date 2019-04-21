@@ -40,7 +40,7 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         #try:
-        page_request = self.session.get("https://forums.somethingawful.com/account.php",
+        page_request = self.session.post("https://forums.somethingawful.com/account.php",
                                  params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
                                           'secure_login': ''})
         raise ValueError(page_request.text)
