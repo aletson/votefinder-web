@@ -89,6 +89,9 @@ class ForumPageDownloader():
         for i in soup.find_all('input', {'value': True}):
             inputs[i['name']] = i['value']
 
+        if not inputs['disablesmilies']:
+            # Thread is locked!
+            return False
         del inputs['disablesmilies']
         del inputs['preview']
 
