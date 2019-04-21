@@ -43,7 +43,7 @@ class ForumPageDownloader():
         page_request = self.session.post("https://forums.somethingawful.com/account.php",
                                  params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
                                           'secure_login': ''})
-        raise ValueError(page_request.text)
+        raise ValueError(self.session.cookies)
         data = page_request.text
             # This doesn't have anything in it!
         #except URLError:
