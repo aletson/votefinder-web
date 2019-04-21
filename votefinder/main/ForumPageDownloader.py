@@ -44,6 +44,7 @@ class ForumPageDownloader():
                                      params={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
                                               'secure_login': ''})
             data = page_request.text
+            # This doesn't have anything in it!
         except URLError:
             return False
 
@@ -59,8 +60,9 @@ class ForumPageDownloader():
             return True
 
     def IsLoggedInCorrectlyPage(self, data):
+        if not data:
+            raise ValueError('Login failed, no data in response from login attempt')
         if re.search(re.compile(r"Login with username and password"), data) == None:
-            raise ValueError(data)
             return True
         else:
             return False
