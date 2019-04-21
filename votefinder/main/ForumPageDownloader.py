@@ -96,7 +96,7 @@ class ForumPageDownloader():
         del inputs['preview']
 
         r = self.session.post(postUrl, data=inputs)
-        result = r.text()
+        result = r.text
 
 
 if __name__ == "__main__":
