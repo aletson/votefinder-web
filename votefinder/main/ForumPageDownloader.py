@@ -54,9 +54,9 @@ class ForumPageDownloader():
 
     def IsNeedToLogInPage(self, data):
         if re.search(re.compile(r"Sorry, you must be a registered forums member to view this page"), data) == None:
-            raise ValueError(data)
             return False
         else:
+            raise ValueError(data)
             return True
 
     def IsLoggedInCorrectlyPage(self, data):
