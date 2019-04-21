@@ -16,7 +16,6 @@ class ForumPageDownloader():
         data = self.PerformDownload(page)
 
         if data is None:
-            raise ValueError('No data returned on page download attempt.')
             return None
         elif not self.IsNeedToLogInPage(data):
             return data
@@ -26,7 +25,7 @@ class ForumPageDownloader():
             if not self.IsNeedToLogInPage(data):
                 return data
             else:
-                raise ValueError('Did the login, but the returned data was another login page.')
+                # This is where it goes
                 return None
         else:
             return None
@@ -55,6 +54,7 @@ class ForumPageDownloader():
 
     def IsNeedToLogInPage(self, data):
         if re.search(re.compile(r"Sorry, you must be a registered forums member to view this page"), data) == None:
+            raise ValueError(data)
             return False
         else:
             return True
