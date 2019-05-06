@@ -1,8 +1,6 @@
 import json as simplejson
 import math
-import re
 import urllib
-from datetime import timedelta, datetime
 from math import ceil
 import boto3
 
@@ -1062,7 +1060,7 @@ def votechart_player(request, gameslug, playerslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = [ v for v in vc.getVoteLog() if v['player'] == player.name ]
+    voteLog = [ v for v in vc.GetVoteLog() if v['player'] == player.name ]
 
     return render(request, "votechart.html",
                   {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
