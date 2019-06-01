@@ -27,7 +27,7 @@
     <p>Currently Active Games:
     <ol>
         {% for g in player.current_games %}
-            <li>{{ g.state }} in <a href="{{ g.game.get_absolute_url }}">{{ g.name|safe }}</a></li>
+            <li>{{ g.state }} in <a href="{{ g.game.get_absolute_url }}">{{ g.game|safe }}</a></li>
         {% endfor %}
     </ol>
 
@@ -35,7 +35,7 @@
     <ol>
         {% for g in player.closed_games %}
             <li>{% if g.moderator or g.spectator %}{{ g.state }}{% else %}Played{% endif %} in <a
-                    href="{{ g.game.get_absolute_url }}">{{ g.name|safe }}</a></li>
+                    href="{{ g.game.get_absolute_url }}">{{ g.game|safe }}</a></li>
         {% endfor %}
     </ol>
 
