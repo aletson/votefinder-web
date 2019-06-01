@@ -71,7 +71,7 @@ class VotecountTemplate(models.Model):
     full_tick = models.CharField(max_length=256, default="https://votefinder.org/t.png")
     empty_tick = models.CharField(max_length=256, default="https://votefinder.org/te.png")
 
-    def __unicode__(self):
+    def __str__(self):
         if self.system_default:
             return 'DEFAULT: %s [by %s]' % (self.name, self.creator)
         elif self.shared:
@@ -129,7 +129,7 @@ class Game(models.Model):
         self.locked_at = datetime.now()
         super(Game, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
@@ -193,7 +193,7 @@ class Comment(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=4096, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s: %s" % (self.player, self.comment[:100])
 
 
@@ -226,7 +226,7 @@ class PlayerState(models.Model):
         else:
             return "Dead"
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s [%s]" % (self.player, self.state())
 
 
@@ -234,7 +234,7 @@ class Alias(models.Model):
     player = models.ForeignKey(Player)
     alias = models.CharField(max_length=255)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.alias
 
     class Meta:
@@ -251,7 +251,7 @@ class Post(models.Model):
     pageNumber = models.IntegerField()
     game = models.ForeignKey(Game, related_name="posts")
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s at %s" % (self.author.name, self.timestamp)
 
 
@@ -275,7 +275,7 @@ class Vote(models.Model):
     manual = models.BooleanField(default=False)
     nolynch = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.unvote:
             return "%s unvotes" % self.author
         else:
@@ -309,7 +309,7 @@ class BlogPost(models.Model):
     text = models.TextField()
     timestamp = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def get_absolute_url(self):
@@ -318,7 +318,7 @@ class BlogPost(models.Model):
 class Theme(models.Model):
     name = models.CharField(max_length=10, default="default")
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
 class UserProfile(models.Model):
@@ -327,7 +327,7 @@ class UserProfile(models.Model):
     registered = models.DateTimeField(auto_now=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
 
-    def __unicode__(self):
+    def __str__(self):
         return self.player.name
 
 class GameDay(models.Model):
@@ -336,7 +336,7 @@ class GameDay(models.Model):
     startPost = models.ForeignKey(Post)
     notified = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return "Day %s of %s" % (self.dayNumber, self.game)
 
 
@@ -370,5 +370,5 @@ class VotecountTemplateForm(ModelForm):
 class LynchMessage(models.Model):
     text = models.CharField(max_length=512)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
