@@ -152,6 +152,10 @@
                 }
             );
         })
+
+        .on("click", ".not-loaded", function() {
+            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
+        })
         .on('click', '#bbcode', function(obj) {
             $('#bbcode').select();
         });
