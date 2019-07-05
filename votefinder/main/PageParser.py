@@ -252,7 +252,7 @@ class PageParser:
         post.bodySoup = node.find("td", "postbody")
         for quote in post.bodySoup.findAll("div", "bbc-block"):
             quote['class'] = "quote well"
-            quote['data-quote-id'] = re.match(/.*postid=([0-9]{1,}).*$/, quote.find("a")['href']).group(1)
+            quote['data-quote-id'] = re.match(r".*postid=([0-9]{1,}).*$", quote.find("a")['href']).group(1)
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img["src"]+'">Click to load image...</div>') for img in post.bodySoup.find_all("img")] # See #44.
         [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = post.bodySoup.prettify(formatter=None)
