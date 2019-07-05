@@ -130,7 +130,7 @@ class PageParser:
                 self.SearchLineForActions(post, line)
 
     def ParsePage(self, data, threadid):
-        soup = BeautifulSoup(data, 'html5lib', formatter=None)
+        soup = BeautifulSoup(data, 'html5lib')
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
         self.gameName = re.compile(r"\[.*?\]").sub("", self.ReadThreadTitle(soup)).strip()
@@ -253,9 +253,8 @@ class PageParser:
         for quote in post.bodySoup.findAll("div", "bbc-block"):
             quote['class'] = "quote well"
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img["src"]+'">Click to load image...</div>') for img in post.bodySoup.find_all("img")] # See #44.
-        [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
+        [comment.extract() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = "".join([str(x) for x in post.bodySoup.contents]).strip()
-        post.body = re.sub(r"google_ad_section_(start|end)", "", post.body) # Ridiculous dumb hack
         postDateNode = node.find("td", "postdate")
         if postDateNode:
             dateText = postDateNode.text.replace("#", "").replace("?", "").strip()
