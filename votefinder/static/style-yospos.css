@@ -572,3 +572,7 @@ a:active {
     color: #57FF57 !important;
     background-color: #000 !important;
 }
+
+.not-loaded {
+    font-size: 10px;
+}
