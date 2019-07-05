@@ -130,7 +130,7 @@ class PageParser:
                 self.SearchLineForActions(post, line)
 
     def ParsePage(self, data, threadid):
-        soup = BeautifulSoup(data, 'html5lib')
+        soup = BeautifulSoup(data, 'html5lib', formatter=None)
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
         self.gameName = re.compile(r"\[.*?\]").sub("", self.ReadThreadTitle(soup)).strip()
