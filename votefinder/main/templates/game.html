@@ -153,7 +153,8 @@
             );
         })
 
-        .on("click", ".not-loaded", function() {
+        .on("click", ".not-loaded", function(e) {
+            e.preventDefault();
             $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
         })
         .on('click', '#bbcode', function(obj) {
