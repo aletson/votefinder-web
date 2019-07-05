@@ -618,3 +618,7 @@ a:active {
     -moz-border-radius: 0px;
     background-image: none;
 }
+
+.not-loaded {
+    font-size: 10px;
+}
