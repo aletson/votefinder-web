@@ -16,6 +16,9 @@
         $('#liveThread').button();
         $('#updateButton').button().click(function() {
             updateGame(); return false;
+        })
+        .on("click", ".not-loaded", function() {
+            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
         });
         function dataReceived(data) {
             if (data.success) {
@@ -61,9 +64,6 @@
             var id = $(this).attr("id");
             location.href = '/'+action+'/'+id;
         })
-        .on("click", ".not-loaded", function() {
-            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
-        });
         $('.playerList').sortable({
             connectWith: '.playerList', items: 'div:not(.creator)',
             start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
