@@ -16,9 +16,6 @@
         $('#liveThread').button();
         $('#updateButton').button().click(function() {
             updateGame(); return false;
-        })
-        .on("click", ".not-loaded", function() {
-            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
         });
         function dataReceived(data) {
             if (data.success) {
