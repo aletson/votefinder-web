@@ -60,6 +60,9 @@
             var action = $(this).val();
             var id = $(this).attr("id");
             location.href = '/'+action+'/'+id;
+        })
+        .on("click", ".not-loaded", function() {
+            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
         });
         $('.playerList').sortable({
             connectWith: '.playerList', items: 'div:not(.creator)',
