@@ -2,7 +2,6 @@
 {% block title %}{{ game.name|safe }}{% endblock %}
 
 {% block script %}
-{% block script %}
 function loadPage(x) {
     $('#postList').load('/posts/{{ game.id }}/' + x, function () {
     });
