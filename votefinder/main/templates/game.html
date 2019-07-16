@@ -6,7 +6,35 @@
         $('#postList').load('/posts/{{ game.id }}/'+x, function() {
         });
         $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
-    }
+    } /* function loadPage */
+
+    function dataReceived(data) {
+        if (data.success) {
+            curPage = parseInt(data.curPage);
+            maxPages = parseInt(data.maxPages);
+            $('#readPages').html(curPage + ' / ' + maxPages);
+
+            if (curPage < maxPages) {
+                updateGame();
+            } else {				       
+                $('#dialog').modal('hide');
+                location.href="{{ game.get_absolute_url }}#votecount";
+                location.reload();
+            }
+        } else {
+            alert('Error from the server: ' + data.message);
+        }
+    } /* function dataReceived */
+				   
+    function updateGame() {
+        var page = (curPage < maxPages) ? curPage + 1 : curPage;
+        $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
+	
+        if(!$('#dialog').hasClass('in')){
+            $('#dialog').modal('show');
+        }
+        $.getJSON('/update/{{ game.id }}/', dataReceived);
+    } /* function updateGame */
 
     $(document).ready(function() {
         var curPage = {{ game.currentPage }};
@@ -17,32 +45,7 @@
         $('#updateButton').button().click(function() {
             updateGame(); return false;
         });
-        function dataReceived(data) {
-            if (data.success) {
-                curPage = parseInt(data.curPage);
-                maxPages = parseInt(data.maxPages);
-                $('#readPages').html(curPage + ' / ' + maxPages);
 
-                if (curPage < maxPages) {
-                    updateGame();
-                } else {				       
-                    $('#dialog').modal('hide');
-                    location.href="{{ game.get_absolute_url }}#votecount";
-                    location.reload();
-                }
-            } else {
-                alert('Error from the server: ' + data.message);
-            }
-        }
-        function updateGame() {
-            var page = (curPage < maxPages) ? curPage + 1 : curPage;
-            $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
-	
-            if(!$('#dialog').hasClass('in')){
-                $('#dialog').modal('show');
-            }
-            $.getJSON('/update/{{ game.id }}/', dataReceived);
-        }
         $('#voteImgButton').click(function() {
             prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
         });
