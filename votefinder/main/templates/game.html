@@ -148,7 +148,6 @@
         loadPage({{ game.currentPage }});
     })
         .on('change', '.resolver', function(obj) {
-            console.log('Event fired!"');
             var resolution = $(this).val();
             var vote = $(this).attr('id');
             var removing = $(this);
