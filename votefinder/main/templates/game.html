@@ -2,172 +2,174 @@
 {% block title %}{{ game.name|safe }}{% endblock %}
 
 {% block script %}
-    function loadPage(x) {
-        $('#postList').load('/posts/{{ game.id }}/'+x, function() {
-        });
-        $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page '+x+'...');
-    } /* function loadPage */
+{% block script %}
+function loadPage(x) {
+    $('#postList').load('/posts/{{ game.id }}/' + x, function () {
+    });
+    $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page ' + x + '...');
+} /* function loadPage */
 
-    function dataReceived(data) {
-        if (data.success) {
-            curPage = parseInt(data.curPage);
-            maxPages = parseInt(data.maxPages);
-            $('#readPages').html(curPage + ' / ' + maxPages);
+function dataReceived(data) {
+    if (data.success) {
+        curPage = parseInt(data.curPage);
+        maxPages = parseInt(data.maxPages);
+        $('#readPages').html(curPage + ' / ' + maxPages);
 
-            if (curPage < maxPages) {
-                updateGame();
-            } else {				       
-                $('#dialog').modal('hide');
-                location.href="{{ game.get_absolute_url }}#votecount";
-                location.reload();
-            }
+        if (curPage < maxPages) {
+            updateGame();
         } else {
-            alert('Error from the server: ' + data.message);
+            $('#dialog').modal('hide');
+            location.href = "{{ game.get_absolute_url }}#votecount";
+            location.reload();
         }
-    } /* function dataReceived */
-				   
-    function updateGame() {
-        var page = (curPage < maxPages) ? curPage + 1 : curPage;
-        $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page '+page+'...');
-	
-        if(!$('#dialog').hasClass('in')){
-            $('#dialog').modal('show');
-        }
-        $.getJSON('/update/{{ game.id }}/', dataReceived);
-    } /* function updateGame */
+    } else {
+        alert('Error from the server: ' + data.message);
+    }
+} /* function dataReceived */
 
-    $(document).ready(function() {
-        var curPage = {{ game.currentPage }};
-        var maxPages = {{ game.maxPages }};
-        var pushed = false;
-        $('#dialog').modal('hide');
-        $('#liveThread').button();
-        $('#updateButton').button().click(function() {
-            updateGame(); return false;
-        });
+function updateGame() {
+    var page = (curPage < maxPages) ? curPage + 1 : curPage;
+    $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading page ' + page + '...');
 
-        $('#voteImgButton').click(function() {
-            prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
-        });
-        {% if moderator and not game.closed %}
-        $('.playerList').sortable({
-            connectWith: '.playerList', items: 'div:not(.creator)',
-            start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
-            stop: function(event, ui) {    $(ui.item).delay(500).queue(function() { $(this).unbind('click'); }); },
-            over: function(event, ui) { $(this).addClass('blackOutline'); },
-            out: function(event, ui) { $(this).removeClass('blackOutline'); },
-            receive: function(event, ui) {
-                var uid = $(ui.item.html()).attr("href").match(/\d+$/);
-                var state = $(this).attr('id');
-                $.ajax({ url: '/player_state/{{ game.id }}/'+uid+'/'+state})
-                    .done(function() {
-                        $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
-                            $('.button').button();
-                        });
-                        $.get('/post_histories/{{ game.id }}', function(data) {
-                            $('#playerPostHistories').html(data);
-                        });
-                    });
-            }
-        });
+    if (!$('#dialog').hasClass('in')) {
+        $('#dialog').modal('show');
+    }
+    $.getJSON('/update/{{ game.id }}/', dataReceived);
+} /* function updateGame */
 
-        {% if post_vc_button %}
-        $(document).on('click', '#post-vc-button', function() {
-            if (pushed == false) {
-                pushed = true;
-                $('#post-vc-button').attr('disabled', 'disabled');
-                location.href = '/post_vc/{{ game.id }}';
-            }
-        });
-        {% endif %}
+$(document).ready(function () {
+    var curPage = {{ game.currentPage }};
+    var maxPages = {{ game.maxPages }};
+    var pushed = false;
+    $('#dialog').modal('hide');
+    $('#liveThread').button();
+    $('#updateButton').button().click(function () {
+        updateGame(); return false;
+    });
 
-        $(document).on('change', '.post-action', function(obj) {
-            var action = $(this).val();
-            var id = $(this).attr("id");
-            location.href = '/'+action+'/'+id;
-        });
-
-        $("#id_name").autocomplete({
-            source: "/player_list/",
-            select: function(event, ui) {
-                $('#id_name').val(ui.item.value);
-                $('#addPlayerForm').submit();
-            }
-        });
-
-        $('#incomingPlayerName').autocomplete({ source: "/player_list/" });
-        $("#deadlineDate").datepicker();
-        $('#submitNewDeadline').click(function() {
-            location.href = '/deadline/{{ game.id }}/' + $('#deadlineDate').val() + '/'
-                + $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' +
-                $('#timezone').val();
-        });
-        $('#submitTemplate').click(function() {
-            location.href='/game_template/{{ game.id }}/' + $('#templates').val();
-        });
-        $('#addVoteType').change(function() {
-            if ($(this).val() == 'unvotes') {
-                $('#addVoteTarget').hide();
-            } else {
-                $('#addVoteTarget').show();
-            }
-        });
-        $('#submitAddVote').click(function() {
-            location.href='/add_vote/{{ game.id }}/' + $('#addVotePlayer').val() + '/' + $('#addVoteType').val() + '/' +
-                $('#addVoteTarget').val();
-        });
-        $('#submitGlobalAnonVote').click(function() {
-            location.href='/add_vote_global/{{ game.id }}';
-        });
-        $('#submitNewDay').click(function() {
-            var day = $('#dayNumber').val();
-            $('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
-            location.href = '/new_day/{{ game.id }}/'+day;
-        });
-        $('#submitReplacePlayer').click(function() {
-            var outgoing = $('#replacePlayer').val();
-            var incoming = $('#incomingPlayerName').val();
-            var clear = $('input[name="clearVotes"]:checked').val();
-            location.href = '/replace/{{ game.id }}/'+clear+'/'+outgoing+'/'+incoming;
-        });
-        {% endif %}
+    $('#voteImgButton').click(function () {
+        prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
+    });
+    $('.button').button();
+    $('#refreshbutton').button();
+    $('#votecount_contents').load('/votecount/{{ game.id }}', function () {
         $('.button').button();
-        {% if moderator %}
-        $('.collapse').collapse();
-        {% endif %}
-        $(document).on('change', '#pageJump', function(obj) {
-            loadPage($(this).val());
-        });
-        $('#refreshbutton').button();
-        $('#votecount_contents').load('/votecount/{{ game.id }}', function() {
-            $('.button').button();
-        });
-        $.get('/post_histories/{{ game.id }}', function(data) {
-            $('#playerPostHistories').html(data);
-        });
-        loadPage({{ game.currentPage }});
-    })
-        .on('change', '.resolver', function(obj) {
-            var resolution = $(this).val();
-            var vote = $(this).attr('id');
-            var removing = $(this);
-            $.getJSON('/resolve/'+vote+'/'+resolution,
-                function(data) {
-                    removing.parent().parent().remove();
-                    if ($(".resolver").length == 0 || data.refresh == true) {
-                        $('#votecount_contents').load('/votecount/{{ game.id }}', function() { $('.button').button(); });
-                    }
-                }
-            );
-        })
+    });
+    $.get('/post_histories/{{ game.id }}', function (data) {
+        $('#playerPostHistories').html(data);
+    });
+    loadPage({{ game.currentPage }});
+    {% if moderator %}
+    $('.collapse').collapse();
+    {% if not game.closed %}
+    $('.playerList').sortable({
+        connectWith: '.playerList', items: 'div:not(.creator)',
+        start: function (event, ui) { $(ui.item).bind('click', function (event) { return false; }); },
+        stop: function (event, ui) { $(ui.item).delay(500).queue(function () { $(this).unbind('click'); }); },
+        over: function (event, ui) { $(this).addClass('blackOutline'); },
+        out: function (event, ui) { $(this).removeClass('blackOutline'); },
+        receive: function (event, ui) {
+            var uid = $(ui.item.html()).attr("href").match(/\d+$/);
+            var state = $(this).attr('id');
+            $.ajax({ url: '/player_state/{{ game.id }}/' + uid + '/' + state })
+                .done(function () {
+                    $('#votecount_contents').load('/votecount/{{ game.id }}', function () {
+                        $('.button').button();
+                    });
+                    $.get('/post_histories/{{ game.id }}', function (data) {
+                        $('#playerPostHistories').html(data);
+                    });
+                });
+        }
+    });
 
-        .on("click", ".not-loaded", function(e) {
-            e.preventDefault();
-            $(this).html('<img src="'+$(this).data("image")+'" />').removeClass('.not-loaded');
-        })
-        .on('click', '#bbcode', function(obj) {
-            $('#bbcode').select();
-        });
+    $("#id_name").autocomplete({
+        source: "/player_list/",
+        select: function (event, ui) {
+            $('#id_name').val(ui.item.value);
+            $('#addPlayerForm').submit();
+        }
+    });
+
+    $('#incomingPlayerName').autocomplete({ source: "/player_list/" });
+    $("#deadlineDate").datepicker();
+    $('#submitNewDeadline').click(function () {
+        location.href = '/deadline/{{ game.id }}/' + $('#deadlineDate').val() + '/'
+            + $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' +
+            $('#timezone').val();
+    });
+    $('#submitTemplate').click(function () {
+        location.href = '/game_template/{{ game.id }}/' + $('#templates').val();
+    });
+    $('#addVoteType').change(function () {
+        if ($(this).val() == 'unvotes') {
+            $('#addVoteTarget').hide();
+        } else {
+            $('#addVoteTarget').show();
+        }
+    });
+    $('#submitAddVote').click(function () {
+        location.href = '/add_vote/{{ game.id }}/' + $('#addVotePlayer').val() + '/' + $('#addVoteType').val() + '/' +
+            $('#addVoteTarget').val();
+    });
+    $('#submitGlobalAnonVote').click(function () {
+        location.href = '/add_vote_global/{{ game.id }}';
+    });
+    $('#submitNewDay').click(function () {
+        var day = $('#dayNumber').val();
+        $('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
+        location.href = '/new_day/{{ game.id }}/' + day;
+    });
+    $('#submitReplacePlayer').click(function () {
+        var outgoing = $('#replacePlayer').val();
+        var incoming = $('#incomingPlayerName').val();
+        var clear = $('input[name="clearVotes"]:checked').val();
+        location.href = '/replace/{{ game.id }}/' + clear + '/' + outgoing + '/' + incoming;
+    });
+    {% endif %}
+    {% endif %}
+
+})
+    {% if moderator and not game.closed %}
+    .on('change', '.post-action', function (obj) {
+        var action = $(this).val();
+        var id = $(this).attr("id");
+        location.href = '/' + action + '/' + id;
+    })
+    {% if post_vc_button %}
+    .on('click', '#post-vc-button', function () {
+        if (pushed == false) {
+            pushed = true;
+            $('#post-vc-button').attr('disabled', 'disabled');
+            location.href = '/post_vc/{{ game.id }}';
+        }
+    })
+    {% endif %}
+    {% endif %}
+    .on('change', '#pageJump', function (obj) {
+        loadPage($(this).val());
+    })
+    .on('change', '.resolver', function (obj) {
+        var resolution = $(this).val();
+        var vote = $(this).attr('id');
+        var removing = $(this);
+        $.getJSON('/resolve/' + vote + '/' + resolution,
+            function (data) {
+                removing.parent().parent().remove();
+                if ($(".resolver").length == 0 || data.refresh == true) {
+                    $('#votecount_contents').load('/votecount/{{ game.id }}', function () { $('.button').button(); });
+                }
+            }
+        );
+    })
+
+    .on("click", ".not-loaded", function (e) {
+        e.preventDefault();
+        $(this).html('<img src="' + $(this).data("image") + '" />').removeClass('.not-loaded');
+    })
+    .on('click', '#bbcode', function (obj) {
+        $('#bbcode').select();
+    });
 {% endblock %}
 {% block content %}
     <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
