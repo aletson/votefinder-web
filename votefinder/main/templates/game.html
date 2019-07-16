@@ -50,20 +50,6 @@
             prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
         });
         {% if moderator and not game.closed %}
-        {% if post_vc_button %}
-        $(document).on('click', '#post-vc-button', function() {
-            if (pushed == false) {
-                pushed = true;
-                $('#post-vc-button').attr('disabled', 'disabled');
-                location.href = '/post_vc/{{ game.id }}';
-            }
-        });
-        {% endif %}
-        $(document).on('change', '.post-action', function(obj) {
-            var action = $(this).val();
-            var id = $(this).attr("id");
-            location.href = '/'+action+'/'+id;
-        })
         $('.playerList').sortable({
             connectWith: '.playerList', items: 'div:not(.creator)',
             start: function(event, ui) { $(ui.item).bind('click', function(event) { return false; }); },
@@ -84,11 +70,31 @@
                     });
             }
         });
-        $("#id_name").autocomplete({ source: "/player_list/", select: function(event, ui) {
-            $('#id_name').val(ui.item.value);
-            $('#addPlayerForm').submit();
-        }
+
+        {% if post_vc_button %}
+        $(document).on('click', '#post-vc-button', function() {
+            if (pushed == false) {
+                pushed = true;
+                $('#post-vc-button').attr('disabled', 'disabled');
+                location.href = '/post_vc/{{ game.id }}';
+            }
         });
+        {% endif %}
+
+        $(document).on('change', '.post-action', function(obj) {
+            var action = $(this).val();
+            var id = $(this).attr("id");
+            location.href = '/'+action+'/'+id;
+        });
+
+        $("#id_name").autocomplete({
+            source: "/player_list/",
+            select: function(event, ui) {
+                $('#id_name').val(ui.item.value);
+                $('#addPlayerForm').submit();
+            }
+        });
+
         $('#incomingPlayerName').autocomplete({ source: "/player_list/" });
         $("#deadlineDate").datepicker();
         $('#submitNewDeadline').click(function() {
