@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
 from votefinder.main.models import *
+from django.db import transaction
 
 class PageParser:
     def __init__(self):
@@ -163,19 +164,18 @@ class PageParser:
         game.currentPage = self.pageNumber
         game.gameName = self.gameName
 
-        for post in self.posts:
-            post.game = game
+        with transaction.atomic():
+            for post in self.posts:
+                post.game = game
+                post.save()
+                self.ReadVotes(post)
 
-            self.ReadVotes(post)
-
-            if not post.author in self.players:
-                self.players.append(post.author)
-            cur_player = post.author
-            cur_player.last_post = datetime.now()
-            cur_player.total_posts += 1
-            cur_player.save()
-
-        Post.objects.bulk_create(self.posts)
+                if not post.author in self.players:
+                    self.players.append(post.author)
+                cur_player = post.author
+                cur_player.last_post = datetime.now()
+                cur_player.total_posts += 1
+                cur_player.save()
         
         if self.new_game or self.pageNumber == 1:
             defaultState = 'alive'
