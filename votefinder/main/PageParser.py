@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
 from votefinder.main.models import *
-
+from django.db import transaction
 
 class PageParser:
     def __init__(self):
@@ -128,7 +128,8 @@ class PageParser:
             content = "".join([str(x) for x in bold.contents])
             for line in content.splitlines():
                 self.SearchLineForActions(post, line)
-
+                
+    @transaction.atomic
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data, 'html5lib')
         self.pageNumber = self.FindPageNumber(soup)
