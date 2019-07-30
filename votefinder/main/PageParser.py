@@ -3,7 +3,6 @@ from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
 from votefinder.main.models import *
-from django.db import transaction
 
 class PageParser:
     def __init__(self):
@@ -129,7 +128,6 @@ class PageParser:
             for line in content.splitlines():
                 self.SearchLineForActions(post, line)
                 
-    @transaction.atomic
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data, 'html5lib')
         self.pageNumber = self.FindPageNumber(soup)
@@ -167,7 +165,6 @@ class PageParser:
 
         for post in self.posts:
             post.game = game
-            post.save()
 
             self.ReadVotes(post)
 
@@ -178,6 +175,8 @@ class PageParser:
             cur_player.total_posts += 1
             cur_player.save()
 
+        Post.objects.bulk_create(self.posts)
+        
         if self.new_game or self.pageNumber == 1:
             defaultState = 'alive'
         else:
