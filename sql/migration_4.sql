@@ -1,0 +1,2 @@
+ALTER TABLE main_post MODIFY body BLOB DEFAULT '' NOT NULL;
+ALTER TABLE main_post MODIFY body TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
