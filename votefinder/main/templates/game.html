@@ -36,9 +36,10 @@ function updateGame() {
     $.getJSON('/update/{{ game.id }}/', dataReceived);
 } /* function updateGame */
 
+var curPage = {{ game.currentPage }};
+var maxPages = {{ game.maxPages }};
 $(document).ready(function () {
-    var curPage = {{ game.currentPage }};
-    var maxPages = {{ game.maxPages }};
+
     var pushed = false;
     $('#dialog').modal('hide');
     $('#liveThread').button();
