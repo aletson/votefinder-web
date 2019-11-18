@@ -1,4 +1,5 @@
 import urllib
+import urllib.parse
 
 from votefinder.main.ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import *
@@ -31,7 +32,7 @@ class CreateUserForm(forms.Form):
         if self.required_key:
             downloader = ForumPageDownloader()
             data = downloader.download(
-                'https://forums.somethingawful.com/member.php?action=getinfo&username=%s' % urllib.quote_plus(login))
+                'https://forums.somethingawful.com/member.php?action=getinfo&username=%s' % urllib.parse.quote_plus(login))
 
             if data == None:
                 raise forms.ValidationError("There was a problem downloading the profile for the SA user %s." % login)
