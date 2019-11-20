@@ -10,7 +10,7 @@ image==1.5.19
 ipaddress==1.0.22
 mysqlclient==1.4.4
 parsedatetime==2.4
-Pillow==6.1.0
+Pillow==6.2.0
 pytz==2018.5
 requests==2.22.0
 simplejson==3.16.0
