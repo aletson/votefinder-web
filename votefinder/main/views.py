@@ -1102,3 +1102,21 @@ def my_classes(c):
     if c.parent is not None and c.parent.has_key('class') and c.parent['class'] == 'subforums' and c.has_key('href'):
         return True
     return False
+
+def common_games(request, slug_a, slug_b):
+    player_a = get_object_or_404(Player, slug = slug_a)
+    player_b = get_object_or_404(Player, slug = slug_b)
+    games_a = [state.game for state in PlayerState.objects.filter(player = player_a) if not state.moderator or state.spectator]
+    games_b = [state.game for state in PlayerState.objects.filter(player = player_b) if not state.moderator or state.spectator]
+    common_games = [game for game in games_a if game in games_b]
+
+    if settings.DEBUG:
+        print(common_games)
+
+    context = {
+        'player_a': player_a,
+        'player_b': player_b,
+        'games': common_games
+    }
+
+    return render(request, 'common_games.html',context)

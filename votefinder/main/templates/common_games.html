@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Common Games: {{ player_a.name | safe }} & {{ player_b.name | safe }}{% endblock %}
+
+{% block onready %}
+{% endblock %}
+
+{% block content %}
+    <h1><a href="/">VoteFinder</a>: Common Games: {{ player_a.name | safe }} & {{ player_b.name | safe }}</h1>
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_a.uid }}">jump to live
+    profile for {{ player_a.name | safe }}</a>)<br>
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_b.uid }}">jump to live
+    profile for {{ player_b.name | safe }}</a>)
+    <hr>
+
+
+    {% if games %}
+        <p>Games played together:</p>
+        <ol>
+            {% for game in games %}
+                <li><a href="{{ game.get_absolute_url }}">{{ game.name |safe }}</a></li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <p>These two haven't played any games together :(</p>
+    {% endif %}
+
+
+{% endblock %}
+
