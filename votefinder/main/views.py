@@ -26,6 +26,13 @@ from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, 
 from votefinder.main.models import *
 
 
+def check_mod(request, game):
+    try:
+        moderator = game.is_user_mod(request.user)
+    except AttributeError:
+        moderator = False
+    return moderator
+
 def index(request):
     game_list = Game.objects.select_related().filter(closed=False).order_by("name")
 
@@ -106,8 +113,6 @@ def game_list(request, page):
 def game(request, slug):
     game = get_object_or_404(Game, slug=slug)
     players = game.players.select_related().all()
-
-    moderator = game.is_user_mod(request.user)
     form = AddPlayerForm()
     try:
         comment = Comment.objects.get(game=game)
@@ -130,13 +135,13 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
-    if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
+    if check_mod(request, game) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
         post_vc_button = True
     else:
         post_vc_button = False
 
     return render(request, 'game.html',
-                  {'game': game, 'players': players, 'moderator': moderator, 'form': form,
+                  {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
                    'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
                    'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
                    'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
@@ -222,7 +227,7 @@ def player_state(request, gameid, playerid, state):
     player = get_object_or_404(Player, id=playerid)
     current_state = get_object_or_404(PlayerState, game=game, player=player)
 
-    if not game.is_user_mod(request.user) or game.moderator == player:
+    if not check_mod(request, game) or game.moderator == player:
         return HttpResponseNotFound
 
     if state == 'dead':
@@ -257,7 +262,7 @@ def player_list(request):
 @login_required
 def add_player(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if request.method != 'POST' or not game.is_user_mod(request.user):
+    if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
 
     c = {}
@@ -284,7 +289,7 @@ def add_player(request, gameid):
 @login_required
 def delete_spectators(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     for p in game.spectators():
@@ -308,7 +313,7 @@ def votecount(request, gameid):
     v = VotecountFormatter.VotecountFormatter(game)
     v.go()
 
-    if game.is_user_mod(request.user) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(
+    if check_mod(request, game) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(
             minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
         post_vc_button = True
     else:
@@ -359,19 +364,17 @@ def posts(request, gameid, page):
     posts = game.posts.select_related().filter(pageNumber=page).order_by('id')
     page = int(page)
     gameday = game.days.select_related().last()
-    moderator = game.is_user_mod(request.user)
-
     return render(request, 'posts.html',
                   {'game': game, 'posts': posts,
                    'prevPage': page - 1, 'nextPage': page + 1, 'page': page,
                    'pageNumbers': range(1, game.currentPage + 1),
-                   'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': moderator})
+                   'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)})
 
 
 @login_required
 def add_comment(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if request.method != 'POST' or not game.is_user_mod(request.user):
+    if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
 
     c = {}
@@ -397,7 +400,7 @@ def add_comment(request, gameid):
 @login_required
 def delete_comment(request, commentid):
     c = get_object_or_404(Comment, id=commentid)
-    if not c.game.is_user_mod(request.user):
+    if not check_mod(c.game):
         return HttpResponseNotFound
 
     url = c.game.get_absolute_url()
@@ -409,7 +412,7 @@ def delete_comment(request, commentid):
 @login_required
 def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     hour = int(hour)
@@ -435,7 +438,7 @@ def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
 @login_required
 def close_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     game.closed = True
@@ -452,7 +455,7 @@ def close_game(request, gameid):
 @login_required
 def reopen_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     game.closed = False
@@ -475,7 +478,7 @@ def new_day(request, gameid, day):
 @login_required
 def replace(request, gameid, clear, outgoing, incoming):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     playerOut = get_object_or_404(Player, id=outgoing)
@@ -531,7 +534,7 @@ def replace(request, gameid, clear, outgoing, incoming):
 @login_required
 def start_day(request, day, postid):
     post = get_object_or_404(Post, id=postid)
-    if not post.game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     gameday, created = GameDay.objects.get_or_create(game=post.game, dayNumber=day, defaults={'startPost': post})
@@ -642,8 +645,7 @@ def delete_template(request, templateid):
 def game_template(request, gameid, templateid):
     game = get_object_or_404(Game, id=gameid)
     template = get_object_or_404(VotecountTemplate, id=templateid)
-
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     game.template = None if template.system_default else template
@@ -697,7 +699,7 @@ def closed_games(request):
 @login_required
 def add_vote(request, gameid, player, votes, target):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     gameday = game.days.select_related().last()
@@ -719,7 +721,7 @@ def add_vote(request, gameid, player, votes, target):
 @login_required
 def add_vote_global(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
     
     gameday = game.days.select_related().last()
@@ -736,7 +738,7 @@ def add_vote_global(request, gameid):
 def delete_vote(request, voteid):
     vote = get_object_or_404(Vote, id=voteid)
     game = vote.game
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseNotFound
 
     vote.delete()
@@ -965,7 +967,7 @@ def delete_alias(request, id):
 @login_required
 def sendpms(request, slug):
     game = get_object_or_404(Game, slug=slug)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseForbidden
 
     return render(request, "sendpms.html", {'game': game})
@@ -979,15 +981,15 @@ def post_histories(request, gameid):
 @login_required
 def post_lynches(request, gameid, enabled):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseForbidden
 
     if enabled == "on":
         game.post_lynches = True
-        messages.add_message(request, messages.SUCCESS, 'Posting of lynches for this game is now enabled!')
+        messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now enabled!')
     else:
         game.post_lynches = False
-        messages.add_message(request, messages.SUCCESS, 'Posting of lynches for this game is now disabled!')
+        messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now disabled!')
 
     game.save()
     return HttpResponseRedirect(game.get_absolute_url())
@@ -996,7 +998,7 @@ def post_lynches(request, gameid, enabled):
 @login_required
 def ecco_mode(request, gameid, enabled):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseForbidden
 
     if enabled == "on":
@@ -1013,7 +1015,7 @@ def ecco_mode(request, gameid, enabled):
 @login_required
 def post_vc(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not game.is_user_mod(request.user):
+    if not check_mod(request, game):
         return HttpResponseForbidden
 
     if game.last_vc_post != None and datetime.now() - game.last_vc_post < timedelta(minutes=60) and (game.deadline and game.deadline - datetime.now() > timedelta(minutes=60)):
