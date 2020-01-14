@@ -2,12 +2,8 @@
 
 SA web-based vote parser
 
-## Installation
-
-[Wiki](https://www.samafia.net/wiki/Votefinder)
-
 ## Usage
-`pip install -r requirements.txt && python -Wall manage.py runserver`
+For the standalone Django server, please review the documentation at INSTALL.md.
 
 You may also run using Passenger with the included `passenger_wsgi.py`.
 
