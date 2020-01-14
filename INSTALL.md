@@ -9,4 +9,5 @@ source /var/venvs/venv/bin/activate
 git clone https://github.com/aletson/votefinder-web
 cd votefinder-web
 pip install -r requirements.txt
-python manage.py runserver localhost:8080```
+python -Wall manage.py runserver localhost:8080
+```
