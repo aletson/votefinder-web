@@ -186,7 +186,7 @@ class Game(models.Model):
     def is_user_mod(self, user):
         if user.is_superuser:
             return True
-        elif user.is_authenticated():
+        elif user.is_authenticated:
             return self.is_player_mod(user.profile.player)
         else:
             return False
