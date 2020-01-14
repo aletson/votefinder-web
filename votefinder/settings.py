@@ -3,21 +3,21 @@
 import os
 
 # Import sensitive data from envvars
-VF_MYSQL_HOST = os.environ['VF_MYSQL_HOST'] or 'MySQL database server'
-VF_MYSQL_USER = os.environ['VF_MYSQL_USER'] or 'MySQL database user'
-VF_MYSQL_PASS = os.environ['VF_MYSQL_PASS'] or 'MySQL database password'
-VF_MYSQL_NAME = os.environ['VF_MYSQL_NAME'] or 'MySQL database name'
-VF_SA_USER = os.environ['VF_SA_USER'] or 'SA forums account name'
-VF_SA_PASS = os.environ['VF_SA_PASS'] or 'SA forums account password'
-VF_EMAIL_HOST = os.environ['VF_EMAIL_HOST'] or 'Email server'
-VF_EMAIL_USER = os.environ['VF_EMAIL_USER'] or 'Email user'
-VF_EMAIL_PASS = os.environ['VF_EMAIL_PASS'] or 'Email password'
-VF_DOMAINS = os.environ['VF_DOMAINS'] or '127.0.0.1 localhost'
-VF_FROM_EMAIL = os.environ['VF_FROM_EMAIL'] or 'reset@votefinder.org'
-VF_ADMIN_NAME = os.environ['VF_ADMIN_NAME'] or 'Your Name'
-VF_ADMIN_EMAIL = os.environ['VF_ADMIN_EMAIL'] or 'you@yourname.com'
-VF_DEBUG_STR = os.environ['VF_DEBUG_STR'] or False
-SQS_QUEUE_URL = os.environ['SQS_QUEUE_URL'] or ''
+VF_MYSQL_HOST = os.environ.get('VF_MYSQL_HOST') or 'MySQL database server'
+VF_MYSQL_USER = os.environ.get('VF_MYSQL_USER') or 'MySQL database user'
+VF_MYSQL_PASS = os.environ.get('VF_MYSQL_PASS') or 'MySQL database password'
+VF_MYSQL_NAME = os.environ.get('VF_MYSQL_NAME') or 'MySQL database name'
+VF_SA_USER = os.environ.get('VF_SA_USER') or 'SA forums account name'
+VF_SA_PASS = os.environ.get('VF_SA_PASS') or 'SA forums account password'
+VF_EMAIL_HOST = os.environ.get('VF_EMAIL_HOST') or 'Email server'
+VF_EMAIL_USER = os.environ.get('VF_EMAIL_USER') or 'Email user'
+VF_EMAIL_PASS = os.environ.get('VF_EMAIL_PASS') or 'Email password'
+VF_DOMAINS = os.environ.get('VF_DOMAINS') or '127.0.0.1 localhost'
+VF_FROM_EMAIL = os.environ.get('VF_FROM_EMAIL') or 'reset@votefinder.org'
+VF_ADMIN_NAME = os.environ.get('VF_ADMIN_NAME') or 'Your Name'
+VF_ADMIN_EMAIL = os.environ.get('VF_ADMIN_EMAIL') or 'you@yourname.com'
+VF_DEBUG_STR = os.environ.get('VF_DEBUG_STR') or False
+SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL') or ''
 PRIMARY_DOMAIN = VF_DOMAINS.split(" ", 1)[0]
 
 if VF_DEBUG_STR == 'True':
