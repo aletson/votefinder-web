@@ -190,6 +190,14 @@ def update_user_theme(request):
         profile.theme = theme # This might not work check it afterwards.
         profile.save()
         return HttpResponse(simplejson.dumps({'success': True}))
+		
+def update_user_pronouns(request):
+    if request.method == "POST":
+        profile = request.user.profile
+        pronouns = request.POST.get('p')
+        profile.pronouns = pronouns
+        profile.save()
+        return HttpResponse(simplejson.dumps({'success': True}))
 
 def player(request, slug):
     try:
@@ -200,15 +208,18 @@ def player(request, slug):
 
     try:
         aliases = Alias.objects.filter(player=player)
+		profile = UserProfile.objects.get(player=player)
     except Alias.DoesNotExist:
         pass
+	except UserProfile.DoesNotExist:
+		pass
 
     show_delete = False
     if request.user.is_superuser or (request.user.is_authenticated() and request.user.profile.player == player):
         show_delete = True
 
     return render(request, 'player.html',
-                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete})
+                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': profile.pronouns})
 
 
 def player_id(request, playerid):
