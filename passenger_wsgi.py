@@ -1,7 +1,7 @@
 import os
 import sys
 
-VENV = '/var/www/venvs/vf' + os.environ['ENVIRONMENT'] # change this to full path in env var
+VENV = os.environ['ENVIRONMENT']
 PYTHON_BIN = VENV + '/bin/python'
 
 if sys.executable != PYTHON_BIN:
@@ -10,7 +10,7 @@ if sys.executable != PYTHON_BIN:
 cwd = os.getcwd()
 sys.path.append(cwd)
 sys.path.append(os.path.join(cwd, '/votefinder'))
-sys.path.insert(0,'{v}/lib/python3.5/site-packages'.format(v=VENV))
+sys.path.insert(0,'{v}/lib/python3.7/site-packages'.format(v=VENV))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = "votefinder.settings"
 
