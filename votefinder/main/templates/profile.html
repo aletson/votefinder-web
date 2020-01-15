@@ -58,7 +58,7 @@
 		</tr>
 		<tr>
 			<td>Pronouns:</td>
-			<td><input class="form-control" id="pronouns" value="{% if profile.pronouns != '' %}(pronouns: {{ profile.pronouns }}){% endif %}" /></td>
+			<td><input class="form-control" id="pronouns" value="{% if profile.pronouns %}{{ profile.pronouns }}{% endif %}" /></td>
 			<td><button class="form-control btn btn-info" id="pronouns-submit">Save</button></td>
 		</tr>			
     </table></p>
