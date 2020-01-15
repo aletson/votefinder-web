@@ -5,20 +5,31 @@
     $.ajaxSetup({
         headers: { "X-CSRFToken": Cookies.get("csrftoken") }
     });
- // Code goes here to switch theme when dropdown is updated -- update schema via ajax then update CSS
     $("#theme-selector").on("change", function() {
         $(this).prop("disabled", true);
         $.post("/update_user_theme", {t: $(this).val()}) //TODO better path
-            .done(function() {
-                console.log($("#theme-selector option:selected").text())
-                $("#theme-css").attr("href", "/static/style-" + $("#theme-selector option:selected").text() + ".css");
-                $("#theme-selector").prop("disabled", false);
-            })
-            .fail(function() {
-                alert("Failed to contact the server. Please contact the developer.");
-                //TODO more elegant
-            });
+        .done(function() {
+            console.log($("#theme-selector option:selected").text())
+            $("#theme-css").attr("href", "/static/style-" + $("#theme-selector option:selected").text() + ".css");
+            $("#theme-selector").prop("disabled", false);
+        })
+        .fail(function() {
+            alert("Failed to contact the server. Please contact the developer.");
+            //TODO more elegant
+        });
     });
+	$("#pronouns-submit").on('click', function() {
+		$(this).prop('disabled', true);
+		$('#pronouns').prop('disabled', true);
+		$.post("/update_user_pronouns", {p: $('#pronouns').val()})
+		.done(function() {
+		    $('#pronouns-submit').prop('disabled', false);
+		    $('#pronouns').prop('disabled', false);
+		})
+		.fail(function() {
+		    alert("Failed to contact the server. Please contact the developer.");
+		});
+	});
 {% endblock %}
 
 {% block content %}
@@ -44,6 +55,12 @@
                 <option value="{{ t.id }}" {% if t.id == profile.theme.id %} selected="selected" {% endif %}>{{ t.name }}</option>
                 {% endfor %}
                 </select></td>
+		</tr>
+		<tr>
+			<td>Pronouns:</td>
+			<td><input class="form-control" id="pronouns" value="{% if profile.pronouns != '' %}(pronouns: {{ profile.pronouns }}){% endif %}" /></td>
+			<td><button class="form-control btn btn-info" id="pronouns-submit">Save</button></td>
+		</tr>			
     </table></p>
 
     <hr>

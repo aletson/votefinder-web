@@ -326,6 +326,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
     registered = models.DateTimeField(auto_now=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
+    pronouns = models.TextField()
 
     def __str__(self):
         return self.player.name
