@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }} <small>{% if pronouns != '' %}(pronouns: {{ pronouns }}){% endif %}</small></h1>
+    <h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }} <small>{% if pronouns %}(pronouns: {{ pronouns }}){% endif %}</small></h1>
     (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.uid }}">jump to live
     profile</a>)
     {% if user.is_authenticated %}
