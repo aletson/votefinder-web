@@ -208,7 +208,7 @@ def player(request, slug):
 
     try:
         aliases = Alias.objects.filter(player=player)
-		profile = UserProfile.objects.get(player=player)
+        profile = UserProfile.objects.get(player=player)
     except Alias.DoesNotExist:
         pass
 	except UserProfile.DoesNotExist:
