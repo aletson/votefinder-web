@@ -211,8 +211,8 @@ def player(request, slug):
         profile = UserProfile.objects.get(player=player)
     except Alias.DoesNotExist:
         pass
-	except UserProfile.DoesNotExist:
-		pass
+    except UserProfile.DoesNotExist:
+        pass
 
     show_delete = False
     if request.user.is_superuser or (request.user.is_authenticated() and request.user.profile.player == player):
