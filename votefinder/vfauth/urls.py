@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^create/2/*$', votefinder.vfauth.views.create_step_2),
     url(r'^create/done/*$', votefinder.vfauth.views.create_step_3),
     url(r'^login/*$', django.contrib.auth.views.LoginView, {'template_name': 'login.html'}),
-    url(r'^logout/*$', django.contrib.auth.views.LogoutView, {'template_name': 'logged_out.html'}),
+    url(r'^logout/*$', django.contrib.auth.views.LogoutView.as_view(), {'template_name': 'logged_out.html'}),
     url(r'^password_change/*$', django.contrib.auth.views.PasswordChangeView,
         {'template_name': 'password_change_form.html', 'post_change_redirect': 'done/'}),
     url(r'^password_change/done/*$', django.contrib.auth.views.PasswordChangeDoneView,
