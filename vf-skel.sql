@@ -547,7 +547,7 @@ CREATE TABLE `main_theme` (
   `name` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-INSERT INTO `main_theme` (`id`, `name`) VALUES (1, "default"), (2, "yospos");
+INSERT INTO `main_theme` (`id`, `name`) VALUES (1, "default"), (2, "yospos"), (3, "classic"), (4, "amberpos");
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
