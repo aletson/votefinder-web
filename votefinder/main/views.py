@@ -220,7 +220,7 @@ def player(request, slug):
         pass
 
     show_delete = False
-    if request.user.is_superuser or (request.user.is_authenticated() and request.user.profile.player == player):
+    if request.user.is_superuser or (request.user.is_authenticated and request.user.profile.player == player):
         show_delete = True
 
     return render(request, 'player.html',
