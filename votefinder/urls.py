@@ -10,7 +10,7 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^auth/', include(votefinder.vfauth.urls)),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'', include(votefinder.main.urls)),
 ]
 

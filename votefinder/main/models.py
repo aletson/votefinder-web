@@ -13,6 +13,11 @@ DETAIL_LEVEL_CHOICES = (
     (3, 'Detailed'),
 )
 
+def get_root_user():
+    return User.objects.get_or_create(username='root')[0]
+
+def get_default_player():
+    return Player.objects.get_or_create(name='votefinder')[0]
 
 def SlugifyUniquely(value, model, slugfield="slug"):
     suffix = 1
@@ -51,7 +56,7 @@ class Player(models.Model):
 
 
 class VotecountTemplate(models.Model):
-    creator = models.ForeignKey(Player, editable=False)
+    creator = models.ForeignKey(Player, editable=False, on_delete=models.SET(get_default_player))
     name = models.CharField(max_length=256)
     shared = models.BooleanField(default=False)
     system_default = models.BooleanField(editable=False, default=False)
@@ -83,7 +88,7 @@ class VotecountTemplate(models.Model):
 class Game(models.Model):
     name = models.CharField(max_length=255)
     threadId = models.IntegerField(unique=True, db_index=True)
-    moderator = models.ForeignKey(Player, related_name='moderatingGames')
+    moderator = models.ForeignKey(Player, related_name='moderatingGames', on_delete=models.SET(get_default_player))
     lastUpdated = models.DateTimeField(auto_now=True)
     maxPages = models.IntegerField()
     currentPage = models.IntegerField()
@@ -91,8 +96,8 @@ class Game(models.Model):
     locked_at = models.DateTimeField(null=True, blank=True)
     closed = models.BooleanField(default=False)
     deadline = models.DateTimeField(null=True, blank=True)
-    template = models.ForeignKey(VotecountTemplate, null=True, blank=True)
-    added_by = models.ForeignKey(User)
+    template = models.ForeignKey(VotecountTemplate, null=True, blank=True, on_delete=models.SET_DEFAULT, default=2)
+    added_by = models.ForeignKey(User, on_delete=models.SET(get_root_user))
     timezone = models.CharField(max_length=128, default='US/Eastern')
     post_lynches = models.BooleanField(default=False)
     ecco_mode = models.BooleanField(default=False)
@@ -181,15 +186,15 @@ class Game(models.Model):
     def is_user_mod(self, user):
         if user.is_superuser:
             return True
-        elif user.is_authenticated():
+        elif user.is_authenticated:
             return self.is_player_mod(user.profile.player)
         else:
             return False
 
 
 class Comment(models.Model):
-    player = models.ForeignKey(Player)
-    game = models.ForeignKey(Game)
+    player = models.ForeignKey(Player, on_delete=models.SET(get_root_user))
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=4096, blank=True, null=True)
 
@@ -198,8 +203,8 @@ class Comment(models.Model):
 
 
 class PlayerState(models.Model):
-    game = models.ForeignKey(Game, related_name='players')
-    player = models.ForeignKey(Player, related_name='games')
+    game = models.ForeignKey(Game, related_name='players', on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, related_name='games', on_delete=models.CASCADE)
     spectator = models.BooleanField(default=False)
     alive = models.BooleanField(default=False)
     moderator = models.BooleanField(default=False)
@@ -231,7 +236,7 @@ class PlayerState(models.Model):
 
 
 class Alias(models.Model):
-    player = models.ForeignKey(Player)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
     alias = models.CharField(max_length=255)
 
     def __str__(self):
@@ -244,31 +249,31 @@ class Alias(models.Model):
 class Post(models.Model):
     postId = models.IntegerField(unique=True, db_index=True)
     timestamp = models.DateTimeField()
-    author = models.ForeignKey(Player, related_name="posts")
+    author = models.ForeignKey(Player, related_name="posts", on_delete=models.SET(get_default_player))
     authorSearch = models.CharField(max_length=256)
     body = models.TextField()
     avatar = models.CharField(max_length=256)
     pageNumber = models.IntegerField()
-    game = models.ForeignKey(Game, related_name="posts")
+    game = models.ForeignKey(Game, related_name="posts", on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s at %s" % (self.author.name, self.timestamp)
 
 
 class PrivMsg(models.Model):
-    game = models.ForeignKey(Game, related_name="pms")
-    target = models.ForeignKey(Player, related_name="pms_received")
-    author = models.ForeignKey(Player, related_name="pms_sent")
+    game = models.ForeignKey(Game, related_name="pms", on_delete=models.CASCADE)
+    target = models.ForeignKey(Player, related_name="pms_received", on_delete=models.SET(get_default_player))
+    author = models.ForeignKey(Player, related_name="pms_sent", on_delete=models.SET(get_default_player))
     subject = models.CharField(max_length=85)
     icon = models.CharField(max_length=10)
     sent = models.BooleanField(default=False)
 
 
 class Vote(models.Model):
-    post = models.ForeignKey(Post, related_name='votes', db_index=True)
-    game = models.ForeignKey(Game, related_name='votes', db_index=True)
-    author = models.ForeignKey(Player, related_name='votes')
-    target = models.ForeignKey(Player, related_name='target_of_votes', null=True)
+    post = models.ForeignKey(Post, related_name='votes', db_index=True, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, related_name='votes', db_index=True, on_delete=models.CASCADE)
+    author = models.ForeignKey(Player, related_name='votes', on_delete=models.CASCADE)
+    target = models.ForeignKey(Player, related_name='target_of_votes', null=True, on_delete=models.CASCADE)
     targetString = models.CharField(max_length=256)
     unvote = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
@@ -284,7 +289,7 @@ class Vote(models.Model):
 
 class GameStatusUpdate(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     message = models.CharField(max_length=1024)
     url = models.CharField(max_length=255)
 
@@ -304,7 +309,7 @@ class GameStatusUpdate(models.Model):
 
 
 class BlogPost(models.Model):
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     text = models.TextField()
     timestamp = models.DateTimeField(auto_now=True)
@@ -322,8 +327,8 @@ class Theme(models.Model):
         return self.name
     
 class UserProfile(models.Model):
-    player = models.ForeignKey(Player, unique=True)
-    user = models.OneToOneField(User, related_name="profile")
+    player = models.OneToOneField(Player, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
     registered = models.DateTimeField(auto_now=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
     pronouns = models.TextField()
@@ -332,9 +337,9 @@ class UserProfile(models.Model):
         return self.player.name
 
 class GameDay(models.Model):
-    game = models.ForeignKey(Game, related_name='days', db_index=True)
+    game = models.ForeignKey(Game, related_name='days', db_index=True, on_delete=models.CASCADE)
     dayNumber = models.IntegerField(default=1)
-    startPost = models.ForeignKey(Post)
+    startPost = models.ForeignKey(Post, on_delete=models.CASCADE)
     notified = models.BooleanField(default=False)
 
     def __str__(self):
