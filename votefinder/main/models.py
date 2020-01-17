@@ -289,7 +289,7 @@ class Vote(models.Model):
 
 
 class GameStatusUpdate(models.Model):
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     message = models.CharField(max_length=1024)
     url = models.CharField(max_length=255)
@@ -313,7 +313,7 @@ class BlogPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     text = models.TextField()
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -330,7 +330,7 @@ class Theme(models.Model):
 class UserProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE)
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
-    registered = models.DateTimeField(auto_now=True)
+    registered = models.DateTimeField(auto_now_add=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
     pronouns = models.TextField()
 
