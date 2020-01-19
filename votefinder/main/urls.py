@@ -38,7 +38,7 @@ urlpatterns = [
     url(r'^reopen_game/(?P<gameid>\d+)/*$', views.reopen_game),
     url(r'^new_day/(?P<gameid>\d+)/(?P<day>\d+)/*$', views.new_day),
     url(r'^replace/(?P<gameid>\d+)/(?P<clear>\w+)/(?P<outgoing>\d+)/(?P<incoming>.+)*$', views.replace),
-    url(r'^startday:(?P<day>\d+)/(?P<postid>\d+)*$', views.start_day),
+    url(r'^startday/(?P<day>\d+)/(?P<postid>\d+)*$', views.start_day),
     url(r'^templates$', views.templates),
     url(r'^create_template$', views.create_template),
     url(r'^template/(?P<templateid>\d+)$', views.edit_template),
