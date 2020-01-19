@@ -214,17 +214,18 @@ def player(request, slug):
     try:
         aliases = Alias.objects.filter(player=player)
         profile = UserProfile.objects.get(player=player)
+	pronouns = profile.pronouns
     except Alias.DoesNotExist:
         pass
     except UserProfile.DoesNotExist:
-        pass
+        pronouns = None
 
     show_delete = False
     if request.user.is_superuser or (request.user.is_authenticated and request.user.profile.player == player):
         show_delete = True
 
     return render(request, 'player.html',
-                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': profile.pronouns})
+                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': pronouns})
 
 
 def player_id(request, playerid):
