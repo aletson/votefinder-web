@@ -546,7 +546,7 @@ def replace(request, gameid, clear, outgoing, incoming):
 @login_required
 def start_day(request, day, postid):
     post = get_object_or_404(Post, id=postid)
-    if not check_mod(request, game):
+    if not check_mod(request, post.game):
         return HttpResponseNotFound
 
     gameday, created = GameDay.objects.get_or_create(game=post.game, dayNumber=day, defaults={'startPost': post})
