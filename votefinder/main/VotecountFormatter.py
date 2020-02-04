@@ -75,7 +75,7 @@ class VotecountFormatter:
                         this_line.replace("{{ticks}}", self.build_ticks(item['count'], self.tolynch)))
 
         self.not_voting_list = sorted(
-            filter(lambda x: self.vc.currentVote[x] == None and x in living_players, self.vc.currentVote),
+            filter(lambda x: self.vc.currentVote[x] is None and x in living_players, self.vc.currentVote),
             key=lambda x: x.name.lower())
         temp_not_voting = game_template.single_line.replace("{{target}}", "Not Voting").replace("{{count}}", str(
             len(self.not_voting_list))).replace("{{ticks}}", self.build_ticks(0, self.tolynch))
