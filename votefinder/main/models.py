@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.template.defaultfilters import slugify
+from django.conf import settings
 
 DETAIL_LEVEL_CHOICES = (
     (1, 'Brief'),
@@ -73,8 +74,8 @@ class VotecountTemplate(models.Model):
     after_unvoted_vote = models.CharField(max_length=256, blank=True)
     detail_level = models.IntegerField(choices=DETAIL_LEVEL_CHOICES, default=3)
     hide_zero_votes = models.BooleanField(default=False)
-    full_tick = models.CharField(max_length=256, default="https://votefinder.org/t.png")
-    empty_tick = models.CharField(max_length=256, default="https://votefinder.org/te.png")
+    full_tick = models.CharField(max_length=256, default="https://" + settings.PRIMARY_DOMAIN + "/t.png")
+    empty_tick = models.CharField(max_length=256, default="https://" + settings.PRIMARY_DOMAIN + "/te.png")
 
     def __str__(self):
         if self.system_default:
@@ -288,7 +289,7 @@ class Vote(models.Model):
 
 
 class GameStatusUpdate(models.Model):
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     message = models.CharField(max_length=1024)
     url = models.CharField(max_length=255)
@@ -298,7 +299,7 @@ class GameStatusUpdate(models.Model):
             postUrl = "http://forums.somethingawful.com/showthread.php?goto=post&postid=%s" % \
                       self.game.posts.all().order_by("-id")[0].postId
             try:
-                if url == None:
+                if url is None:
                     self.url = postUrl
                 else:
                     self.url = url
@@ -312,7 +313,7 @@ class BlogPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     text = models.TextField()
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -329,7 +330,7 @@ class Theme(models.Model):
 class UserProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE)
     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
-    registered = models.DateTimeField(auto_now=True)
+    registered = models.DateTimeField(auto_now_add=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
     pronouns = models.TextField()
 

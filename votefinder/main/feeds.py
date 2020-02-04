@@ -1,15 +1,16 @@
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
+from django.conf import settings
 
 from votefinder.main.models import BlogPost, GameStatusUpdate, Game
 
 
 class LatestRss(Feed):
     title = "VoteFinder Updates"
-    link = "http://votefinder.org/"
+    link = "https://"+ settings.PRIMARY_DOMAIN + "/"
     author_name = "soru"
-    feed_url = "http://votefinder.org/rss"
+    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/rss"
     description = "Changes and updates to the VoteFinder site."
     guid = '/'
 
@@ -23,7 +24,7 @@ class LatestRss(Feed):
         return item.text
 
     def item_link(self, item):
-        return 'http://votefinder.org/'
+        return 'https://' + settings.PRIMARY_DOMAIN + '/'
 
     def item_pubdate(self, item):
         return item.timestamp
@@ -36,9 +37,9 @@ class LatestAtom(LatestRss):
 
 class GameStatusRss(Feed):
     title = "VoteFinder Game Status Updates"
-    link = "http://votefinder.org/"
+    link = "https://" + settings.PRIMARY_DOMAIN + "/"
     author_name = "soru"
-    feed_url = "http://votefinder.org/game_status"
+    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/game_status"
     description = "Game status updates for games tracked by VoteFinder."
     guid = '/'
 
@@ -68,9 +69,9 @@ class GameStatusAtom(GameStatusRss):
 
 class SpecificGameStatusRss(Feed):
     title = "VoteFinder Game Status Updates"
-    link = "http://votefinder.org/"
+    link = "https://" + settings.PRIMARY_DOMAIN + "/"
     author_name = "soru"
-    feed_url = "http://votefinder.org/game_status"
+    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/game_status"
     description = "Game status updates for games tracked by VoteFinder."
     guid = '/'
     game = None

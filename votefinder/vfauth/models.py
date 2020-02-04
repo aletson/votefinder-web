@@ -34,7 +34,7 @@ class CreateUserForm(forms.Form):
             data = downloader.download(
                 'https://forums.somethingawful.com/member.php?action=getinfo&username=%s' % urllib.parse.quote_plus(login))
 
-            if data == None:
+            if data is None:
                 raise forms.ValidationError("There was a problem downloading the profile for the SA user %s." % login)
 
             if data.find(str(self.required_key)) != -1:
