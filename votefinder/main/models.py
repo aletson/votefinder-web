@@ -299,7 +299,7 @@ class GameStatusUpdate(models.Model):
             postUrl = "http://forums.somethingawful.com/showthread.php?goto=post&postid=%s" % \
                       self.game.posts.all().order_by("-id")[0].postId
             try:
-                if url == None:
+                if url is None:
                     self.url = postUrl
                 else:
                     self.url = url
