@@ -135,7 +135,7 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
-    if check_mod(request, game) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
+    if check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
         post_vc_button = True
     else:
         post_vc_button = False
@@ -325,7 +325,7 @@ def votecount(request, gameid):
     v = VotecountFormatter.VotecountFormatter(game)
     v.go()
 
-    if check_mod(request, game) and (game.last_vc_post == None or datetime.now() - game.last_vc_post >= timedelta(
+    if check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
             minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
         post_vc_button = True
     else:
@@ -799,7 +799,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(": ", font=font)
     max_x = 0
-    if results == None: # No votes found
+    if results is None: # No votes found
         text = "No votes found in vc.results~"
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
         line['size'] = this_size_x
@@ -899,7 +899,7 @@ def votecount_image(request, slug):
     key = "%s-vc-image" % slug
     img_dict = cache.get(key)
 
-    if img_dict == None:
+    if img_dict is None:
         game = check_update_game(game)
         img = Image.new("RGBA", (800, 1024), (255, 255, 255, 0))
         (w, h) = votecount_to_image(img, game, 0, 0, 800)
