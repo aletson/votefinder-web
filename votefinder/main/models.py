@@ -58,8 +58,6 @@ class Player(models.Model):
     def pronouns(self):
         try:
             return UserProfile.objects.get(player=self).pronouns
-        except:
-            return "no pronouns listed"
 
 
 class VotecountTemplate(models.Model):
