@@ -1,3 +1,3 @@
 [list=1]{% for p in game.living_players %}
-[*][url=http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}&userid={{ p.player.uid }}]{{ p.player.name }}[/url]{% if profile.pronouns %} ({{ p.pronouns }}){% endif %}{% endfor %}[/list=1]
+[*][url=http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}&userid={{ p.player.uid }}]{{ p.player.name }}[/url]{% if p.player.pronouns %} ({{ p.player.pronouns }}){% endif %}{% endfor %}[/list=1]
 
