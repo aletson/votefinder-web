@@ -57,7 +57,7 @@ class Player(models.Model):
 
     def pronouns(self):
         try:
-            return UserProfile.objects.get(player=self).pronouns
+            return UserProfile.objects.get(player=self)[0].pronouns
 
 
 class VotecountTemplate(models.Model):
