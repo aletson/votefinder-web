@@ -55,6 +55,12 @@ class Player(models.Model):
     def closed_games(self):
         return PlayerState.objects.filter(player=self, game__closed=True)
 
+    def pronouns(self):
+        try:
+            return UserProfile.objects.get(player=self).pronouns
+        except:
+            return "no pronouns listed"
+
 
 class VotecountTemplate(models.Model):
     creator = models.ForeignKey(Player, editable=False, on_delete=models.SET(get_default_player))
