@@ -56,10 +56,7 @@ class Player(models.Model):
         return PlayerState.objects.filter(player=self, game__closed=True)
 
     def pronouns(self):
-        try:
-            return UserProfile.objects.get(player=self)[0].pronouns
-        except:
-            return False
+        return UserProfile.objects.get(player=self)[0].pronouns
 
 
 class VotecountTemplate(models.Model):
