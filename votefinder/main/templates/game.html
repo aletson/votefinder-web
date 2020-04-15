@@ -403,7 +403,7 @@ $(document).ready(function () {
                 <option value="{{ t.id }}"
                         {% if game.template == t or game.template == None and t.system_default %}
                         selected="selected"{% endif %}>
-                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator }}
+                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by{{ t.creator | safe }}
                     ){% endifnotequal %}</option>
                 {% endfor %}
             </select>
