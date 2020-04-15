@@ -14,3 +14,4 @@ Review all of the settings in `votefinder/settings.py` for accuracy in your envi
 ```bash
 python -Wall manage.py runserver localhost:8080
 ```
+There must be a player with uid of -1 present in your database.
