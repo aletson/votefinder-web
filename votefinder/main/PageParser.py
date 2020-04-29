@@ -18,7 +18,7 @@ class PageParser:
 
     def Add(self, threadid, state):
         self.new_game = True
-		self.state = state
+        self.state = state
         return self.DownloadAndUpdate("http://forums.somethingawful.com/showthread.php?threadid=%s" % threadid,
                                       threadid)
 
