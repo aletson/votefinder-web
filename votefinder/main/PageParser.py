@@ -174,7 +174,7 @@ class PageParser:
             cur_player.total_posts += 1
             cur_player.save()
        
-        if self.new_game or self.pageNumber == 1:
+        if self.new_game or game.state == 'pregame':
             defaultState = 'alive'
         else:
             defaultState = 'spectator'
