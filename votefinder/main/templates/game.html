@@ -61,7 +61,7 @@ $(document).ready(function () {
     loadPage({{ game.currentPage }});
     {% if moderator %}
     $('.collapse').collapse();
-    {% if not game.closed %}
+    {% if game.state != 'closed' %}
     $('.playerList').sortable({
         connectWith: '.playerList', items: 'div:not(.creator)',
         start: function (event, ui) { $(ui.item).bind('click', function (event) { return false; }); },
@@ -130,7 +130,7 @@ $(document).ready(function () {
     {% endif %}
 
 })
-    {% if moderator and not game.closed %}
+    {% if moderator and game.state == 'started' %}
     .on('change', '.post-action', function (obj) {
         var action = $(this).val();
         var id = $(this).attr("id");
@@ -176,7 +176,7 @@ $(document).ready(function () {
     <div class="btn-group">
         <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
            href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}" id="liveThread"><i class="fa fa-link"></i></a>
-        {% if not game.closed %}
+        {% if game.state != 'closed' %}
             <a title="Votecount Image" class="button btn btn-sm btn-default" id="voteImgButton"><i class="fa fa-image"></i></a>
             <a title="Update" href="#" id="updateButton" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i></a>
             <a title="Vote Chart" class="button btn btn-sm btn-default" href="/votechart/{{ game.slug }}"><i class="fa fa-bar-chart"></i></a>
@@ -219,8 +219,8 @@ $(document).ready(function () {
     <div id="tabs">
         <ul class="nav nav-pills">
             {% if moderator %}
-            <li class="single-tab{% if game.closed %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
-            <li class="single-tab{% if not moderator and not game.closed %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
+            <li class="single-tab{% if game.state == 'closed' %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab{% if not moderator and game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#updates">Game Updates</a></li>
@@ -229,8 +229,8 @@ $(document).ready(function () {
         <hr />
         <div class="tab-content">
         {% if moderator %}
-            <div id="moderator" class="tab-pane fade{% if game.closed %} in active{% endif %}">
-                    {% if game.closed %}
+            <div id="moderator" class="tab-pane fade{% if game.state == 'closed' %} in active{% endif %}">
+                    {% if game.state == 'closed' %}
                 <div class="panel-group" id="moderator-closed-game-accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="moderator-add-wiki-heading">
@@ -590,7 +590,7 @@ $(document).ready(function () {
                     {% endif %}
 
         {% endif %}
-    <div id="votecount" class="tab-pane fade{% if not game.closed or not moderator %} in active{% endif %}">
+    <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
         <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
     </div>
 
