@@ -50,7 +50,7 @@ class Player(models.Model):
         super(Player, self).save(*args, **kwargs)
 
     def current_games(self):
-        return PlayerState.objects.filter(player=self, spectator=False).exclude(game__state='closed')
+        return PlayerState.objects.filter(player=self, spectator=False, game__state='started')
 
     def closed_games(self):
         return PlayerState.objects.filter(player=self, game__state='closed')
