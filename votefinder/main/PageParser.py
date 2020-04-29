@@ -147,11 +147,14 @@ class PageParser:
 
                 newPost.pageNumber = self.pageNumber
                 self.posts.append(newPost)
-
+        # TODO Check this via checkbox on the add game form.
+        dayNumber = 1
+        gameState = 'started'
+        
         game, gameCreated = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
-                                                                 'currentPage': 1, 'maxPages': 1, 'state': 'started',
-                                                                 'added_by': self.user})
+                                                                 'currentPage': 1, 'maxPages': 1, 'state': gameState,
+                                                                 'added_by': self.user, 'currentDay': dayNumber})
 
         if gameCreated:
             playerState, created = PlayerState.objects.get_or_create(game=game, player=mod,
@@ -184,7 +187,7 @@ class PageParser:
                                                                      defaults={defaultState: True})
 
         if gameCreated:
-            gameday = GameDay(game=game, dayNumber=1, startPost=self.posts[0])
+            gameday = GameDay(game=game, dayNumber=dayNumber, startPost=self.posts[0])
             gameday.save()
 
         game.save()
