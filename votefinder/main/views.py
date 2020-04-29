@@ -61,47 +61,55 @@ def add(request):
 
 
 @login_required
-def add_game(request, threadid):
+def add_game(request):
     data = {'success': True, 'message': 'Success!', 'url': ''}
-
-    try:
-        game = Game.objects.get(threadId=threadid)
-        data['url'] = game.get_absolute_url()
-    except Game.DoesNotExist:
-        p = PageParser.PageParser()
-        p.user = request.user
-        game = p.Add(threadid)
-        if game:
-            data['url'] = game.get_absolute_url()
-            game.status_update("A new game was created by %s!" % game.moderator.name)
-            
-            sqs = boto3.client('sqs')
-            queue_url = settings.SQS_QUEUE_URL
-            response = sqs.send_message(
-                QueueUrl=queue_url,
-                DelaySeconds=10,
-                MessageAttributes={
-                    'GameTitle': {
-                        'DataType': 'String',
-                        'StringValue': game.name
-                    },
-                    'Moderator': {
-                        'DataType': 'String',
-                        'StringValue': game.moderator.name
-                    },
-                    'threadId': {
-                        'DataType': 'Number',
-                        'StringValue': game.threadId
-                    },
-                },
-                MessageBody=(
-                    'New game announcement'
-                )
-            )
+    if request.method == "POST":
+        threadid = request.POST.threadid
+		state = request.POST.addState
+		if state == 'started' or state == 'pregame':
+            try:
+                game = Game.objects.get(threadId=threadid)
+                data['url'] = game.get_absolute_url()
+            except Game.DoesNotExist:
+                p = PageParser.PageParser()
+                p.user = request.user
+                game = p.Add(threadid, state)
+                if game:
+                    data['url'] = game.get_absolute_url()
+                    game.status_update("A new game was created by %s!" % game.moderator.name)
+                    
+                    sqs = boto3.client('sqs')
+                    queue_url = settings.SQS_QUEUE_URL
+                    response = sqs.send_message(
+                        QueueUrl=queue_url,
+                        DelaySeconds=10,
+                        MessageAttributes={
+                            'GameTitle': {
+                                'DataType': 'String',
+                                'StringValue': game.name
+                            },
+                            'Moderator': {
+                                'DataType': 'String',
+                                'StringValue': game.moderator.name
+                            },
+                            'threadId': {
+                                'DataType': 'Number',
+                                'StringValue': game.threadId
+                            },
+                        },
+                        MessageBody=(
+                            'New game announcement'
+                        )
+                    )
+                else:
+                    data['success'] = False
+                    data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
         else:
             data['success'] = False
-            data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
-
+            data['message'] = "Couldn't validate the starting game state. Please contact support."
+    else:
+        data['success'] = False
+        data['message'] = "Form was submitted incorrectly. Please use the add game page."
     return HttpResponse(simplejson.dumps(data), content_type='application/json')
 
 @login_required

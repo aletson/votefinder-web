@@ -16,8 +16,9 @@ class PageParser:
         self.user = None
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
-    def Add(self, threadid):
+    def Add(self, threadid, state):
         self.new_game = True
+		self.state = state
         return self.DownloadAndUpdate("http://forums.somethingawful.com/showthread.php?threadid=%s" % threadid,
                                       threadid)
 
@@ -148,12 +149,15 @@ class PageParser:
                 newPost.pageNumber = self.pageNumber
                 self.posts.append(newPost)
         # TODO Check this via checkbox on the add game form.
-        dayNumber = 1
-        gameState = 'started'
+        if self.new_game = True and self.state = 'pregame':
+            dayNumber = 0
+        else:
+            dayNumber = 1
+            self.state = 'started'
         
         game, gameCreated = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
-                                                                 'currentPage': 1, 'maxPages': 1, 'state': gameState,
+                                                                 'currentPage': 1, 'maxPages': 1, 'state': self.state,
                                                                  'added_by': self.user, 'currentDay': dayNumber})
 
         if gameCreated:

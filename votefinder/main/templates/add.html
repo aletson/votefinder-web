@@ -36,13 +36,13 @@
     if(!$('#dialog').hasClass('in')) {
         $('#dialog').modal('show');
     }
-    $.getJSON( '/add_game/' + result, function(data) {
+    $.post( '/add_game/', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame'), function(data) {
     if (data.success == true) {
     location.href = data.url;
     } else {
     $("#dialog-content").html(data.message);
     }
-    });
+    }, 'json');
     } else {
     alert("That doesn't look like a good thread URL.");
     }
@@ -67,6 +67,9 @@
             <ul></ul>
         </div>
     </div>
+	<div>
+	    <input id="isAlreadyStarted" type="checkbox" name="isAlreadyStarted" value="yes" /> Has this game already started (e.g., Day 1 has begun)?
+	</div>
 
 <!-- DIALOG MODAL FOR MANUAL UPDATE -->
     <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-label">
