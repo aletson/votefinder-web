@@ -94,14 +94,16 @@ $(document).ready(function () {
     });
 
     $('#incomingPlayerName').autocomplete({ source: "/player_list/" });
-    $("#deadlineDate").datepicker();
+    $('#submitTemplate').click(function () {
+        location.href = '/game_template/{{ game.id }}/' + $('#templates').val();
+    });
+    {% endif %}
+	{% if game.state == 'started' %}
+		$("#deadlineDate").datepicker();
     $('#submitNewDeadline').click(function () {
         location.href = '/deadline/{{ game.id }}/' + $('#deadlineDate').val() + '/'
             + $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' +
             $('#timezone').val();
-    });
-    $('#submitTemplate').click(function () {
-        location.href = '/game_template/{{ game.id }}/' + $('#templates').val();
     });
     $('#addVoteType').change(function () {
         if ($(this).val() == 'unvotes') {
@@ -128,8 +130,13 @@ $(document).ready(function () {
         var clear = $('input[name="clearVotes"]:checked').val();
         location.href = '/replace/{{ game.id }}/' + clear + '/' + outgoing + '/' + incoming;
     });
+	{% elif game.state == 'pregame' %}
+	$('#submitStartGame').click(function () {
+	  location.href = '/start_game/{{game.id}}/' + $('#gameStartDay').val();
+	});
+	{% endif %}
     {% endif %}
-    {% endif %}
+	
 
 })
     {% if moderator and game.state == 'started' %}
@@ -276,7 +283,7 @@ $(document).ready(function () {
                 </div>
                 </div>
         </div>
-                    {% else %}
+                    {% elif game.state == 'started' %}
 
 <div class="panel-group" id="moderator-open-game-accordion" role="tablist" aria-multiselectable="true">
 
@@ -324,123 +331,6 @@ $(document).ready(function () {
                 <button type="button" id="submitNewDeadline" class="button btn btn-default">Set!</button>
                 <span id="deadlineStatus"></span>
 
-            </div>
-        </div>
-    </div>
-
-
-
-
-    {% if user.is_superuser %}
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="moderator-send-pm-heading">
-
-            <h3 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-send-pm-collapse" aria-expanded="true" aria-controls="moderator-send-pm-collapse">
-                    Send PMs
-                </a>
-            </h3>
-        </div>
-        <div id="moderator-send-pm-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-send-pm-heading">
-            <div class="panel-body">
-
-                Votefinder can let you send out individual PMs to living players in the game, to
-                distribute roles or
-                night results or really anything else.<p>
-
-                <a href="/sendpms/{{ game.slug }}" class="btn btn-default">Access PMs</a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="moderator-game-options-heading">
-
-            <h3 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-game-options-collapse" aria-expanded="true" aria-controls="moderator-game-options-collapse">
-                    Game Options
-                </a>
-            </h3>
-        </div>
-        <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
-            <div class="panel-body">
-                {% if game.post_lynches %}
-                Posting of executions is <b>enabled</b>.  Votefinder will post in the thread when it sees a majority-vote execution
-                happen.
-                <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
-                {% else %}
-                Posting of executions is <b>disabled</b>.  Votefinder will NOT post in the thread when it sees a
-                majority-vote execution happen.
-                <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
-                {% endif %}
-                <br/><br/>
-                {% if game.ecco_mode %}
-                Ecco Mode is <b>enabled</b>. Votefinder will not process votes of players who are already
-                voting.
-                <a href="/ecco_mode/{{ game.id }}/off" class="btn btn-default">Disable</a>
-                {% else %}
-                Ecco Mode is <b>disabled</b>. Votefinder will automatically change votes of players already
-                voting.
-                <a href="/ecco_mode/{{ game.id }}/on" class="btn btn-default">Enable</a>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="moderator-change-template-heading">
-
-            <h3 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-change-template-collapse" aria-expanded="true" aria-controls="moderator-change-template-collapse">
-                    Change the Template
-                </a>
-            </h3>
-        </div>
-        <div id="moderator-change-template-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-change-template-heading">
-            <div class="panel-body">
-                <p>To change the template this game is using, just select it from the dropdown box.</p>
-
-                New template: <select name="template" id="templates">
-                {% for t in templates %}
-                <option value="{{ t.id }}"
-                        {% if game.template == t or game.template == None and t.system_default %}
-                        selected="selected"{% endif %}>
-                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by {{ t.creator.name | safe }}){% endifnotequal %}
-                    </option>
-                {% endfor %}
-            </select>
-                <button type="button" id="submitTemplate" class="button btn btn-default">Change!</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="moderator-votecount-comment-heading">
-
-            <h3 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-votecount-comment-collapse" aria-expanded="true" aria-controls="moderator-votecount-comment-collapse">
-                    Add a Votecount Comment
-                </a>
-            </h3>
-        </div>
-        <div id="moderator-votecount-comment-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-votecount-comment-heading">
-            <div class="panel-body">
-                <p>If you add a comment here, it will be visible to anyone viewing the votecount
-                    at any time.</p>
-                <form action="/add_comment/{{ game.id }}" method="post">{% csrf_token %}
-                    <table border="0" cellpadding="5" cellspacing="0">
-                        <tr>
-                            <td valign="top">Comment:</td>
-                            <td>{{ comment_form.comment }}
-                        </tr>
-                        <tr>
-                            <td colspan="2" align="right"><input type="submit" value="Add Comment"
-                                                                 id="submitAddComment" class="button btn btn-default"/></td>
-                        </tr>
-                    </table>
-                </form>
             </div>
         </div>
     </div>
@@ -568,6 +458,146 @@ $(document).ready(function () {
             </div>
         </div>
     </div>
+	{% elif game.state == 'pregame' %}
+	    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-new-day-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-new-day-collapse" aria-expanded="true" aria-controls="moderator-new-day-collapse">
+                    Start the Game
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-new-day-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-new-day-heading">
+            <div class="panel-body">
+                <p>To move the game into a "started" state, just press the button below.</p>
+
+                <label for="gameStartDay">The game should start on: <select id="gameStartDay" name="gameStartDay">
+                    <option value="1" selected>Day 1</option>
+                    <option value="0">Night 0</option>
+					</select>
+                    <button type="button" id="submitStartGame" class="button btn btn-default">Start the Game!</button>
+                    <!-- TODO input group -->
+                    <span id="newDayStatus"></span></label>
+            </div>
+        </div>
+    </div>
+	{% endif %}
+
+
+    {% if user.is_superuser %}
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-send-pm-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-send-pm-collapse" aria-expanded="true" aria-controls="moderator-send-pm-collapse">
+                    Send PMs
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-send-pm-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-send-pm-heading">
+            <div class="panel-body">
+
+                Votefinder can let you send out individual PMs to living players in the game, to
+                distribute roles or
+                night results or really anything else.<p>
+
+                <a href="/sendpms/{{ game.slug }}" class="btn btn-default">Access PMs</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-game-options-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-game-options-collapse" aria-expanded="true" aria-controls="moderator-game-options-collapse">
+                    Game Options
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
+            <div class="panel-body">
+                {% if game.post_lynches %}
+                Posting of executions is <b>enabled</b>.  Votefinder will post in the thread when it sees a majority-vote execution
+                happen.
+                <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
+                {% else %}
+                Posting of executions is <b>disabled</b>.  Votefinder will NOT post in the thread when it sees a
+                majority-vote execution happen.
+                <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
+                {% endif %}
+                <br/><br/>
+                {% if game.ecco_mode %}
+                Ecco Mode is <b>enabled</b>. Votefinder will not process votes of players who are already
+                voting.
+                <a href="/ecco_mode/{{ game.id }}/off" class="btn btn-default">Disable</a>
+                {% else %}
+                Ecco Mode is <b>disabled</b>. Votefinder will automatically change votes of players already
+                voting.
+                <a href="/ecco_mode/{{ game.id }}/on" class="btn btn-default">Enable</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-change-template-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-change-template-collapse" aria-expanded="true" aria-controls="moderator-change-template-collapse">
+                    Change the Template
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-change-template-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-change-template-heading">
+            <div class="panel-body">
+                <p>To change the template this game is using, just select it from the dropdown box.</p>
+
+                New template: <select name="template" id="templates">
+                {% for t in templates %}
+                <option value="{{ t.id }}"
+                        {% if game.template == t or game.template == None and t.system_default %}
+                        selected="selected"{% endif %}>
+                    {{ t.name }}{% ifnotequal t.creator user.profile.player %} (shared by {{ t.creator.name | safe }}){% endifnotequal %}
+                    </option>
+                {% endfor %}
+            </select>
+                <button type="button" id="submitTemplate" class="button btn btn-default">Change!</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-votecount-comment-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-votecount-comment-collapse" aria-expanded="true" aria-controls="moderator-votecount-comment-collapse">
+                    Add a Votecount Comment
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-votecount-comment-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-votecount-comment-heading">
+            <div class="panel-body">
+                <p>If you add a comment here, it will be visible to anyone viewing the votecount
+                    at any time.</p>
+                <form action="/add_comment/{{ game.id }}" method="post">{% csrf_token %}
+                    <table border="0" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <td valign="top">Comment:</td>
+                            <td>{{ comment_form.comment }}
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="right"><input type="submit" value="Add Comment"
+                                                                 id="submitAddComment" class="button btn btn-default"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="moderator-close-game-heading">
@@ -606,12 +636,13 @@ $(document).ready(function () {
 
         {% if moderator %}
             <p>You are a moderator of this game. To update the player list, simply drag players between the boxes.</p>
-
+            {% if game.state != 'closed' %}
             <form id="addPlayerForm" action="/add_player/{{ game.id }}" method="post">{% csrf_token %}
                 <label for="addPlayer">Add Player:</label>
                 {{ form.name }}
                 <input id="submitAddPlayer" type="submit" class="btn btn-primary" value="Add"/>
             </form>
+            {% endif %}
             <p></p>
         {% endif %}
 

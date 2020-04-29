@@ -28,7 +28,7 @@ from votefinder.main.models import *
 
 def check_mod(request, game):
     try:
-        moderator = game.is_user_mod(request.user)
+        moderator = game.is_user_mod(request.user) or request.user.is_superuser
     except AttributeError:
         moderator = False
     return moderator
@@ -391,6 +391,18 @@ def posts(request, gameid, page):
                    'pageNumbers': range(1, game.currentPage + 1),
                    'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)})
 
+@login_required
+def start_game(request, gameid, startDay):
+    game = get_object_or_404(Game, id=gameid)
+    if game.state != 'pregame' or not check_mod(request, game):
+        return HttpResponseNotFound
+    game.state = 'started'
+    game.save()
+	game.status_update("The game has started!")
+    if(startDay == 1):
+        return new_day(request, gameid, startDay)
+    else:
+        return HttpResponseRedirect(game.get_absolute_url())
 
 @login_required
 def add_comment(request, gameid):
@@ -433,7 +445,7 @@ def delete_comment(request, commentid):
 @login_required
 def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
 
     hour = int(hour)
@@ -476,7 +488,7 @@ def close_game(request, gameid):
 @login_required
 def reopen_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'closed' or not check_mod(request, game):
         return HttpResponseNotFound
 
     game.state = 'started'
@@ -499,7 +511,7 @@ def new_day(request, gameid, day):
 @login_required
 def replace(request, gameid, clear, outgoing, incoming):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
 
     playerOut = get_object_or_404(Player, id=outgoing)
@@ -555,7 +567,7 @@ def replace(request, gameid, clear, outgoing, incoming):
 @login_required
 def start_day(request, day, postid):
     post = get_object_or_404(Post, id=postid)
-    if not check_mod(request, post.game):
+    if post.game.state != 'started' or not check_mod(request, post.game):
         return HttpResponseNotFound
 
     gameday, created = GameDay.objects.get_or_create(game=post.game, dayNumber=day, defaults={'startPost': post})
@@ -720,7 +732,7 @@ def closed_games(request):
 @login_required
 def add_vote(request, gameid, player, votes, target):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
 
     gameday = game.days.select_related().last()
@@ -742,7 +754,7 @@ def add_vote(request, gameid, player, votes, target):
 @login_required
 def add_vote_global(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
     
     gameday = game.days.select_related().last()
@@ -759,7 +771,7 @@ def add_vote_global(request, gameid):
 def delete_vote(request, voteid):
     vote = get_object_or_404(Vote, id=voteid)
     game = vote.game
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
 
     vote.delete()
@@ -988,7 +1000,7 @@ def delete_alias(request, id):
 @login_required
 def sendpms(request, slug):
     game = get_object_or_404(Game, slug=slug)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseForbidden
 
     return render(request, "sendpms.html", {'game': game})
@@ -1036,7 +1048,7 @@ def ecco_mode(request, gameid, enabled):
 @login_required
 def post_vc(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if game.state != 'started' or not check_mod(request, game):
         return HttpResponseForbidden
 
     if game.last_vc_post != None and datetime.now() - game.last_vc_post < timedelta(minutes=60) and (game.deadline and game.deadline - datetime.now() > timedelta(minutes=60)):
