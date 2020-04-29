@@ -34,10 +34,11 @@ def check_mod(request, game):
     return moderator
 
 def index(request):
-    game_list = Game.objects.select_related().filter(closed=False).order_by("name")
+    active_game_list = Game.objects.select_related().filter(state='started').order_by("name")
+	pregame_list = Game.objects.select_related().filter(state='pregame').order_by("name")
 
-    big_games = [g for g in game_list if g.is_big == True]
-    mini_games = [g for g in game_list if g.is_big == False]
+    big_games = [g for g in active_game_list if g.is_big == True]
+    mini_games = [g for g in active_game_list if g.is_big == False]
     posts = BlogPost.objects.all().order_by("-timestamp")[:5]
 
     game_count = Game.objects.count()
@@ -46,7 +47,7 @@ def index(request):
     player_count = Player.objects.count()
 
     return render(request, "index.html",
-                  {'big_games': big_games, 'mini_games': mini_games,
+                  {'pregame_games': pregame_list, 'big_games': big_games, 'mini_games': mini_games,
                    'total': len(big_games) + len(mini_games), 'posts': posts,
                    'game_count': game_count, 'post_count': post_count, 'vote_count': vote_count,
                    'player_count': player_count}
@@ -453,7 +454,7 @@ def close_game(request, gameid):
     if not check_mod(request, game):
         return HttpResponseNotFound
 
-    game.closed = True
+    game.state = 'closed'
     game.save()
 
     game.status_update("The game is over.")
@@ -470,7 +471,7 @@ def reopen_game(request, gameid):
     if not check_mod(request, game):
         return HttpResponseNotFound
 
-    game.closed = False
+    game.state = 'started'
     game.save()
 
     game.status_update("The game is re-opened!")
@@ -669,7 +670,7 @@ def game_template(request, gameid, templateid):
 
 
 def active_games(request):
-    game_list = Game.objects.select_related().filter(closed=False).order_by("name")
+    game_list = Game.objects.select_related().filter(state='started').order_by("name")
 
     big_games = [g for g in game_list if g.is_big == True]
     mini_games = [g for g in game_list if g.is_big == False]
@@ -680,13 +681,13 @@ def active_games(request):
 
 def active_games_style(request, style):
     if style == "default" or style == "verbose":
-        game_list = Game.objects.select_related().filter(closed=False).order_by("name")
+        game_list = Game.objects.select_related().filter(state='started').order_by("name")
         big_games = [g for g in game_list if g.is_big == True]
         mini_games = [g for g in game_list if g.is_big == False]
 
         return render(request, "wiki_games.html", {'big_games': big_games, 'mini_games': mini_games, 'style': style})
     elif style == "closedmonthly":
-        game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('posts__timestamp')).order_by(
+        game_list = Game.objects.select_related().filter(state='closed').order_by("name").annotate(last_post=Max('posts__timestamp')).order_by(
             "-last_post")
         game_list = [ g for g in game_list if datetime.now() - g.last_post < timedelta(days=31) ]
 
@@ -698,13 +699,13 @@ def active_games_style(request, style):
 def active_games_json(request):
     gameList = sorted([{'name': g.name, 'mod': g.moderator.name,
                         'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s' % g.threadId} for g in
-                       Game.objects.select_related().filter(closed=False)], key=lambda g: g['name'])
+                       Game.objects.select_related().filter(state='started')], key=lambda g: g['name'])
 
     return HttpResponse(simplejson.dumps(gameList), content_type='application/json')
 
 
 def closed_games(request):
-    game_list = Game.objects.select_related().filter(closed=True).order_by("name").annotate(last_post=Max('posts__timestamp'),first_post=Min('posts__timestamp'))
+    game_list = Game.objects.select_related().filter(state='closed').order_by("name").annotate(last_post=Max('posts__timestamp'),first_post=Min('posts__timestamp'))
     return render(request, "closed.html", {'games': game_list, 'total': len(game_list)})
 
 
@@ -914,16 +915,16 @@ def votecount_image(request, slug):
 
 
 def autoupdate(request):
-    games = Game.objects.filter(closed=False).order_by("-lastUpdated")
+    games = Game.objects.exclude(state='closed').order_by("-lastUpdated")
     for game in games:
         key = "%s-vc-image" % game.slug
         cache.delete(key) # image will regenerate on next GET
         game = check_update_game(game)
         post = game.posts.order_by('-timestamp')[:1][0]
 
-        if datetime.now() - post.timestamp > timedelta(days=6):
+        if datetime.now() - post.timestamp > timedelta(days=6) and game.state == 'started':
             game.status_update("Closed automatically for inactivity.")
-            game.closed = True
+            game.state = 'closed'
             game.save()
     return HttpResponse("Ok")
 
@@ -943,9 +944,9 @@ def players_page(request, page):
 
     total_players = Player.objects.all().count()
     total_pages = int(ceil(1.0 * total_players / items_per_page))
-    #players = Player.objects.raw('SELECT main_player.id, main_player.name, main_player.slug, main_player.last_post, main_player.total_posts, sum(case when main_playerstate.moderator=false and main_playerstate.spectator=false then 1 else 0 end) as total_games_played, sum(case when main_game.closed=false and main_playerstate.alive=true then 1 else 0 end) as alive, sum(case when main_playerstate.moderator=true then 1 else 0 end) as total_games_run FROM main_player LEFT JOIN main_playerstate ON main_player.id = main_playerstate.player_id LEFT JOIN main_game ON main_playerstate.game_id = main_game.id WHERE main_player.uid > 0 GROUP BY main_player.name ORDER BY main_player.name ASC')
+    #players = Player.objects.raw('SELECT main_player.id, main_player.name, main_player.slug, main_player.last_post, main_player.total_posts, sum(case when main_playerstate.moderator=false and main_playerstate.spectator=false then 1 else 0 end) as total_games_played, sum(case when main_game.state = 'started' and main_playerstate.alive=true then 1 else 0 end) as alive, sum(case when main_playerstate.moderator=true then 1 else 0 end) as total_games_run FROM main_player LEFT JOIN main_playerstate ON main_player.id = main_playerstate.player_id LEFT JOIN main_game ON main_playerstate.game_id = main_game.id WHERE main_player.uid > 0 GROUP BY main_player.name ORDER BY main_player.name ASC')
     players = Player.objects.select_related().filter(uid__gt='0').order_by("name").extra(select={
-       'alive': "select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.closed=false and main_playerstate.alive=true",
+       'alive': "select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = 'started' and main_playerstate.alive=true",
        'total_games_played': "select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false",
        'total_games_run': "select count(*) from main_game where main_game.moderator_id=main_player.id"})[
              first_record: first_record + items_per_page]
