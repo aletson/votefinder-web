@@ -52,9 +52,11 @@ $(document).ready(function () {
     });
     $('.button').button();
     $('#refreshbutton').button();
+	{% if game.state == 'started' %}
     $('#votecount_contents').load('/votecount/{{ game.id }}', function () {
         $('.button').button();
     });
+	{% endif %}
     $.get('/post_histories/{{ game.id }}', function (data) {
         $('#playerPostHistories').html(data);
     });
@@ -136,7 +138,7 @@ $(document).ready(function () {
         var id = $(this).attr("id");
         location.href = '/' + action + '/' + id;
     })
-    {% if post_vc_button %}
+    {% if post_vc_button and game.state == 'started' %}
     .on('click', '#post-vc-button', function () {
         if (pushed == false) {
             pushed = true;
@@ -149,6 +151,7 @@ $(document).ready(function () {
     .on('change', '#pageJump', function (obj) {
         loadPage($(this).val());
     })
+	{% if game.state == 'started' %}
     .on('change', '.resolver', function (obj) {
         var resolution = $(this).val();
         var vote = $(this).attr('id');
@@ -162,6 +165,7 @@ $(document).ready(function () {
             }
         );
     })
+	{% endif %}
 
     .on("click", ".not-loaded", function (e) {
         e.preventDefault();
@@ -591,7 +595,11 @@ $(document).ready(function () {
 
         {% endif %}
     <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
-        <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
+        {% if game.state == 'pregame' %}
+            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}">thread</a> if you'd like to sign up.</div>
+        {% else %}
+            <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
+        {% endif %}
     </div>
 
     <div id="players" class="tab-pane fade">
