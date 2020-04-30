@@ -4,21 +4,21 @@
 {% block onready %}
 
     function dataReceived(data) {
-    $('#loading').hide();
-    var str = "";
-    $.each(data, function(i, game) {
-    if (game.tracked == true) {
-    str = '<span class="grayed">' + game.name + '</span>';
-    } else {
-    str = '<a href="' + game.url + '">' + game.name + '</a>';
-    }
-    $('#gameList ul').append('<li>' + str + '</li>');
-    });
-    $('#gameListContainer').show('slow');
-    $('#gameList ul li a').click(function (event) {
-    doAddGame(event.target.getAttribute("href"));
-    event.preventDefault();
-    });
+        $('#loading').hide();
+        var str = "";
+        $.each(data, function(i, game) {
+            if (game.tracked == true) {
+                str = '<span class="grayed">' + game.name + '</span>';
+            } else {
+                str = '<a href="' + game.url + '">' + game.name + '</a>';
+            }
+            $('#gameList ul').append('<li>' + str + '</li>');
+        });
+        $('#gameListContainer').show('slow');
+        $('#gameList ul li a').click(function (event) {
+            doAddGame(event.target.getAttribute("href"));
+            event.preventDefault();
+        });
     }
 
     $('#addButton').button();
@@ -27,26 +27,43 @@
     $.getJSON('/game_list/1', dataReceived);
     $.getJSON('/game_list/2', dataReceived);
     $('#addButton').click(function() { doAddGame($('#textUrl').val()); });
-
-    function doAddGame(url) {
-    var thread = url.replace(/threadid=(\d+)/);
-    var result = RegExp.$1;
-    if (result) {
-    $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
-    if(!$('#dialog').hasClass('in')) {
-        $('#dialog').modal('show');
+    
+    /* CSRF setup for Django */
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+    
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-    $.post('/add_game', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
-        if (data.success == true) {
-            location.href = data.url;
-        } else {
-            $("#dialog-content").html(data.message);
+    
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
         }
-    }, 'json');
-    } else {
-    alert("That doesn't look like a good thread URL.");
+    });
+    
+    function doAddGame(url) {
+        var thread = url.replace(/threadid=(\d+)/);
+        var result = RegExp.$1;
+        if (result) {
+            $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
+            if(!$('#dialog').hasClass('in')) {
+                $('#dialog').modal('show');
+            }
+            $.post('/add_game', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+                if (data.success == true) {
+                    location.href = data.url;
+                } else {
+                    $("#dialog-content").html(data.message);
+                }
+            }, 'json');
+        } else {
+            alert("That doesn't look like a good thread URL.");
+        }
     }
-    }
+    
 {% endblock %}
 
 {% block content %}
@@ -70,6 +87,7 @@
 	<div>
 	    <input id="isAlreadyStarted" type="checkbox" name="isAlreadyStarted" value="yes" /> Has this game already started (e.g., Day 1 has begun)?
 	</div>
+    {% csrf_token %}
 
 <!-- DIALOG MODAL FOR MANUAL UPDATE -->
     <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="dialog-label">
