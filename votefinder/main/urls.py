@@ -10,7 +10,7 @@ from . import feeds
 urlpatterns = [
     url(r'^$', views.index),
     url(r'^add$', views.add),
-    url(r'^add_game/(?P<threadid>\d+)/*$', views.add_game),
+    url(r'^add_game/*$', views.add_game),
     url(r'^game_list/(?P<page>\d+)/*$', views.game_list),
     url(r'^game/(?P<slug>[\w-]+)$', views.game),
     url(r'^player/(?P<slug>[\w-]+)/*$', views.player),
