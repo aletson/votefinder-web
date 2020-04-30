@@ -35,7 +35,7 @@ urlpatterns = [
         r'^deadline/(?P<gameid>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<year>[\d]+)/(?P<hour>[\d]+)/(?P<min>[\d]+)/(?P<ampm>[\w]+)/(?P<tzname>.+)$',
         views.deadline),
     url(r'^close_game/(?P<gameid>\d+)/*$', views.close_game),
-    url(r'^start_game/(?P<gameid>\d+)/(?P<day>\d+)*$', views.start_game),
+    url(r'^start_game/(?P<gameid>\d+)/(?P<day>\d+)/*$', views.start_game),
     url(r'^reopen_game/(?P<gameid>\d+)/*$', views.reopen_game),
     url(r'^new_day/(?P<gameid>\d+)/(?P<day>\d+)/*$', views.new_day),
     url(r'^replace/(?P<gameid>\d+)/(?P<clear>\w+)/(?P<outgoing>\d+)/(?P<incoming>.+)*$', views.replace),
