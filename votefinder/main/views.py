@@ -65,8 +65,8 @@ def add_game(request):
     data = {'success': True, 'message': 'Success!', 'url': ''}
     if request.method == "POST":
         threadid = request.POST.threadid
-		state = request.POST.addState
-		if state == 'started' or state == 'pregame':
+        state = request.POST.addState
+        if state == 'started' or state == 'pregame':
             try:
                 game = Game.objects.get(threadId=threadid)
                 data['url'] = game.get_absolute_url()
@@ -204,7 +204,7 @@ def update_user_theme(request):
         profile.theme = theme # This might not work check it afterwards.
         profile.save()
         return HttpResponse(simplejson.dumps({'success': True}))
-		
+
 def update_user_pronouns(request):
     if request.method == "POST":
         profile = request.user.profile
@@ -398,7 +398,7 @@ def start_game(request, gameid, startDay):
         return HttpResponseNotFound
     game.state = 'started'
     game.save()
-	game.status_update("The game has started!")
+    game.status_update("The game has started!")
     if(startDay == 1):
         return new_day(request, gameid, startDay)
     else:
