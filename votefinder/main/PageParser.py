@@ -157,7 +157,7 @@ class PageParser:
         game, gameCreated = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
                                                                  'currentPage': 1, 'maxPages': 1, 'state': self.state,
-                                                                 'added_by': self.user, 'currentDay': dayNumber})
+                                                                 'added_by': self.user, 'current_day': dayNumber})
 
         if gameCreated:
             playerState, created = PlayerState.objects.get_or_create(game=game, player=mod,
