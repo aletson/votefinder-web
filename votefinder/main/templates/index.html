@@ -39,7 +39,7 @@
         {% endif %}
         <div class="pregame-games">
         {% for game in pregame_games %}
-	        <div class="well pregame">
+	        <div class="game pregame">
                 <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
                 <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
                 <span class="second-line">This game has not yet started. Visit the thread to sign up!</span>

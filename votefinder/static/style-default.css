@@ -424,7 +424,7 @@ tr.instructions td.text {
 }
 
 .game {
-    display: block;
+    display: inline-block;
     float: left;
     border: 1px solid #bbb;
     padding: 0.5em 1em 0.5em 1em;
