@@ -99,7 +99,7 @@ $(document).ready(function () {
     });
     {% endif %}
 	{% if game.state == 'started' %}
-		$("#deadlineDate").datepicker();
+    $("#deadlineDate").datepicker();
     $('#submitNewDeadline').click(function () {
         location.href = '/deadline/{{ game.id }}/' + $('#deadlineDate').val() + '/'
             + $('#deadlineHour').val() + '/' + $('#deadlineMinute').val() + '/' + $('#deadlineAmPm').val() + '/' +
@@ -145,7 +145,7 @@ $(document).ready(function () {
         var id = $(this).attr("id");
         location.href = '/' + action + '/' + id;
     })
-    {% if post_vc_button and game.state == 'started' %}
+    {% if post_vc_button %}
     .on('click', '#post-vc-button', function () {
         if (pushed == false) {
             pushed = true;
@@ -231,7 +231,7 @@ $(document).ready(function () {
         <ul class="nav nav-pills">
             {% if moderator %}
             <li class="single-tab{% if game.state == 'closed' %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
-            <li class="single-tab{% if not moderator and game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
+            <li class="single-tab{% if not moderator or game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#updates">Game Updates</a></li>
