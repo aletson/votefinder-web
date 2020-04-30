@@ -63,7 +63,7 @@
                                         {% endfor %}
                                     </ul>{% endif %}
                             </div>
-                            {% if moderator %}Actions: <select class="post-action" id="{{ post.id }}">
+                            {% if moderator and game.state == 'started' %}Actions: <select class="post-action" id="{{ post.id }}">
                                 <option value="-">---</option>
                                 <option value="startday/{{ nextDay }}">Starts Day {{ nextDay }} (new day)</option>
                                 <option value="startday/{{ currentDay }}">Starts Day {{ currentDay }} (current day)

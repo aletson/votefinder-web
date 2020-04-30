@@ -16,8 +16,9 @@ class PageParser:
         self.user = None
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
-    def Add(self, threadid):
+    def Add(self, threadid, state):
         self.new_game = True
+        self.state = state
         return self.DownloadAndUpdate("http://forums.somethingawful.com/showthread.php?threadid=%s" % threadid,
                                       threadid)
 
@@ -97,7 +98,7 @@ class PageParser:
                 game = Game.objects.get(id=post.game.id)
                 playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
                 currentGameDay = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode == False or playersLastVote == None or playersLastVote.post_id < currentGameDay.startPost_id or playersLastVote.unvote == True or v.unvote == True or PlayerState.get(
+                if game.ecco_mode == False or playersLastVote == None or playersLastVote.post_id < currentGameDay.startPost_id or playersLastVote.unvote or v.unvote or PlayerState.get(
                         game=game, player_id=playersLastVote.target).alive == False:
                     v.save()
             except Game.DoesNotExist:
@@ -147,11 +148,16 @@ class PageParser:
 
                 newPost.pageNumber = self.pageNumber
                 self.posts.append(newPost)
-
+        if self.new_game and self.state == 'pregame':
+            dayNumber = 0
+        else:
+            dayNumber = 1
+            self.state = 'started'
+        
         game, gameCreated = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
-                                                                 'currentPage': 1, 'maxPages': 1,
-                                                                 'added_by': self.user})
+                                                                 'currentPage': 1, 'maxPages': 1, 'state': self.state,
+                                                                 'added_by': self.user, 'currentDay': dayNumber})
 
         if gameCreated:
             playerState, created = PlayerState.objects.get_or_create(game=game, player=mod,
@@ -174,7 +180,7 @@ class PageParser:
             cur_player.total_posts += 1
             cur_player.save()
        
-        if self.new_game or self.pageNumber == 1:
+        if self.new_game or game.state == 'pregame':
             defaultState = 'alive'
         else:
             defaultState = 'spectator'
@@ -184,7 +190,7 @@ class PageParser:
                                                                      defaults={defaultState: True})
 
         if gameCreated:
-            gameday = GameDay(game=game, dayNumber=1, startPost=self.posts[0])
+            gameday = GameDay(game=game, dayNumber=dayNumber, startPost=self.posts[0])
             gameday.save()
 
         game.save()

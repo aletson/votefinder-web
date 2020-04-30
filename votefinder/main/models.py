@@ -50,10 +50,10 @@ class Player(models.Model):
         super(Player, self).save(*args, **kwargs)
 
     def current_games(self):
-        return PlayerState.objects.filter(player=self, game__closed=False, spectator=False)
+        return PlayerState.objects.filter(player=self, spectator=False, game__state='started')
 
     def closed_games(self):
-        return PlayerState.objects.filter(player=self, game__closed=True)
+        return PlayerState.objects.filter(player=self, game__state='closed')
 
     def pronouns(self):
         return UserProfile.objects.get(player=self).pronouns
@@ -98,7 +98,7 @@ class Game(models.Model):
     currentPage = models.IntegerField()
     slug = models.SlugField()
     locked_at = models.DateTimeField(null=True, blank=True)
-    closed = models.BooleanField(default=False)
+    state = models.CharField(max_length=32)
     deadline = models.DateTimeField(null=True, blank=True)
     template = models.ForeignKey(VotecountTemplate, null=True, blank=True, on_delete=models.SET_DEFAULT, default=2)
     added_by = models.ForeignKey(User, on_delete=models.SET(get_root_user))
