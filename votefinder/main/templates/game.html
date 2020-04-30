@@ -263,7 +263,6 @@ $(document).ready(function () {
                             </p>
                         </div>
                     </div>
-                </div>
                 <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="moderator-reopen-heading">
                         <h3 class="panel-title">
@@ -282,7 +281,7 @@ $(document).ready(function () {
                         </div>
                 </div>
                 </div>
-        </div>
+                </div>
                     {% elif game.state == 'started' %}
 
 <div class="panel-group" id="moderator-open-game-accordion" role="tablist" aria-multiselectable="true">
@@ -476,9 +475,7 @@ $(document).ready(function () {
                     <option value="1" selected>Day 1</option>
                     <option value="0">Night 0</option>
 					</select>
-                    <button type="button" id="submitStartGame" class="button btn btn-default">Start the Game!</button>
-                    <!-- TODO input group -->
-                    <span id="newDayStatus"></span></label>
+                    <button type="button" id="submitStartGame" class="button btn btn-default">Start the Game!</button></label>
             </div>
         </div>
     </div>
@@ -613,7 +610,8 @@ $(document).ready(function () {
             </div>
         </div>
     </div>
-</div>
+</div> <!-- open-game-accordion -->
+</div> <!-- moderator tab -->
 
 
         {% endif %}
