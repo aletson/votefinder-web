@@ -392,15 +392,15 @@ def posts(request, gameid, page):
                    'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)})
 
 @login_required
-def start_game(request, gameid, startDay):
+def start_game(request, gameid, day):
     game = get_object_or_404(Game, id=gameid)
     if game.state != 'pregame' or not check_mod(request, game):
         return HttpResponseNotFound
     game.state = 'started'
     game.save()
     game.status_update("The game has started!")
-    if(startDay == 1):
-        return new_day(request, gameid, startDay)
+    if(day == 1):
+        return new_day(request, gameid, day)
     else:
         return HttpResponseRedirect(game.get_absolute_url())
 
