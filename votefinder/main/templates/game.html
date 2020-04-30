@@ -488,7 +488,6 @@ $(document).ready(function () {
     {% if user.is_superuser %}
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="moderator-send-pm-heading">
-
             <h3 class="panel-title">
                 <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-send-pm-collapse" aria-expanded="true" aria-controls="moderator-send-pm-collapse">
                     Send PMs
@@ -497,11 +496,7 @@ $(document).ready(function () {
         </div>
         <div id="moderator-send-pm-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-send-pm-heading">
             <div class="panel-body">
-
-                Votefinder can let you send out individual PMs to living players in the game, to
-                distribute roles or
-                night results or really anything else.<p>
-
+                <p>Votefinder can let you send out individual PMs to living players in the game, to distribute roles or night results or really anything else.</p>
                 <a href="/sendpms/{{ game.slug }}" class="btn btn-default">Access PMs</a>
             </div>
         </div>
