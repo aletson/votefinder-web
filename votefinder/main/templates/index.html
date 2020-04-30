@@ -15,16 +15,6 @@
         have been {{ post_count }} posts spread across {{ game_count }} games, containing {{ vote_count }} votes
         cast by {{ player_count }} players.</p>
 		
-    {% for game in pregame_games %}
-	    <div class="game pregame">
-            <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
-            <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
-            <span class="second-line">This game has not yet started. Visit the thread to sign up!</span>
-        </div>
-    {% endfor %}
-    {% if pregame_games != None %}
-        <hr />
-    {% endif %}
     {% for game in big_games %}
         <div class="game big">
             <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
@@ -40,7 +30,17 @@
             <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
         </div>
     {% endfor %}
-
+    <br />
+    {% if pregame_games != None %}
+        <hr />
+    {% endif %}
+    {% for game in pregame_games %}
+	    <div class="well pregame">
+            <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+            <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
+            <span class="second-line">This game has not yet started. Visit the thread to sign up!</span>
+        </div>
+    {% endfor %}
     {% if pregame_games == None and big_games == None and mini_games == None %}
         <p>No games are available.</p>
     {% endif %}
