@@ -399,7 +399,7 @@ def start_game(request, gameid, day):
     game.state = 'started'
     game.save()
     game.status_update("The game has started!")
-    if(day == 1):
+    if day == '1':
         return new_day(request, gameid, day)
     else:
         return HttpResponseRedirect(game.get_absolute_url())
