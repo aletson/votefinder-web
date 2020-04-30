@@ -64,8 +64,8 @@ def add(request):
 def add_game(request):
     data = {'success': True, 'message': 'Success!', 'url': ''}
     if request.method == "POST":
-        threadid = request.data.get("threadid")
-        state = request.data.get("addState")
+        threadid = request.POST.get("threadid")
+        state = request.POST.get("addState")
         if state == 'started' or state == 'pregame':
             try:
                 game = Game.objects.get(threadId=threadid)
