@@ -35,7 +35,7 @@ def check_mod(request, game):
 
 def index(request):
     active_game_list = Game.objects.select_related().filter(state='started').order_by("name")
-	pregame_list = Game.objects.select_related().filter(state='pregame').order_by("name")
+    pregame_list = Game.objects.select_related().filter(state='pregame').order_by("name")
 
     big_games = [g for g in active_game_list if g.is_big == True]
     mini_games = [g for g in active_game_list if g.is_big == False]
