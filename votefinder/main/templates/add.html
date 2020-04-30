@@ -36,7 +36,7 @@
     if(!$('#dialog').hasClass('in')) {
         $('#dialog').modal('show');
     }
-    $.post('/add_game/', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+    $.post('/add_game', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
         if (data.success == true) {
             location.href = data.url;
         } else {
