@@ -36,12 +36,12 @@
     if(!$('#dialog').hasClass('in')) {
         $('#dialog').modal('show');
     }
-    $.post( '/add_game/', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame'), function(data) {
-    if (data.success == true) {
-    location.href = data.url;
-    } else {
-    $("#dialog-content").html(data.message);
-    }
+    $.post('/add_game/', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+        if (data.success == true) {
+            location.href = data.url;
+        } else {
+            $("#dialog-content").html(data.message);
+        }
     }, 'json');
     } else {
     alert("That doesn't look like a good thread URL.");
