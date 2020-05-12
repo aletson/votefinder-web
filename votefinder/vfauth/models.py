@@ -62,6 +62,6 @@ class CreateUserForm(forms.Form):
                         'Unable to find the userID of %s.  Please talk to the site admin.' % login)
             else:
                 raise forms.ValidationError(
-                    'Unable to find the correct key (%s) in %s\'s SA profile' % (self.required_key, login))
+                    "Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
         else:
             return login
