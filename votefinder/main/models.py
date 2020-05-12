@@ -20,12 +20,12 @@ def get_root_user():
 def get_default_player():
     return Player.objects.get_or_create(name='votefinder')[0]
 
-def SlugifyUniquely(value, model, slugfield="slug"):
+def SlugifyUniquely(value, model, slugfield='slug'):
     suffix = 1
     potential = base = slugify(value)[:45]
     while True:
         if suffix > 1:
-            potential = "-".join([base, str(suffix)])
+            potential = '-'.join([base, str(suffix)])
         if not model.objects.filter(**{slugfield: potential}).count():
             return potential
         suffix += 1
@@ -77,8 +77,8 @@ class VotecountTemplate(models.Model):
     after_unvoted_vote = models.CharField(max_length=256, blank=True)
     detail_level = models.IntegerField(choices=DETAIL_LEVEL_CHOICES, default=3)
     hide_zero_votes = models.BooleanField(default=False)
-    full_tick = models.CharField(max_length=256, default="https://" + settings.PRIMARY_DOMAIN + "/t.png")
-    empty_tick = models.CharField(max_length=256, default="https://" + settings.PRIMARY_DOMAIN + "/te.png")
+    full_tick = models.CharField(max_length=256, default='https://' + settings.PRIMARY_DOMAIN + '/t.png')
+    empty_tick = models.CharField(max_length=256, default='https://' + settings.PRIMARY_DOMAIN + '/te.png')
 
     def __str__(self):
         if self.system_default:
@@ -116,13 +116,13 @@ class Game(models.Model):
         self.living_count = len(self.living_players())
         self.is_big = True if self.players_count > 16 else False
 
-        days = self.days.order_by("-id")
+        days = self.days.order_by('-id')
         if len(days) > 0:
             self.current_day = days[0].dayNumber
 
     def status_update(self, message):
         self.status_update_noncritical(message)
-        tag = "".join([w.capitalize() for w in re.split(re.compile("[\W_-]*"), self.slug)])
+        tag = ''.join([w.capitalize() for w in re.split(re.compile('[\W_-]*'), self.slug)])
 
     def status_update_noncritical(self, message):
         u = GameStatusUpdate(game=self, message=message)
@@ -143,11 +143,11 @@ class Game(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            filtered_name = re.compile(r"[:\.-].+").sub("", self.name.lower())
-            filtered_name = filtered_name.replace("mini-mafia", "")
-            filtered_name = filtered_name.replace("mafia", "")
-            filtered_name = filtered_name.replace("mini", "")
-            if filtered_name.strip() == "":
+            filtered_name = re.compile(r'[:\.-].+').sub('', self.name.lower())
+            filtered_name = filtered_name.replace('mini-mafia', '')
+            filtered_name = filtered_name.replace('mafia', '')
+            filtered_name = filtered_name.replace('mini', '')
+            if filtered_name.strip() == '':
                 self.slug = SlugifyUniquely(self.name.strip(), self.__class__)
             else:
                 self.slug = SlugifyUniquely(filtered_name.strip(), self.__class__)
@@ -203,7 +203,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=4096, blank=True, null=True)
 
     def __str__(self):
-        return "%s: %s" % (self.player, self.comment[:100])
+        return '%s: %s' % (self.player, self.comment[:100])
 
 
 class PlayerState(models.Model):
@@ -227,16 +227,16 @@ class PlayerState(models.Model):
 
     def state(self):
         if self.moderator:
-            return "Moderator"
+            return 'Moderator'
         elif self.spectator:
-            return "Spectator"
+            return 'Spectator'
         elif self.alive:
-            return "Alive"
+            return 'Alive'
         else:
-            return "Dead"
+            return 'Dead'
 
     def __str__(self):
-        return "%s [%s]" % (self.player, self.state())
+        return '%s [%s]' % (self.player, self.state())
 
 
 class Alias(models.Model):
@@ -247,27 +247,27 @@ class Alias(models.Model):
         return self.alias
 
     class Meta:
-        verbose_name_plural = "Aliases"
+        verbose_name_plural = 'Aliases'
 
 
 class Post(models.Model):
     postId = models.IntegerField(unique=True, db_index=True)
     timestamp = models.DateTimeField()
-    author = models.ForeignKey(Player, related_name="posts", on_delete=models.SET(get_default_player))
+    author = models.ForeignKey(Player, related_name='posts', on_delete=models.SET(get_default_player))
     authorSearch = models.CharField(max_length=256)
     body = models.TextField()
     avatar = models.CharField(max_length=256)
     pageNumber = models.IntegerField()
-    game = models.ForeignKey(Game, related_name="posts", on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
     def __str__(self):
-        return "%s at %s" % (self.author.name, self.timestamp)
+        return '%s at %s' % (self.author.name, self.timestamp)
 
 
 class PrivMsg(models.Model):
-    game = models.ForeignKey(Game, related_name="pms", on_delete=models.CASCADE)
-    target = models.ForeignKey(Player, related_name="pms_received", on_delete=models.SET(get_default_player))
-    author = models.ForeignKey(Player, related_name="pms_sent", on_delete=models.SET(get_default_player))
+    game = models.ForeignKey(Game, related_name='pms', on_delete=models.CASCADE)
+    target = models.ForeignKey(Player, related_name='pms_received', on_delete=models.SET(get_default_player))
+    author = models.ForeignKey(Player, related_name='pms_sent', on_delete=models.SET(get_default_player))
     subject = models.CharField(max_length=85)
     icon = models.CharField(max_length=10)
     sent = models.BooleanField(default=False)
@@ -286,9 +286,9 @@ class Vote(models.Model):
 
     def __str__(self):
         if self.unvote:
-            return "%s unvotes" % self.author
+            return '%s unvotes' % self.author
         else:
-            return "%s votes %s" % (self.author, self.targetString)
+            return '%s votes %s' % (self.author, self.targetString)
 
 
 class GameStatusUpdate(models.Model):
@@ -299,8 +299,8 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            postUrl = "http://forums.somethingawful.com/showthread.php?goto=post&postid=%s" % \
-                      self.game.posts.all().order_by("-id")[0].postId
+            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid=%s' % \
+                      self.game.posts.all().order_by('-id')[0].postId
             try:
                 if url is None:
                     self.url = postUrl
@@ -325,14 +325,14 @@ class BlogPost(models.Model):
         return '/'
 
 class Theme(models.Model):
-    name = models.CharField(max_length=10, default="default")
+    name = models.CharField(max_length=10, default='default')
     
     def __str__(self):
         return self.name
     
 class UserProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE)
-    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     registered = models.DateTimeField(auto_now_add=True)
     theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
     pronouns = models.TextField()
@@ -347,7 +347,7 @@ class GameDay(models.Model):
     notified = models.BooleanField(default=False)
 
     def __str__(self):
-        return "Day %s of %s" % (self.dayNumber, self.game)
+        return 'Day %s of %s' % (self.dayNumber, self.game)
 
 
 class CookieStore(models.Model):
@@ -362,7 +362,7 @@ class AddPlayerForm(forms.Form):
         try:
             self.player = Player.objects.get(name=name)
         except Player.DoesNotExist:
-            raise forms.ValidationError("No player by that name.")
+            raise forms.ValidationError('No player by that name.')
 
         return self.player.name
 

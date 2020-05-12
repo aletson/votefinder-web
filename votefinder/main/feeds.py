@@ -7,15 +7,15 @@ from votefinder.main.models import BlogPost, GameStatusUpdate, Game
 
 
 class LatestRss(Feed):
-    title = "VoteFinder Updates"
-    link = "https://"+ settings.PRIMARY_DOMAIN + "/"
-    author_name = "soru"
-    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/rss"
-    description = "Changes and updates to the VoteFinder site."
+    title = 'VoteFinder Updates'
+    link = 'https://'+ settings.PRIMARY_DOMAIN + '/'
+    author_name = 'Alli'
+    feed_url = 'https://' + settings.PRIMARY_DOMAIN + '/rss'
+    description = 'Changes and updates to the VoteFinder site.'
     guid = '/'
 
     def items(self):
-        return BlogPost.objects.all().order_by("-timestamp")[:5]
+        return BlogPost.objects.all().order_by('-timestamp')[:5]
 
     def item_title(self, item):
         return item.title
@@ -36,19 +36,19 @@ class LatestAtom(LatestRss):
 
 
 class GameStatusRss(Feed):
-    title = "VoteFinder Game Status Updates"
-    link = "https://" + settings.PRIMARY_DOMAIN + "/"
-    author_name = "soru"
-    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/game_status"
-    description = "Game status updates for games tracked by VoteFinder."
+    title = 'VoteFinder Game Status Updates'
+    link = 'https://' + settings.PRIMARY_DOMAIN + '/'
+    author_name = 'Alli'
+    feed_url = 'https://' + settings.PRIMARY_DOMAIN + '/game_status'
+    description = 'Game status updates for games tracked by VoteFinder.'
     guid = '/'
 
     def items(self):
-        return GameStatusUpdate.objects.all().order_by("-id")[:5]
+        return GameStatusUpdate.objects.all().order_by('-id')[:5]
 
     def item_title(self, item):
         if item.game:
-            return "[%s] %s" % (item.game.name, item.message)
+            return '[%s] %s' % (item.game.name, item.message)
         else:
             return item.message
 
@@ -68,11 +68,11 @@ class GameStatusAtom(GameStatusRss):
 
 
 class SpecificGameStatusRss(Feed):
-    title = "VoteFinder Game Status Updates"
-    link = "https://" + settings.PRIMARY_DOMAIN + "/"
-    author_name = "soru"
-    feed_url = "https://" + settings.PRIMARY_DOMAIN + "/game_status"
-    description = "Game status updates for games tracked by VoteFinder."
+    title = 'VoteFinder Game Status Updates'
+    link = 'https://' + settings.PRIMARY_DOMAIN + '/'
+    author_name = 'Alli'
+    feed_url = 'https://' + settings.PRIMARY_DOMAIN + '/game_status'
+    description = 'Game status updates for games tracked by VoteFinder.'
     guid = '/'
     game = None
 
@@ -81,11 +81,11 @@ class SpecificGameStatusRss(Feed):
         return self.game
 
     def items(self):
-        return GameStatusUpdate.objects.filter(game=self.game).order_by("-id")[:5]
+        return GameStatusUpdate.objects.filter(game=self.game).order_by('-id')[:5]
 
     def item_title(self, item):
         if item.game:
-            return "[%s] %s" % (item.game.name, item.message)
+            return '[%s] %s' % (item.game.name, item.message)
         else:
             return item.message
 

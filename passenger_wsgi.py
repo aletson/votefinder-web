@@ -12,7 +12,7 @@ sys.path.append(cwd)
 sys.path.append(os.path.join(cwd, '/votefinder'))
 sys.path.insert(0,'{v}/lib/python3.7/site-packages'.format(v=VENV))
 
-os.environ['DJANGO_SETTINGS_MODULE'] = "votefinder.settings"
+os.environ['DJANGO_SETTINGS_MODULE'] = 'votefinder.settings'
 
 from django.core.wsgi import get_wsgi_application
 

@@ -71,7 +71,7 @@ class VoteCounter:
             gameday.save()
 
             if len(list(lynched)) == 1:
-                game.status_update("%s was executed on day %s!" % (lynched[0].name, gameday.dayNumber))
+                game.status_update('%s was executed on day %s!' % (lynched[0].name, gameday.dayNumber))
                 self.PostLynchedMessage(game, lynched[0].name)
 
     def PostLynchedMessage(self, game, name):
@@ -81,10 +81,10 @@ class VoteCounter:
         message = random.choice(LynchMessage.objects.all()).text
         v = VotecountFormatter.VotecountFormatter(game)
         v.go()
-        message += "\n\n"
+        message += '\n\n'
         message += v.bbcode_votecount
         dl = ForumPageDownloader()
-        dl.ReplyToThread(game.threadId, ":redhammer: " + (message % name))
+        dl.ReplyToThread(game.threadId, ':redhammer: ' + (message % name))
 
     def BuildResultList(self):
         list = []

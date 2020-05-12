@@ -18,7 +18,7 @@ VF_ADMIN_NAME = os.environ.get('VF_ADMIN_NAME') or 'Your Name'
 VF_ADMIN_EMAIL = os.environ.get('VF_ADMIN_EMAIL') or 'you@yourname.com'
 VF_DEBUG_STR = os.environ.get('VF_DEBUG_STR') or False
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL') or ''
-PRIMARY_DOMAIN = VF_DOMAINS.split(" ", 1)[0]
+PRIMARY_DOMAIN = VF_DOMAINS.split(' ', 1)[0]
 
 if VF_DEBUG_STR == 'True':
     DEBUG = True
