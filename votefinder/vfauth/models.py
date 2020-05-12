@@ -6,18 +6,18 @@ from votefinder.main.models import *
 
 
 class CreateUserForm(forms.Form):
-    login = forms.CharField(label="SA Username", min_length=3)
-    email = forms.EmailField(label="Email")
+    login = forms.CharField(label='SA Username', min_length=3)
+    email = forms.EmailField(label='Email')
     password = forms.CharField(widget=forms.PasswordInput, min_length=5,
-                               label="New Password")
+                               label='New Password')
     confirm = forms.CharField(widget=forms.PasswordInput, min_length=5,
-                              label="Confirm Password")
+                              label='Confirm Password')
 
     def clean_confirm(self):
-        password1 = self.cleaned_data["password"]
-        password2 = self.cleaned_data["confirm"]
+        password1 = self.cleaned_data['password']
+        password2 = self.cleaned_data['confirm']
         if password1 != password2:
-            raise forms.ValidationError("The two password fields don't match.")
+            raise forms.ValidationError('The two password fields don't match.')
         return password2
 
     def clean_login(self):
@@ -25,7 +25,7 @@ class CreateUserForm(forms.Form):
 
         try:
             existingUser = User.objects.all().get(username=login)
-            raise forms.ValidationError("A user by that name already exists.")
+            raise forms.ValidationError('A user by that name already exists.')
         except User.DoesNotExist:
             pass
         
@@ -35,7 +35,7 @@ class CreateUserForm(forms.Form):
                 'https://forums.somethingawful.com/member.php?action=getinfo&username=%s' % urllib.parse.quote_plus(login))
 
             if data is None:
-                raise forms.ValidationError("There was a problem downloading the profile for the SA user %s." % login)
+                raise forms.ValidationError('There was a problem downloading the profile for the SA user %s.' % login)
 
             if data.find(str(self.required_key)) != -1:
                 matcher = re.compile('userid=(?P<userid>\d+)').search(data)
@@ -45,7 +45,7 @@ class CreateUserForm(forms.Form):
                         existingPlayer = Player.objects.all().get(uid=self.userid)
                         existingUserProfile = UserProfile.objects.all().get(player_id=existingPlayer.id)
                         existingUser = UserProfile.objects.all().get(id=existingUserProfile.user_id)
-                        raise forms.ValidationError("%s is already registered with that user ID. Has your forum name changed?" % existingUser.username)
+                        raise forms.ValidationError('%s is already registered with that user ID. Has your forum name changed?' % existingUser.username)
                     except UserProfile.DoesNotExist:
                         pass
                     except Player.DoesNotExist:
@@ -59,9 +59,9 @@ class CreateUserForm(forms.Form):
                     return login
                 else:
                     raise forms.ValidationError(
-                        "Unable to find the userID of %s.  Please talk to the site admin." % login)
+                        'Unable to find the userID of %s.  Please talk to the site admin.' % login)
             else:
                 raise forms.ValidationError(
-                    "Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
+                    'Unable to find the correct key (%s) in %s\'s SA profile' % (self.required_key, login))
         else:
             return login
