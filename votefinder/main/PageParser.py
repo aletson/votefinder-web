@@ -8,7 +8,7 @@ class PageParser:
     def __init__(self):
         self.pageNumber = 0
         self.maxPages = 0
-        self.gameName = ""
+        self.gameName = ''
         self.posts = []
         self.players = []
         self.gamePlayers = []
@@ -19,7 +19,7 @@ class PageParser:
     def Add(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.DownloadAndUpdate("http://forums.somethingawful.com/showthread.php?threadid=%s" % threadid,
+        return self.DownloadAndUpdate('http://forums.somethingawful.com/showthread.php?threadid=%s' % threadid,
                                       threadid)
 
     def DownloadAndUpdate(self, url, threadid):
@@ -40,7 +40,7 @@ class PageParser:
             page = game.currentPage + 1
 
         return self.DownloadAndUpdate(
-            "http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s" % (game.threadId, page),
+            'http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s' % (game.threadId, page),
             game.threadId)
 
     def DownloadForumPage(self, url):
@@ -80,7 +80,7 @@ class PageParser:
 
     def SearchLineForActions(self, post, line):
         # Votes
-        pattern = re.compile("##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)", re.I)
+        pattern = re.compile('##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)', re.I)
         pos = 0
         match = pattern.search(line, pos)
 
@@ -92,7 +92,7 @@ class PageParser:
                 v.target = self.AutoResolveVote(v.targetString)
                 v.unvote = False
 
-                if v.target == None and (v.targetString.lower() == "nolynch" or v.targetString.lower() == "no lynch" or v.targetString.lower() == "no execute" or v.targetString.lower() == "no hang" or v.targetString.lower() == "no cuddle"):
+                if v.target == None and (v.targetString.lower() == 'nolynch' or v.targetString.lower() == 'no lynch' or v.targetString.lower() == 'no execute' or v.targetString.lower() == 'no hang' or v.targetString.lower() == 'no cuddle'):
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
@@ -109,7 +109,7 @@ class PageParser:
         if post.game.is_player_mod(post.author):
             # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
             # pattern search for ##deadline and # of hours
-            pattern = re.compile("##\\s*deadline[:\\s+](\\d+)", re.I)
+            pattern = re.compile('##\\s*deadline[:\\s+](\\d+)', re.I)
             pos = 0
             match = pattern.search(line,pos)
             while match:
@@ -122,20 +122,20 @@ class PageParser:
                                 
 
     def ReadVotes(self, post):
-        for quote in post.bodySoup.findAll("div", "quote well"):
+        for quote in post.bodySoup.findAll('div', 'quote well'):
             quote.extract()
-        for bold in post.bodySoup.findAll("b"):
-            content = "".join([str(x) for x in bold.contents])
-            for line in content.splitlines():
+        for bold in post.bodySoup.findAll('b'):
+            postContent = ''.join([str(x) for x in bold.contents])
+            for line in postContent.splitlines():
                 self.SearchLineForActions(post, line)
                 
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data, 'html5lib')
         self.pageNumber = self.FindPageNumber(soup)
         self.maxPages = self.FindMaxPages(soup)
-        self.gameName = re.compile(r"\[.*?\]").sub("", self.ReadThreadTitle(soup)).strip()
+        self.gameName = re.compile(r'\[.*?\]').sub('', self.ReadThreadTitle(soup)).strip()
 
-        posts = soup.find_all("table", "post")
+        posts = soup.find_all('table', 'post')
         if not posts:
             return None
 
@@ -197,20 +197,20 @@ class PageParser:
         return game
 
     def FindPageNumber(self, soup):
-        pages = soup.find("div", "pages")
+        pages = soup.find('div', 'pages')
         if pages:
-            curPage = pages.find(attrs={"selected": "selected"})
+            curPage = pages.find(attrs={'selected': 'selected'})
             if curPage:
                 return curPage['value']
             else:
-                return "1"
+                return '1'
 
-        return "1"
+        return '1'
 
     def FindMaxPages(self, soup):
-        pages = soup.find("div", "pages")
+        pages = soup.find('div', 'pages')
         if pages:
-            option_tags = pages.find_all("option")
+            option_tags = pages.find_all('option')
             total_pages = len(option_tags)
             if total_pages == 0:
                 return 1
@@ -220,7 +220,7 @@ class PageParser:
             return 1
 
     def ReadThreadTitle(self, soup):
-        title = soup.find("title")
+        title = soup.find('title')
         if title:
             return title.text[:len(title.text) - 29]
         else:
@@ -237,7 +237,7 @@ class PageParser:
         return player
 
     def ReadPostValues(self, node):
-        postId = node["id"][4:]
+        postId = node['id'][4:]
         if postId == '':
             return None
 
@@ -248,40 +248,40 @@ class PageParser:
             post = Post()
 
         post.postId = postId
-        titleNode = node.find("dd", "title")
+        titleNode = node.find('dd', 'title')
         if titleNode:
-            post.avatar = str(titleNode.find("img"))
+            post.avatar = str(titleNode.find('img'))
 
-        post.bodySoup = node.find("td", "postbody")
-        for quote in post.bodySoup.findAll("div", "bbc-block"):
-            quote['class'] = "quote well"
-        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img["src"]+'">Click to load image...</div>') for img in post.bodySoup.find_all("img")] # See #44.
+        post.bodySoup = node.find('td', 'postbody')
+        for quote in post.bodySoup.findAll('div', 'bbc-block'):
+            quote['class'] = 'quote well'
+        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img["src"]+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
         [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = post.bodySoup.prettify(formatter=None)
-        post.body = re.sub(r"google_ad_section_(start|end)", "", post.body)
-        postDateNode = node.find("td", "postdate")
+        post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
+        postDateNode = node.find('td', 'postdate')
         
         if postDateNode:
-            dateText = postDateNode.text.replace("#", "").replace("?", "").strip()
-            post.timestamp = datetime(*time.strptime(dateText, "%b %d, %Y %H:%M")[:6])
+            dateText = postDateNode.text.replace('#', '').replace('?', '').strip()
+            post.timestamp = datetime(*time.strptime(dateText, '%b %d, %Y %H:%M')[:6])
         else:
             return None
 
-        anchorList = postDateNode.findAll("a")
+        anchorList = postDateNode.findAll('a')
         if len(anchorList) > 0:
-            post.authorSearch = anchorList[-1]["href"]
+            post.authorSearch = anchorList[-1]['href']
 
-        authorString = node.find("dt", "author").text
-        authorString = re.sub("<.*?>", "", authorString)
-        authorString = re.sub("&\\w+?;", "", authorString).strip()
+        authorString = node.find('dt', 'author').text
+        authorString = re.sub('<.*?>', '', authorString)
+        authorString = re.sub('&\\w+?;', '', authorString).strip()
 
-        matcher = re.compile("userid=(?P<uid>\d+)").search(post.authorSearch)
+        matcher = re.compile('userid=(?P<uid>\d+)').search(post.authorSearch)
         if matcher:
             authorUid = matcher.group('uid')
         else:
             return None
 
-        if authorString == "Adbot":
+        if authorString == 'Adbot':
             return None
         else:
             post.author = self.FindOrCreatePlayer(authorString, authorUid)
