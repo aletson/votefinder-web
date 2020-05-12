@@ -32,15 +32,15 @@ class ForumPageDownloader():
 
     def LogLoginAttempt(self):
         g = Game.objects.get(id=228)
-        g.status_update("Trying to re-login to forums.  PM soru if this happens a lot.")
+        g.status_update('Trying to re-login to forums.  PM Alli if this happens a lot.')
 
     def LoginToForum(self):
-        data = ""
+        data = ''
 
         self.LogLoginAttempt()
 
         #try:
-        page_request = self.session.post("https://forums.somethingawful.com/account.php",
+        page_request = self.session.post('https://forums.somethingawful.com/account.php',
                                  data={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
                                           'secure_login': ''})
         data = page_request.text
@@ -54,7 +54,7 @@ class ForumPageDownloader():
             return False
 
     def IsNeedToLogInPage(self, data):
-        if re.search(re.compile(r"\*\*\* LOG IN \*\*\*"), data) == None:
+        if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) == None:
             return False
         else:
             return True
@@ -62,7 +62,7 @@ class ForumPageDownloader():
     def IsLoggedInCorrectlyPage(self, data):
         if not data:
             raise ValueError('Login failed, no data in response from login attempt')
-        if re.search(re.compile(r"Login with username and password"), data) == None:
+        if re.search(re.compile(r'Login with username and password'), data) == None:
             return True
         else:
             return False
@@ -76,8 +76,8 @@ class ForumPageDownloader():
             return None
 
     def ReplyToThread(self, thread, message):
-        getUrl = "https://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s" % thread
-        postUrl = "https://forums.somethingawful.com/newreply.php?action=newreply"
+        getUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s' % thread
+        postUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply'
 
         data = self.download(getUrl)
         if data is None:
@@ -99,6 +99,6 @@ class ForumPageDownloader():
         result = r.text
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     dl = ForumPageDownloader()
-    result = dl.download("https://forums.somethingawful.com/showthread.php?threadid=3552086")
+    result = dl.download('https://forums.somethingawful.com/showthread.php?threadid=3552086')
