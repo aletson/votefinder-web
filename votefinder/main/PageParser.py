@@ -255,7 +255,7 @@ class PageParser:
         post.bodySoup = node.find('td', 'postbody')
         for quote in post.bodySoup.findAll('div', 'bbc-block'):
             quote['class'] = 'quote well'
-        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img["src"]+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
+        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img['src']+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
         [comment.decompose() for comment in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))] # Not working???
         post.body = post.bodySoup.prettify(formatter=None)
         post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
