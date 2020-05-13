@@ -1,10 +1,10 @@
-import django.views.static
+from django.views import static
 from django.conf import settings
 from django.conf.urls import *
 from django.contrib import admin
 
-import votefinder.main.urls
-import votefinder.vfauth.urls
+from votefinder.main import urls
+from votefinder.vfauth import urls
 
 admin.autodiscover()
 
