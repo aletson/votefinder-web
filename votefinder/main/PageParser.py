@@ -173,7 +173,7 @@ class PageParser:
             post.game = game
             post.save()
             self.ReadVotes(post)
-            if not post.author in self.players:
+            if post.author not in self.players:
                 self.players.append(post.author)
             cur_player = post.author
             cur_player.last_post = datetime.now()
