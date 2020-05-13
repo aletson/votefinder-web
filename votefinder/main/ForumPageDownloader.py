@@ -49,7 +49,7 @@ class ForumPageDownloader():
             return False
 
     def IsNeedToLogInPage(self, data):
-        if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) == None:
+        if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) is None:
             return False
         else:
             return True
@@ -57,7 +57,7 @@ class ForumPageDownloader():
     def IsLoggedInCorrectlyPage(self, data):
         if not data:
             raise ValueError('Login failed, no data in response from login attempt')
-        if re.search(re.compile(r'Login with username and password'), data) == None:
+        if re.search(re.compile(r'Login with username and password'), data) is None:
             return True
         else:
             return False

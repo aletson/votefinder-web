@@ -96,7 +96,7 @@ class VoteCounter:
         return list
 
     def TargetIsValid(self, vote):
-        if vote.nolynch and self.nolynch_player == None:
+        if vote.nolynch and self.nolynch_player is None:
             self.nolynch_player = Player.objects.get(uid=-1)
             self.results[self.nolynch_player] = {'count': 0, 'votes': []}
 

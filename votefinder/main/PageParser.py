@@ -92,13 +92,13 @@ class PageParser:
                 v.target = self.AutoResolveVote(v.targetString)
                 v.unvote = False
 
-                if v.target == None and (v.targetString.lower() == 'nolynch' or v.targetString.lower() == 'no lynch' or v.targetString.lower() == 'no execute' or v.targetString.lower() == 'no hang' or v.targetString.lower() == 'no cuddle'):
+                if v.target is None and (v.targetString.lower() == 'nolynch' or v.targetString.lower() == 'no lynch' or v.targetString.lower() == 'no execute' or v.targetString.lower() == 'no hang' or v.targetString.lower() == 'no cuddle'):
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
                 playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
                 currentGameDay = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or playersLastVote == None or playersLastVote.post_id < currentGameDay.startPost_id or playersLastVote.unvote or v.unvote or PlayerState.get(
+                if game.ecco_mode is False or playersLastVote is None or playersLastVote.post_id < currentGameDay.startPost_id or playersLastVote.unvote or v.unvote or PlayerState.get(
                     game=game, player_id=playersLastVote.target).alive is False:
                     v.save()
             except Game.DoesNotExist:
