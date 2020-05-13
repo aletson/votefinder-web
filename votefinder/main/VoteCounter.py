@@ -126,7 +126,7 @@ class VoteCounter:
 
         resultItem['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
                                     'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s#post%s' % (
-                                    self.game.threadId, page, postid)})
+                                        self.game.threadId, page, postid)})
 
     def HandleUnvote(self, vote):
         currentVote = self.PlayerIsVoting(vote.author)

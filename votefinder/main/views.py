@@ -546,8 +546,8 @@ def replace(request, gameid, clear, outgoing, incoming):
     game.status_update_noncritical('%s is replaced by %s.' % (playerOut, playerIn))
 
     messages.add_message(request, messages.SUCCESS,
-                         'Success! <strong>%s</strong> was replaced by <strong>%s</strong>.  %s votes were affected.' % (
-                         playerOut, playerIn, votesAffected))
+        'Success! <strong>%s</strong> was replaced by <strong>%s</strong>.  %s votes were affected.' % (
+            playerOut, playerIn, votesAffected))
     return HttpResponseRedirect(game.get_absolute_url())
 
 
@@ -568,8 +568,8 @@ def start_day(request, day, postid):
     post.game.status_update('Day %s has begun!' % day)
 
     messages.add_message(request, messages.SUCCESS,
-                         'Success! <strong>Day %s</strong> will now begin with post (%s) by %s.' % (
-                         gameday.dayNumber, post.postId, post.author))
+        'Success! <strong>Day %s</strong> will now begin with post (%s) by %s.' % (
+            gameday.dayNumber, post.postId, post.author))
 
     return HttpResponseRedirect(post.game.get_absolute_url())
 
@@ -778,16 +778,14 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
         if word_width + space_width > remaining:
             output_text.append(word)
             remaining = max_width - word_width
-        elif not output_text:
-            output_text.append(word)
-            remaining = remaining - (word_width + space_width)
-        else:
+        elif output_text:
             output = output_text.pop()
             output += ' %s' % word
             output_text.append(output)
             remaining = remaining - (word_width + space_width)
-
-            
+        else:
+            output_text.append(word)
+            remaining = remaining - (word_width + space_width)
 
     for t in output_text:
         cur_width, cur_height = draw.textsize(t, font=font)

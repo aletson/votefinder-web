@@ -35,7 +35,9 @@ class CreateUserForm(forms.Form):
             if data is None:
                 raise forms.ValidationError('There was a problem downloading the profile for the SA user %s.' % login)
 
-            if data.find(str(self.required_key)) != -1:
+            if data.find(str(self.required_key)) == -1:
+                raise forms.ValidationError("Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
+            else:
                 matcher = re.compile('userid=(?P<userid>\d+)').search(data)
                 if matcher:
                     self.userid = matcher.group('userid')
@@ -58,7 +60,5 @@ class CreateUserForm(forms.Form):
                 else:
                     raise forms.ValidationError(
                         'Unable to find the userID of %s.  Please talk to the site admin.' % login)
-            else:
-                raise forms.ValidationError(
-                    "Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
+
         return login
