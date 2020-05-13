@@ -1,8 +1,7 @@
-# from django.contrib.auth import *
-import django.contrib.auth.views
+from django.contrib.auth import views
 from django.conf.urls import *
 
-import votefinder.vfauth.views
+from votefinder.vfauth import views
 
 urlpatterns = [
     url(r'^create/*$', votefinder.vfauth.views.create_step_1),

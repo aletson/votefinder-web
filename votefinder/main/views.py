@@ -181,7 +181,6 @@ def update(request, gameid):
     except:
         game.save()
         raise
-        # return HttpResponse(simplejson.dumps({ 'success': False, 'message': 'There was a problem updating the thread.  Please try again later.'}), content_type='application/json')
 
 
 @login_required
@@ -870,7 +869,6 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     split_vc = re.compile('\[.*?\]').sub('', vc.bbcode_votecount).split('\r\n')
     header_text = split_vc[0]  # Explicitly take the first and last elements in case of multiline templates
     footer_text = split_vc[-1]
-    # (header_text, footer_text) = re.compile('\[.*?\]').sub('', vc.bbcode_votecount).split('\r\n')
     (header_x_size, header_y_size) = draw_wordwrap_text(draw, header_text, 0, 0, max_width, bold_font)
     draw.line([0, header_y_size - 2, header_x_size, header_y_size - 2], fill=(0, 0, 0, 255), width=2)
     ypos = 2 * header_y_size
