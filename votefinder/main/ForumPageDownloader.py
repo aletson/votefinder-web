@@ -24,10 +24,8 @@ class ForumPageDownloader():
 
             if not self.IsNeedToLogInPage(data):
                 return data
-            else:
-                return None
-        else:
             return None
+        return None
 
     def LogLoginAttempt(self):
         g = Game.objects.get(id=228)
@@ -45,22 +43,19 @@ class ForumPageDownloader():
 
         if self.IsLoggedInCorrectlyPage(data):
             return True
-        else:
-            return False
+        return False
 
     def IsNeedToLogInPage(self, data):
         if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) is None:
             return False
-        else:
-            return True
+        return True
 
     def IsLoggedInCorrectlyPage(self, data):
         if not data:
             raise ValueError('Login failed, no data in response from login attempt')
         if re.search(re.compile(r'Login with username and password'), data) is None:
             return True
-        else:
-            return False
+        return False
 
     def PerformDownload(self, page):
         try:

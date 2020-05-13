@@ -56,14 +56,14 @@ class PageParser:
 
         try:
             aliases = Alias.objects.filter(alias__iexact=text, player__in=self.players)
-            if len(aliases) > 0:
+            if aliases:
                 return aliases[0].player
         except Alias.DoesNotExist:
             pass
 
         try:
             aliases = Alias.objects.filter(alias__iexact=text, player__in=self.gamePlayers)
-            if len(aliases) > 0:
+            if aliases:
                 return aliases[0].player
         except Alias.DoesNotExist:
             pass
@@ -202,9 +202,7 @@ class PageParser:
             curPage = pages.find(attrs={'selected': 'selected'})
             if curPage:
                 return curPage['value']
-            else:
-                return '1'
-
+            return '1'
         return '1'
 
     def FindMaxPages(self, soup):
@@ -214,17 +212,14 @@ class PageParser:
             total_pages = len(option_tags)
             if total_pages == 0:
                 return 1
-            else:
-                return total_pages
-        else:
-            return 1
+            return total_pages
+        return 1
 
     def ReadThreadTitle(self, soup):
         title = soup.find('title')
         if title:
             return title.text[:len(title.text) - 29]
-        else:
-            return None
+        return None
 
     def FindOrCreatePlayer(self, playerName, playerUid):
         player, created = Player.objects.get_or_create(uid=playerUid,
@@ -268,7 +263,7 @@ class PageParser:
             return None
 
         anchorList = postDateNode.findAll('a')
-        if len(anchorList) > 0:
+        if anchorList:
             post.authorSearch = anchorList[-1]['href']
 
         authorString = node.find('dt', 'author').text

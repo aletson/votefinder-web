@@ -50,7 +50,7 @@ class VotecountFormatter:
             if item['count'] == 0 and game_template.hide_zero_votes:
                 continue
 
-            if len(item['votes']) > 0:
+            if item['votes']:
                 votelist = []
                 for v in item['votes']:
                     thisvote = None
@@ -68,7 +68,7 @@ class VotecountFormatter:
                     if thisvote:
                         votelist.append(thisvote.replace('{{url}}', v['url']))
 
-                if len(votelist) > 0:
+                if votelist:
                     this_line = game_template.single_line.replace('{{target}}', str(item['target'].name)).replace(
                         '{{count}}', str(item['count'])).replace('{{votelist}}', ', '.join(votelist))
                     votecount_lines.append(
@@ -86,7 +86,7 @@ class VotecountFormatter:
         temp_overall = temp_overall.replace('{{notvoting}}', temp_not_voting.replace('{{votelist}}', ', '.join(
             map(lambda x: x.name, self.not_voting_list))))
 
-        if len(comments) > 0:
+        if comments:
             temp_overall += '\n \n' + '\n \n'.join([c.comment for c in comments])
 
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}',

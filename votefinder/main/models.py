@@ -85,8 +85,7 @@ class VotecountTemplate(models.Model):
             return 'DEFAULT: %s [by %s]' % (self.name, self.creator)
         elif self.shared:
             return 'SHARED: %s [by %s]' % (self.name, self.creator)
-        else:
-            return '%s [by %s]' % (self.name, self.creator)
+        return '%s [by %s]' % (self.name, self.creator)
 
 
 class Game(models.Model):
@@ -117,7 +116,7 @@ class Game(models.Model):
         self.is_big = True if self.players_count > 16 else False
 
         days = self.days.order_by('-id')
-        if len(days) > 0:
+        if days:
             self.current_day = days[0].dayNumber
 
     def status_update(self, message):
@@ -131,8 +130,7 @@ class Game(models.Model):
     def is_locked(self):
         if self.locked_at is None or datetime.now() - self.locked_at > timedelta(minutes=1):
             return False
-        else:
-            return True
+        return True
 
     def lock(self, *args, **kwargs):
         self.locked_at = datetime.now()
@@ -192,8 +190,7 @@ class Game(models.Model):
             return True
         elif user.is_authenticated:
             return self.is_player_mod(user.profile.player)
-        else:
-            return False
+        return False
 
 
 class Comment(models.Model):
@@ -232,8 +229,7 @@ class PlayerState(models.Model):
             return 'Spectator'
         elif self.alive:
             return 'Alive'
-        else:
-            return 'Dead'
+        return 'Dead'
 
     def __str__(self):
         return '%s [%s]' % (self.player, self.state())
@@ -287,8 +283,7 @@ class Vote(models.Model):
     def __str__(self):
         if self.unvote:
             return '%s unvotes' % self.author
-        else:
-            return '%s votes %s' % (self.author, self.targetString)
+        return '%s votes %s' % (self.author, self.targetString)
 
 
 class GameStatusUpdate(models.Model):

@@ -173,11 +173,9 @@ def update(request, gameid):
             return HttpResponse(
                 simplejson.dumps({'success': True, 'curPage': newGame.currentPage, 'maxPages': newGame.maxPages}),
                 content_type='application/json')
-        else:
-            game.save()
-            return HttpResponse(simplejson.dumps({'success': False,
-                                                  'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
-                                content_type='application/json')
+        game.save()
+        return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
+            content_type='application/json')
     except:
         game.save()
         raise
@@ -372,7 +370,7 @@ def resolve(request, voteid, resolution):
     newVotes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
                                    ignored=False, nolynch=False)
 
-    if len(votes) == 1 and len(newVotes) > 0:
+    if len(votes) == 1 and newVotes:
         refresh = False
     else:
         refresh = True
@@ -400,8 +398,7 @@ def start_game(request, gameid, day):
     game.status_update('The game has started!')
     if day == '1':
         return new_day(request, gameid, day)
-    else:
-        return HttpResponseRedirect(game.get_absolute_url())
+    return HttpResponseRedirect(game.get_absolute_url())
 
 @login_required
 def add_comment(request, gameid):
@@ -414,7 +411,7 @@ def add_comment(request, gameid):
     form = AddCommentForm(request.POST)
     if form.is_valid():
         comments = Comment.objects.filter(game=game)
-        if len(comments) > 0:
+        if comments:
             comments.delete()
 
         if len(form.cleaned_data['comment']) > 1:
@@ -614,8 +611,7 @@ def create_template(request):
         messages.add_message(request, messages.SUCCESS,
                              'Success! The template <strong>%s</strong> was saved.' % new_temp.name)
         return HttpResponseRedirect('/templates')
-    else:
-        return render(request, 'template_edit.html', {'form': form})
+    return render(request, 'template_edit.html', {'form': form})
 
 
 @login_required
@@ -648,8 +644,7 @@ def edit_template(request, templateid):
         messages.add_message(request, messages.SUCCESS,
                              'Success! The template <strong>%s</strong> was saved.' % new_temp.name)
         return HttpResponseRedirect('/templates')
-    else:
-        return render(request, 'template_edit.html', {'form': form, 'template': t, 'edit': True})
+    return render(request, 'template_edit.html', {'form': form, 'template': t, 'edit': True})
 
 
 @login_required
@@ -711,8 +706,7 @@ def active_games_style(request, style):
         game_list = [ g for g in game_list if datetime.now() - g.last_post < timedelta(days=31) ]
 
         return render(request, 'wiki_closed_games.html', {'game_list': game_list})
-    else:
-        return HttpResponse('Style not supported')
+    return HttpResponse('Style not supported')
 
 
 def active_games_json(request):
@@ -879,7 +873,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     (x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
 
     votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
-    if len(votes) > 0:
+    if votes:
         ypos += header_y_size
         if len(votes) == 1:
             warning_text = 'Warning: There is currently 1 unresolved vote.  The votecount may be inaccurate.'
@@ -905,9 +899,8 @@ def check_update_game(game):
         newGame = p.Update(game)
         if newGame:
             return newGame
-        else:
-            game.save()
-            return game
+        game.save()
+        return game
     except:
         return game
 
@@ -969,7 +962,7 @@ def players_page(request, page):
        'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
              first_record: first_record + items_per_page]
 
-    if len(players) == 0:
+    if not players:
         return HttpResponseRedirect('/players')
 
     for p in players:

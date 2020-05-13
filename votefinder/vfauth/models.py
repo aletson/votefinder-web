@@ -62,5 +62,4 @@ class CreateUserForm(forms.Form):
             else:
                 raise forms.ValidationError(
                     "Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
-        else:
-            return login
+        return login

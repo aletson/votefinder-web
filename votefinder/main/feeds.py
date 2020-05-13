@@ -49,8 +49,7 @@ class GameStatusRss(Feed):
     def item_title(self, item):
         if item.game:
             return '[%s] %s' % (item.game.name, item.message)
-        else:
-            return item.message
+        return item.message
 
     def item_description(self, item):
         return item.message
@@ -86,8 +85,7 @@ class SpecificGameStatusRss(Feed):
     def item_title(self, item):
         if item.game:
             return '[%s] %s' % (item.game.name, item.message)
-        else:
-            return item.message
+        return item.message
 
     def item_description(self, item):
         return item.message

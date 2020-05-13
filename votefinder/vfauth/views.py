@@ -42,8 +42,7 @@ def create_step_3(request):
         messages.add_message(request, messages.SUCCESS,
                              '<strong>Done!</strong> Your account was created and you are now logged in.')
         return HttpResponseRedirect('/')
-    else:
-        return render(request, 'step2.html', {'form': form})
+    return render(request, 'step2.html', {'form': form})
 
 
 def CreateUser(login, email, password, userid):

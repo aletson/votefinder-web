@@ -66,7 +66,7 @@ class VoteCounter:
         tolynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
         lynched = filter(lambda key: self.results[key]['count'] >= tolynch, self.results)
 
-        if len(list(lynched)) > 0:
+        if list(lynched):
             gameday.notified = True
             gameday.save()
 
@@ -145,5 +145,4 @@ class VoteCounter:
     def PlayerIsVoting(self, player):
         if player in self.currentVote.keys():
             return self.currentVote[player]
-        else:
-            return None
+        return None
