@@ -90,8 +90,7 @@ class VotecountFormatter:
             temp_overall += '\n \n' + '\n \n'.join([c.comment for c in comments])
 
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}',
-            until_deadline).replace('{{day}}', str(gameday.dayNumber)).replace('{{tolynch}}', str(self.tolynch))
-            .replace('{{alive}}',str(alive))
+            until_deadline).replace('{{day}}', str(gameday.dayNumber)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}',str(alive))
 
         self.html_votecount = self.ConvertBBCodeToHTML(self.bbcode_votecount)
 

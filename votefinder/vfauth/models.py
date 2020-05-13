@@ -17,7 +17,7 @@ class CreateUserForm(forms.Form):
         password1 = self.cleaned_data['password']
         password2 = self.cleaned_data['confirm']
         if password1 != password2:
-            raise forms.ValidationError('The two password fields don't match.')
+            raise forms.ValidationError("The two password fields don't match.")
         return password2
 
     def clean_login(self):
