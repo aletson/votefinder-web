@@ -114,7 +114,7 @@ class Game(models.Model):
     def update_counts(self):
         self.players_count = self.count_players()
         self.living_count = len(self.living_players())
-        self.is_big = True if self.players_count > 16 else False
+        self.is_big = bool(self.players_count > 16)
 
         days = self.days.order_by('-id')
         if days:

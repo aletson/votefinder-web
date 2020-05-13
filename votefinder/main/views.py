@@ -66,7 +66,7 @@ def add_game(request):
     if request.method == 'POST':
         threadid = request.POST.get('threadid')
         state = request.POST.get('addState')
-        if state == 'started' or state == 'pregame':
+        if state in {'started', 'pregame'}:
             try:
                 game = Game.objects.get(threadId=threadid)
                 data['url'] = game.get_absolute_url()
@@ -144,10 +144,7 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
-    if check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
-        post_vc_button = True
-    else:
-        post_vc_button = False
+    post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
 
     return render(request, 'game.html',
                   {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
@@ -331,11 +328,8 @@ def votecount(request, gameid):
     v = VotecountFormatter.VotecountFormatter(game)
     v.go()
 
-    if check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
-            minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))):
-        post_vc_button = True
-    else:
-        post_vc_button = False
+    post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
+            minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
 
     return render(request, 'votecount.html',
                   {'post_vc_button': post_vc_button,
@@ -370,10 +364,7 @@ def resolve(request, voteid, resolution):
     newVotes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
                                    ignored=False, nolynch=False)
 
-    if len(votes) == 1 and newVotes:
-        refresh = False
-    else:
-        refresh = True
+    refresh = bool(len(votes) != 1 or not newVotes)
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
 
 
@@ -517,7 +508,7 @@ def replace(request, gameid, clear, outgoing, incoming):
         messages.add_message(request, messages.ERROR, 'No player by the name <strong>%s</strong> was found!' % incoming)
         return HttpResponseRedirect(game.get_absolute_url())
 
-    clearVotes = True if clear == 'true' else False
+    clearVotes = bool(clear == 'true')
 
     try:
         playerState = PlayerState.objects.get(game=game, player=playerOut)
@@ -694,7 +685,7 @@ def active_games(request):
 
 
 def active_games_style(request, style):
-    if style == 'default' or style == 'verbose':
+    if style in {'default', 'verbose'}:
         game_list = Game.objects.select_related().filter(state='started').order_by('name')
         big_games = [g for g in game_list if g.is_big]
         mini_games = [g for g in game_list if not g.is_big]
@@ -787,15 +778,16 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
         if word_width + space_width > remaining:
             output_text.append(word)
             remaining = max_width - word_width
-        else:
-            if not output_text:
-                output_text.append(word)
-            else:
-                output = output_text.pop()
-                output += ' %s' % word
-                output_text.append(output)
-
+        elif not output_text:
+            output_text.append(word)
             remaining = remaining - (word_width + space_width)
+        else:
+            output = output_text.pop()
+            output += ' %s' % word
+            output_text.append(output)
+            remaining = remaining - (word_width + space_width)
+
+            
 
     for t in output_text:
         cur_width, cur_height = draw.textsize(t, font=font)
@@ -977,7 +969,7 @@ def players_page(request, page):
 @login_required
 def delete_alias(request, aliasid):
     alias = get_object_or_404(Alias, id=aliasid)
-    if not request.user.is_superuser and not request.user.profile.player == alias.player:
+    if not request.user.is_superuser and request.user.profile.player != alias.player:
         return HttpResponseForbidden
 
     messages.add_message(request, messages.SUCCESS, 'The alias <strong>%s</strong> was deleted.' % alias.alias)

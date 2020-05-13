@@ -93,7 +93,7 @@ class PageParser:
                 v.target = self.AutoResolveVote(v.targetString)
                 v.unvote = False
 
-                if v.target is None and (v.targetString.lower() == 'nolynch' or v.targetString.lower() == 'no lynch' or v.targetString.lower() == 'no execute' or v.targetString.lower() == 'no hang' or v.targetString.lower() == 'no cuddle'):
+                if v.target is None and v.targetString.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
@@ -253,7 +253,7 @@ class PageParser:
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img['src']+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
         comments = post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))
         for match in comments:
-            comment.decompose()
+            match.decompose()
         post.body = post.bodySoup.prettify(formatter=None)
         post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
         postDateNode = node.find('td', 'postdate')

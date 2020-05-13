@@ -20,10 +20,7 @@ VF_DEBUG_STR = os.environ.get('VF_DEBUG_STR') or False
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL') or ''
 PRIMARY_DOMAIN = VF_DOMAINS.split(' ', 1)[0]
 
-if VF_DEBUG_STR == 'True':
-    DEBUG = True
-else:
-    DEBUG = False
+DEBUG = bool(VF_DEBUG_STR == 'True')
 
 ALLOWED_HOSTS = VF_DOMAINS.split()
 
