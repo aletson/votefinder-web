@@ -82,7 +82,7 @@ class VotecountFormatter:
 
         temp_overall = game_template.overall.replace('{{votecount}}', '\n'.join(votecount_lines))
         temp_overall = temp_overall.replace('{{deadline}}',
-                                            game_template.deadline_exists if self.game.deadline else game_template.deadline_not_set)
+            game_template.deadline_exists if self.game.deadline else game_template.deadline_not_set)
         temp_overall = temp_overall.replace('{{notvoting}}', temp_not_voting.replace('{{votelist}}', ', '.join(
             map(lambda x: x.name, self.not_voting_list))))
 
@@ -90,9 +90,8 @@ class VotecountFormatter:
             temp_overall += '\n \n' + '\n \n'.join([c.comment for c in comments])
 
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}',
-                                                                                            until_deadline).replace(
-            '{{day}}', str(gameday.dayNumber)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}',
-                                                                                                 str(alive))
+            until_deadline).replace('{{day}}', str(gameday.dayNumber)).replace('{{tolynch}}', str(self.tolynch))
+            .replace('{{alive}}',str(alive))
 
         self.html_votecount = self.ConvertBBCodeToHTML(self.bbcode_votecount)
 
@@ -110,13 +109,9 @@ class VotecountFormatter:
         results = bbcode
 
         results = results.replace('\n', '<br />\n').replace('[b]', '<b>').replace('[/b]', '</b>').replace('[i]', '<i>')
-        results = results.replace('[/i]', '</i>').replace('[u]', '<u>').replace('[/u]', '</u>').replace('[super]',
-                                                                                                        '<sup>')
-        results = results.replace('[/super]', '</sup>').replace('[sub]', '<sub>').replace('[/sub]', '</sub>').replace(
-            '[s]', '<del>')
-        results = results.replace('[/s]', '</del>').replace('[list]', '<list>').replace('[/list]',
-                                                                                        '</list><br/>').replace('[*]',
-                                                                                                                '<li>')
+        results = results.replace('[/i]', '</i>').replace('[u]', '<u>').replace('[/u]', '</u>').replace('[super]', '<sup>')
+        results = results.replace('[/super]', '</sup>').replace('[sub]', '<sub>').replace('[/sub]', '</sub>').replace('[s]', '<del>')
+        results = results.replace('[/s]', '</del>').replace('[list]', '<list>').replace('[/list]', '</list><br/>').replace('[*]', '<li>')
 
         results = re.compile(r'\[img\](.*?)\[/img\]', re.I | re.S).sub(r'<img src="\1">', results)
         results = re.compile(r'\[url=(.*?)\](.*?)\[/url\]', re.I | re.S).sub(r'<u><a href="\1">\2</a></u>', results)

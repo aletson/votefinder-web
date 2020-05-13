@@ -163,14 +163,14 @@ class Game(models.Model):
 
     def all_players(self):
         return sorted(self.players.select_related().filter(spectator=False, moderator=False),
-                      key=lambda p: p.player.name.lower())
+            key=lambda p: p.player.name.lower())
 
     def living_players(self):
         return sorted(self.players.select_related().filter(alive=True), key=lambda p: p.player.name.lower())
 
     def dead_players(self):
         return sorted(self.players.select_related().filter(alive=False, moderator=False, spectator=False),
-                      key=lambda p: p.player.name.lower())
+            key=lambda p: p.player.name.lower())
 
     def spectators(self):
         return sorted(self.players.select_related().filter(spectator=True), key=lambda p: p.player.name.lower())
@@ -300,7 +300,7 @@ class GameStatusUpdate(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid=%s' % \
-                      self.game.posts.all().order_by('-id')[0].postId
+                self.game.posts.all().order_by('-id')[0].postId
             try:
                 if url is None:
                     self.url = postUrl

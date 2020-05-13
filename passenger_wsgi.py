@@ -5,7 +5,7 @@ VENV = os.environ['ENVIRONMENT']
 PYTHON_BIN = VENV + '/bin/python'
 
 if sys.executable != PYTHON_BIN:
-      os.execl(PYTHON_BIN, PYTHON_BIN, *sys.argv)
+    os.execl(PYTHON_BIN, PYTHON_BIN, *sys.argv)
     
 cwd = os.getcwd()
 sys.path.append(cwd)
