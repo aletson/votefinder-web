@@ -439,7 +439,7 @@ def delete_comment(request, commentid):
 
 
 @login_required
-def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
+def deadline(request, gameid, month, day, year, hour, minute, ampm, tzname):
     game = get_object_or_404(Game, id=gameid)
     if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
@@ -451,7 +451,7 @@ def deadline(request, gameid, month, day, year, hour, min, ampm, tzname):
         hour = hour + 12
 
     prev_deadline = game.deadline
-    dl = timezone(tzname).localize(datetime(int(year), int(month), int(day), int(hour), int(min)))
+    dl = timezone(tzname).localize(datetime(int(year), int(month), int(day), int(hour), int(minute)))
     game.timezone = tzname
     game.deadline = dl.astimezone(timezone(settings.TIME_ZONE)).replace(tzinfo=None)
     game.save()
@@ -955,7 +955,6 @@ def players_page(request, page):
 
     total_players = Player.objects.all().count()
     total_pages = int(ceil(1.0 * total_players / items_per_page))
-    #players = Player.objects.raw('SELECT main_player.id, main_player.name, main_player.slug, main_player.last_post, main_player.total_posts, sum(case when main_playerstate.moderator=false and main_playerstate.spectator=false then 1 else 0 end) as total_games_played, sum(case when main_game.state = 'started' and main_playerstate.alive=true then 1 else 0 end) as alive, sum(case when main_playerstate.moderator=true then 1 else 0 end) as total_games_run FROM main_player LEFT JOIN main_playerstate ON main_player.id = main_playerstate.player_id LEFT JOIN main_game ON main_playerstate.game_id = main_game.id WHERE main_player.uid > 0 GROUP BY main_player.name ORDER BY main_player.name ASC')
     players = Player.objects.select_related().filter(uid__gt='0').order_by('name').extra(select={
        'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
        'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
@@ -976,8 +975,8 @@ def players_page(request, page):
 
 
 @login_required
-def delete_alias(request, id):
-    alias = get_object_or_404(Alias, id=id)
+def delete_alias(request, aliasid):
+    alias = get_object_or_404(Alias, id=aliasid)
     if not request.user.is_superuser and not request.user.profile.player == alias.player:
         return HttpResponseForbidden
 
@@ -1099,7 +1098,6 @@ def votechart_player(request, gameslug, playerslug):
 
 
 def dictfetchall(cursor):
-    'Returns all rows from a cursor as a dict'
     desc = cursor.description
     return [
         dict(zip([col[0] for col in desc], row))

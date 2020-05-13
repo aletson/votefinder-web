@@ -87,13 +87,13 @@ class VoteCounter:
         dl.ReplyToThread(game.threadId, ':redhammer: ' + (message % name))
 
     def BuildResultList(self):
-        list = []
+        resultlist = []
         for key, val in self.results.items():
-            list.append({'target': key, 'count': val['count'], 'votes': val['votes']})
+            resultlist.append({'target': key, 'count': val['count'], 'votes': val['votes']})
 
-        list.sort(key=lambda i: i['count'], reverse=True)
+        resultlist.sort(key=lambda i: i['count'], reverse=True)
 
-        return list
+        return resultlist
 
     def TargetIsValid(self, vote):
         if vote.nolynch and self.nolynch_player is None:

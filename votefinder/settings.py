@@ -41,7 +41,7 @@ DATABASES = {
         'PASSWORD': VF_MYSQL_PASS,
         'HOST': VF_MYSQL_HOST,
         'PORT': 3306,
-		'OPTIONS': {'charset': 'utf8mb4'},
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
@@ -60,14 +60,14 @@ DEFAULT_FROM_EMAIL = VF_FROM_EMAIL
 
 WEB_ROOT = 'votefinder/'
 REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
-BOLD_FONT_PATH =    'votefinder/static/MyriadPro-Bold.otf'
+BOLD_FONT_PATH = 'votefinder/static/MyriadPro-Bold.otf'
 STATIC_ROOT = 'votefinder/static/'
 
 # On Unix systems, a value of None will cause Django to use the same
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/New_York' # Set to the time zone set on the SA forums account.
+TIME_ZONE = 'America/New_York'  # Set to the time zone set on the SA forums account.
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -105,7 +105,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'votefinder/main/templates'
+            'votefinder/main/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -132,7 +132,7 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
     'django.contrib.auth.hashers.SHA1PasswordHasher',
-    'django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher'
+    'django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher',
 ]
 
 MIDDLEWARE = (
@@ -140,7 +140,7 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'votefinder.urls'

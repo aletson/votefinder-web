@@ -22,7 +22,8 @@ def get_default_player():
 
 def SlugifyUniquely(value, model, slugfield='slug'):
     suffix = 1
-    potential = base = slugify(value)[:45]
+    potential = slugify(value)[:45]
+    base = slugify(value)[:45]
     while True:
         if suffix > 1:
             potential = '-'.join([base, str(suffix)])
@@ -294,8 +295,7 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid=%s' % \
-                self.game.posts.all().order_by('-id')[0].postId
+            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid=%s' % self.game.posts.all().order_by('-id')[0].postId
             try:
                 if url is None:
                     self.url = postUrl
@@ -319,21 +319,24 @@ class BlogPost(models.Model):
     def get_absolute_url(self):
         return '/'
 
+
 class Theme(models.Model):
     name = models.CharField(max_length=10, default='default')
 
     def __str__(self):
         return self.name
 
+
 class UserProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE)
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
     registered = models.DateTimeField(auto_now_add=True)
-    theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1);
+    theme = models.ForeignKey(Theme, on_delete=models.SET_DEFAULT, default=1)
     pronouns = models.TextField()
 
     def __str__(self):
         return self.player.name
+
 
 class GameDay(models.Model):
     game = models.ForeignKey(Game, related_name='days', db_index=True, on_delete=models.CASCADE)
