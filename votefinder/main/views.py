@@ -37,8 +37,8 @@ def index(request):
     active_game_list = Game.objects.select_related().filter(state='started').order_by('name')
     pregame_list = Game.objects.select_related().filter(state='pregame').order_by('name')
 
-    big_games = [g for g in active_game_list if g.is_big == True]
-    mini_games = [g for g in active_game_list if g.is_big == False]
+    big_games = [g for g in active_game_list if g.is_big]
+    mini_games = [g for g in active_game_list if not g.is_big]
     posts = BlogPost.objects.all().order_by('-timestamp')[:5]
 
     game_count = Game.objects.count()
@@ -103,10 +103,10 @@ def add_game(request):
                     )
                 else:
                     data['success'] = False
-                    data['message'] = 'Couldn't download or parse the forum thread.  Sorry!'
+                    data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
         else:
             data['success'] = False
-            data['message'] = 'Couldn't validate the starting game state. Please contact support.'
+            data['message'] = "Couldn\'t validate the starting game state. Please contact support."
     else:
         data['success'] = False
         data['message'] = 'Form was submitted incorrectly. Please use the add game page.'
@@ -685,7 +685,7 @@ def game_template(request, gameid, templateid):
     game.save()
 
     messages.add_message(request, messages.SUCCESS,
-                         '<strong>Success!</strong> This game now uses the template <strong>%s</strong>.' % template.name)
+        '<strong>Success!</strong> This game now uses the template <strong>%s</strong>.' % template.name)
     return HttpResponseRedirect(game.get_absolute_url())
 
 
@@ -693,7 +693,7 @@ def active_games(request):
     game_list = Game.objects.select_related().filter(state='started').order_by('name')
 
     big_games = [g for g in game_list if g.is_big]
-    mini_games = [g for g in game_list if g.is_big == False]
+    mini_games = [g for g in game_list if g.is_big is False]
 
     return render(request, 'wiki_games.html',
                   {'big_games': big_games, 'mini_games': mini_games})
@@ -703,7 +703,7 @@ def active_games_style(request, style):
     if style == 'default' or style == 'verbose':
         game_list = Game.objects.select_related().filter(state='started').order_by('name')
         big_games = [g for g in game_list if g.is_big]
-        mini_games = [g for g in game_list if g.is_big == False]
+        mini_games = [g for g in game_list if not g.is_big]
 
         return render(request, 'wiki_games.html', {'big_games': big_games, 'mini_games': mini_games, 'style': style})
     elif style == 'closedmonthly':
@@ -847,7 +847,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size2, y_bottom2) = draw_wordwrap_text(draw, ': ', x_size1, ypos, max_width, font)
 
         text = ', '.join(
-            [v['author'].name for v in filter(lambda v: v['unvote'] == False and v['enabled'], line['votes'])])
+            [v['author'].name for v in filter(lambda v: v['unvote'] is False and v['enabled'], line['votes'])])
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)

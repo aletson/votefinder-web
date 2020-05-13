@@ -138,7 +138,7 @@ class VoteCounter:
 
     def DisableCurrentVote(self, player, target):
         for item in self.results[target]['votes']:
-            if item['author'] == player and item['unvote'] == False and item['enabled']:
+            if item['author'] == player and item['unvote'] is False and item['enabled']:
                 item['enabled'] = False
                 return
 
