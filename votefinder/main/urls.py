@@ -1,9 +1,5 @@
 from django.conf.urls import *
 from django.views.generic.base import TemplateView
-
-
-
-
 from . import views
 from . import feeds
 

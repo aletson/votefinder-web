@@ -1,6 +1,5 @@
 import urllib
-import urllib.parse
-
+from urllib import parse
 from votefinder.main.ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import *
 
