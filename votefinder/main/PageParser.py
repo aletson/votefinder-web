@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
 from votefinder.main.models import *
 
+
 class PageParser:
     def __init__(self):
         self.pageNumber = 0
@@ -250,7 +251,7 @@ class PageParser:
         for quote in post.bodySoup.findAll('div', 'bbc-block'):
             quote['class'] = 'quote well'
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img['src']+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
-        comments = post.bodySoup.find_all(text=lambda text: isinstance(text, Comment)
+        comments = post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))
         for match in comments:
             comment.decompose()
         post.body = post.bodySoup.prettify(formatter=None)
