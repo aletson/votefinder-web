@@ -111,7 +111,7 @@ class PageParser:
             # pattern search for ##deadline and # of hours
             pattern = re.compile('##\\s*deadline[:\\s+](\\d+)', re.I)
             pos = 0
-            match = pattern.search(line,pos)
+            match = pattern.search(line, pos)
             while match:
                 (numHrs,) = match.groups()
                 if numHrs and numHrs > 0: # Check if int - or modify regex
@@ -119,7 +119,7 @@ class PageParser:
                     newDeadline = post.timestamp + timedelta(hours=numHrs)
                     post.game.deadline = newDeadline
                     post.game.save()
-                                
+
 
     def ReadVotes(self, post):
         for quote in post.bodySoup.findAll('div', 'quote well'):
@@ -128,7 +128,7 @@ class PageParser:
             postContent = ''.join([str(x) for x in bold.contents])
             for line in postContent.splitlines():
                 self.SearchLineForActions(post, line)
-                
+
     def ParsePage(self, data, threadid):
         soup = BeautifulSoup(data, 'html5lib')
         self.pageNumber = self.FindPageNumber(soup)
@@ -153,7 +153,7 @@ class PageParser:
         else:
             dayNumber = 1
             self.state = 'started'
-        
+
         game, gameCreated = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
                                                                  'currentPage': 1, 'maxPages': 1, 'state': self.state,
@@ -179,7 +179,7 @@ class PageParser:
             cur_player.last_post = datetime.now()
             cur_player.total_posts += 1
             cur_player.save()
-       
+
         if self.new_game or game.state == 'pregame':
             defaultState = 'alive'
         else:
@@ -260,7 +260,7 @@ class PageParser:
         post.body = post.bodySoup.prettify(formatter=None)
         post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
         postDateNode = node.find('td', 'postdate')
-        
+
         if postDateNode:
             dateText = postDateNode.text.replace('#', '').replace('?', '').strip()
             post.timestamp = datetime(*time.strptime(dateText, '%b %d, %Y %H:%M')[:6])

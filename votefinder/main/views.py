@@ -77,7 +77,7 @@ def add_game(request):
                 if game:
                     data['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by %s!' % game.moderator.name)
-                    
+
                     sqs = boto3.client('sqs')
                     queue_url = settings.SQS_QUEUE_URL
                     response = sqs.send_message(
@@ -724,7 +724,7 @@ def active_games_json(request):
 
 
 def closed_games(request):
-    game_list = Game.objects.select_related().filter(state='closed').order_by('name').annotate(last_post=Max('posts__timestamp'),first_post=Min('posts__timestamp'))
+    game_list = Game.objects.select_related().filter(state='closed').order_by('name').annotate(last_post=Max('posts__timestamp'), first_post=Min('posts__timestamp'))
     return render(request, 'closed.html', {'games': game_list, 'total': len(game_list)})
 
 
@@ -755,12 +755,12 @@ def add_vote_global(request, gameid):
     game = get_object_or_404(Game, id=gameid)
     if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
-    
+
     gameday = game.days.select_related().last()
     playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
-        v=Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0),target=target)
+        v=Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0), target=target)
         v.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -889,7 +889,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
 
         (warning_x, ypos) = draw_wordwrap_text(draw, warning_text, 0, ypos, max_width, bold_font)
         x_size = max(x_size, warning_x)
-        
+
 
     return (max(header_x_size, vc_x_size, x_size), ypos)
 
@@ -968,10 +968,10 @@ def players_page(request, page):
        'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
        'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
              first_record: first_record + items_per_page]
-        
+
     if len(players) == 0:
         return HttpResponseRedirect('/players')
-    
+
     for p in players:
         if p.total_games_played > 0:
             p.posts_per_game = p.total_posts / (1.0 * p.total_games_played)
@@ -1152,4 +1152,4 @@ def common_games(request, slug_a, slug_b):
         'games': common_games
     }
 
-    return render(request, 'common_games.html',context)
+    return render(request, 'common_games.html', context)

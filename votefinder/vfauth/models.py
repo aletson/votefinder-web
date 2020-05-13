@@ -27,7 +27,7 @@ class CreateUserForm(forms.Form):
             raise forms.ValidationError('A user by that name already exists.')
         except User.DoesNotExist:
             pass
-        
+
         if self.required_key:
             downloader = ForumPageDownloader()
             data = downloader.download(

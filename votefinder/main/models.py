@@ -326,10 +326,10 @@ class BlogPost(models.Model):
 
 class Theme(models.Model):
     name = models.CharField(max_length=10, default='default')
-    
+
     def __str__(self):
         return self.name
-    
+
 class UserProfile(models.Model):
     player = models.OneToOneField(Player, on_delete=models.CASCADE)
     user = models.OneToOneField(User, related_name='profile', on_delete=models.CASCADE)
