@@ -1,4 +1,5 @@
-import time, re
+import time
+import re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
