@@ -35,7 +35,7 @@ class VotecountFormatter:
             dl = timezone(settings.TIME_ZONE).localize(self.game.deadline).astimezone(tz)
             deadline = format(dl, r'F d[\s\u\p\e\r]S[/\s\u\p\e\r], Y \a\t P ') + dl.tzname()
             until_deadline = timeuntil(self.game.deadline, datetime.now())
-            until_deadline = until_deadline.replace(u'\u00A0', ' ')
+            until_deadline = until_deadline.replace('\u00A0', ' ')
         else:
             deadline = ''
             until_deadline = ''
