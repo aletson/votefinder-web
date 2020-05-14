@@ -14,11 +14,14 @@ DETAIL_LEVEL_CHOICES = (
     (3, 'Detailed'),
 )
 
+
 def get_root_user():
     return User.objects.get_or_create(username='root')[0]
 
+
 def get_default_player():
     return Player.objects.get_or_create(name='votefinder')[0]
+
 
 def SlugifyUniquely(value, model, slugfield='slug'):
     suffix = 1
@@ -123,7 +126,7 @@ class Game(models.Model):
 
     def status_update(self, message):
         self.status_update_noncritical(message)
-        tag = ''.join([w.capitalize() for w in re.split(re.compile('[\W_-]*'), self.slug)])
+        tag = ''.join([w.capitalize() for w in re.split(re.compile(r'[\W_-]*'), self.slug)])
 
     def status_update_noncritical(self, message):
         u = GameStatusUpdate(game=self, message=message)
@@ -163,14 +166,14 @@ class Game(models.Model):
 
     def all_players(self):
         return sorted(self.players.select_related().filter(spectator=False, moderator=False),
-            key=lambda p: p.player.name.lower())
+                      key=lambda p: p.player.name.lower())
 
     def living_players(self):
         return sorted(self.players.select_related().filter(alive=True), key=lambda p: p.player.name.lower())
 
     def dead_players(self):
         return sorted(self.players.select_related().filter(alive=False, moderator=False, spectator=False),
-            key=lambda p: p.player.name.lower())
+                      key=lambda p: p.player.name.lower())
 
     def spectators(self):
         return sorted(self.players.select_related().filter(spectator=True), key=lambda p: p.player.name.lower())

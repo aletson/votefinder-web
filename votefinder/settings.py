@@ -40,7 +40,7 @@ DATABASES = {
         'HOST': VF_MYSQL_HOST,
         'PORT': 3306,
         'OPTIONS': {'charset': 'utf8mb4'},
-    }
+    },
 }
 
 LOGIN_URL = '/auth/login'

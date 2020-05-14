@@ -64,5 +64,5 @@ urlpatterns = [
     url(r'^gamechart$', views.gamechart),
     url(r'^update_user_theme$', views.update_user_theme),
     url(r'^update_user_pronouns$', views.update_user_pronouns),
-    url(r'^players/common_games/(?P<slug_a>[\w-]+)/(?P<slug_b>[\w-]+)', views.common_games)
+    url(r'^players/common_games/(?P<slug_a>[\w-]+)/(?P<slug_b>[\w-]+)', views.common_games),
 ]

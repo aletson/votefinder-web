@@ -1,5 +1,6 @@
 import json as simplejson
 import math
+import re
 import urllib
 from datetime import datetime, timedelta
 from math import ceil
@@ -35,6 +36,7 @@ def check_mod(request, game):
         moderator = False
     return moderator
 
+
 def index(request):
     active_game_list = Game.objects.select_related().filter(state='started').order_by('name')
     pregame_list = Game.objects.select_related().filter(state='pregame').order_by('name')
@@ -52,7 +54,7 @@ def index(request):
                   {'pregame_games': pregame_list, 'big_games': big_games, 'mini_games': mini_games,
                    'total': len(big_games) + len(mini_games), 'posts': posts,
                    'game_count': game_count, 'post_count': post_count, 'vote_count': vote_count,
-                   'player_count': player_count}
+                   'player_count': player_count, }
                   )
 
 
@@ -82,26 +84,26 @@ def add_game(request):
 
                     sqs = boto3.client('sqs')
                     queue_url = settings.SQS_QUEUE_URL
-                    response = sqs.send_message(
+                    sqs.send_message(
                         QueueUrl=queue_url,
                         DelaySeconds=10,
                         MessageAttributes={
                             'GameTitle': {
                                 'DataType': 'String',
-                                'StringValue': game.name
+                                'StringValue': game.name,
                             },
                             'Moderator': {
                                 'DataType': 'String',
-                                'StringValue': game.moderator.name
+                                'StringValue': game.moderator.name,
                             },
                             'threadId': {
                                 'DataType': 'Number',
-                                'StringValue': game.threadId
+                                'StringValue': game.threadId,
                             },
                         },
                         MessageBody=(
                             'New game announcement'
-                        )
+                        ),
                     )
                 else:
                     data['success'] = False
@@ -113,6 +115,7 @@ def add_game(request):
         data['success'] = False
         data['message'] = 'Form was submitted incorrectly. Please use the add game page.'
     return HttpResponse(simplejson.dumps(data), content_type='application/json')
+
 
 @login_required
 def game_list(request, page):
@@ -153,7 +156,7 @@ def game(request, slug):
                    'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
                    'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
                    'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-                   'updates': updates}
+                   'updates': updates, }
                   )
 
 
@@ -174,7 +177,7 @@ def update(request, gameid):
                 content_type='application/json')
         game.save()
         return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
-            content_type='application/json')
+                            content_type='application/json')
     except:
         game.save()
         raise
@@ -188,8 +191,9 @@ def profile(request):
 
     return render(request, 'profile.html',
                   {'player': player, 'games': games, 'profile': request.user.profile, 'themes': themes,
-                   'show_delete': True}
+                   'show_delete': True, }
                   )
+
 
 @login_required
 def update_user_theme(request):
@@ -197,9 +201,10 @@ def update_user_theme(request):
         profile = request.user.profile
         theme_id = request.POST.get('t')
         theme = Theme.objects.get(id=theme_id)
-        profile.theme = theme # This might not work check it afterwards.
+        profile.theme = theme  # This might not work check it afterwards.
         profile.save()
         return HttpResponse(simplejson.dumps({'success': True}))
+
 
 def update_user_pronouns(request):
     if request.method == 'POST':
@@ -208,6 +213,7 @@ def update_user_pronouns(request):
         profile.pronouns = pronouns
         profile.save()
         return HttpResponse(simplejson.dumps({'success': True}))
+
 
 def player(request, slug):
     try:
@@ -335,7 +341,7 @@ def votecount(request, gameid):
 
     return render(request, 'votecount.html',
                   {'post_vc_button': post_vc_button,
-                   'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount}
+                   'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount, }
                   )
 
 
@@ -379,7 +385,8 @@ def posts(request, gameid, page):
                   {'game': game, 'posts': posts,
                    'prevPage': page - 1, 'nextPage': page + 1, 'page': page,
                    'pageNumbers': range(1, game.currentPage + 1),
-                   'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)})
+                   'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game), })
+
 
 @login_required
 def start_game(request, gameid, day):
@@ -392,6 +399,7 @@ def start_game(request, gameid, day):
     if day == '1':
         return new_day(request, gameid, day)
     return HttpResponseRedirect(game.get_absolute_url())
+
 
 @login_required
 def add_comment(request, gameid):
@@ -548,8 +556,8 @@ def replace(request, gameid, clear, outgoing, incoming):
     game.status_update_noncritical('{} is replaced by {}.'.format(playerOut, playerIn))
 
     messages.add_message(request, messages.SUCCESS,
-        'Success! <strong>{}</strong> was replaced by <strong>{}</strong>.  {} votes were affected.'.format(
-            playerOut, playerIn, votesAffected))
+                         'Success! <strong>{}</strong> was replaced by <strong>{}</strong>.  {} votes were affected.'
+                         .format(playerOut, playerIn, votesAffected))
     return HttpResponseRedirect(game.get_absolute_url())
 
 
@@ -570,8 +578,8 @@ def start_day(request, day, postid):
     post.game.status_update('Day {} has begun!'.format(day))
 
     messages.add_message(request, messages.SUCCESS,
-        'Success! <strong>Day {}</strong> will now begin with post ({}) by {}.'.format(
-            gameday.dayNumber, post.postId, post.author))
+                         'Success! <strong>Day {}</strong> will now begin with post ({}) by {}.'
+                         .format(gameday.dayNumber, post.postId, post.author))
 
     return HttpResponseRedirect(post.game.get_absolute_url())
 
@@ -672,7 +680,8 @@ def game_template(request, gameid, templateid):
     game.save()
 
     messages.add_message(request, messages.SUCCESS,
-        '<strong>Success!</strong> This game now uses the template <strong>{}</strong>.'.format(template.name))
+                         '<strong>Success!</strong> This game now uses the template <strong>{}</strong>.'
+                         .format(template.name))
     return HttpResponseRedirect(game.get_absolute_url())
 
 
@@ -696,16 +705,16 @@ def active_games_style(request, style):
     elif style == 'closedmonthly':
         game_list = Game.objects.select_related().filter(state='closed').order_by('name').annotate(last_post=Max('posts__timestamp')).order_by(
             '-last_post')
-        game_list = [ g for g in game_list if datetime.now() - g.last_post < timedelta(days=31) ]
+        game_list = [g for g in game_list if datetime.now() - g.last_post < timedelta(days=31)]
 
         return render(request, 'wiki_closed_games.html', {'game_list': game_list})
     return HttpResponse('Style not supported')
 
 
 def active_games_json(request):
-    gameList = sorted([{'name': g.name, 'mod': g.moderator.name,
+    gameList = sorted(({'name': g.name, 'mod': g.moderator.name,
                         'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(g.threadId)} for g in
-                       Game.objects.select_related().filter(state='started')], key=lambda g: g['name'])
+                       Game.objects.select_related().filter(state='started')), key=lambda g: g['name'])
 
     return HttpResponse(simplejson.dumps(gameList), content_type='application/json')
 
@@ -737,6 +746,7 @@ def add_vote(request, gameid, player, votes, target):
     messages.add_message(request, messages.SUCCESS, 'Success! A new manual vote was saved.')
     return HttpResponseRedirect(game.get_absolute_url())
 
+
 @login_required
 def add_vote_global(request, gameid):
     game = get_object_or_404(Game, id=gameid)
@@ -747,7 +757,7 @@ def add_vote_global(request, gameid):
     playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
-        v=Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0), target=target)
+        v = Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0), target=target)
         v.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -805,9 +815,10 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(': ', font=font)
     max_x = 0
-    if results is None: # No votes found
+    if results is None:  # No votes found
         text = 'No votes found in vc.results~'
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
+        line = []
         line['size'] = this_size_x
         (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
         max_x = max(max_x, x_size3)
@@ -852,7 +863,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     game.template = VotecountTemplate.objects.get(id=11)  # Or id=tid, if we go to custom image templates.
     vc = VotecountFormatter.VotecountFormatter(game)
     vc.go(show_comment=False)
-    split_vc = re.compile('\[.*?\]').sub('', vc.bbcode_votecount).split('\r\n')
+    split_vc = re.compile(r'\[.*?\]').sub('', vc.bbcode_votecount).split('\r\n')
     header_text = split_vc[0]  # Explicitly take the first and last elements in case of multiline templates
     footer_text = split_vc[-1]
     (header_x_size, header_y_size) = draw_wordwrap_text(draw, header_text, 0, 0, max_width, bold_font)
@@ -1132,7 +1143,7 @@ def common_games(request, slug_a, slug_b):
     context = {
         'player_a': player_a,
         'player_b': player_b,
-        'games': common_games
+        'games': common_games,
     }
 
     return render(request, 'common_games.html', context)

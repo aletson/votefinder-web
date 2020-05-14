@@ -10,7 +10,8 @@ from votefinder.main.models import Game
 class ForumPageDownloader():
     def __init__(self):
         self.session = requests.Session()
-        self.session.headers.update({'User-Agent': 'Mozilla/5.0'})  # Required, as SA forums block the default user agent.
+        self.session.headers.update({'User-Agent': 'Mozilla/5.0'})
+        # we must set this, SA blocks the default UA
 
     def download(self, page):
         data = self.PerformDownload(page)
@@ -37,8 +38,8 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         page_request = self.session.post('https://forums.somethingawful.com/account.php',
-            data={'action': 'login', 'username': settings.SA_LOGIN,
-                'password': settings.SA_PASSWORD, 'secure_login': ''})
+                                         data={'action': 'login', 'username': settings.SA_LOGIN,
+                                               'password': settings.SA_PASSWORD, 'secure_login': ''})
         data = page_request.text
 
         if self.IsLoggedInCorrectlyPage(data):
