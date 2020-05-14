@@ -1,10 +1,7 @@
-import requests
 import re
-from datetime import datetime
-
-from django.conf import settings
-
+import requests
 from bs4 import BeautifulSoup
+from django.conf import settings
 from votefinder.main.models import Game
 
 

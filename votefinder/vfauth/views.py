@@ -1,12 +1,12 @@
 import random
-
 from django.contrib import messages
-from django.contrib.auth import *
+from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.template.context_processors import csrf
 from django.shortcuts import render
-
-from votefinder.vfauth.models import *
+from votefinder.main.models import Player, UserProfile
+from votefinder.vfauth.models import CreateUserForm
 
 
 def create_step_1(request):

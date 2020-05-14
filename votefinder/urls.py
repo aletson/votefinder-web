@@ -1,8 +1,7 @@
-from django.views import static
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib import admin
-
+from django.views import static
 from votefinder.main import urls as main_urls
 from votefinder.vfauth import urls as auth_urls
 

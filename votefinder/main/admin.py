@@ -1,6 +1,5 @@
 from django.contrib import admin
-
-from votefinder.main.models import *
+from votefinder.main.models import Alias, BlogPost, Comment, CookieStore, Game, GameDay, LynchMessage, Player, PlayerState, Post, UserProfile, Vote, VotecountTemplate
 
 admin.site.register(Game)
 admin.site.register(Player)

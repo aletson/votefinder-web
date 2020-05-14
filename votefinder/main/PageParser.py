@@ -1,8 +1,8 @@
-import time
 import re
-from datetime import datetime, timedelta
-from bs4 import BeautifulSoup, Comment
+import time
 from . import ForumPageDownloader
+from bs4 import BeautifulSoup, Comment
+from datetime import datetime, timedelta
 from votefinder.main.models import Player, Alias, Vote, Game, GameDay, PlayerState, Post
 
 

@@ -1,12 +1,11 @@
 import re
 from datetime import datetime, timedelta
-
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from django.template.defaultfilters import slugify
-from django.conf import settings
 
 DETAIL_LEVEL_CHOICES = (
     (1, 'Brief'),

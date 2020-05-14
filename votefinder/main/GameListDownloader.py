@@ -1,6 +1,6 @@
 import re
-from bs4 import BeautifulSoup
 from . import ForumPageDownloader
+from bs4 import BeautifulSoup
 from votefinder.main.models import Game
 
 

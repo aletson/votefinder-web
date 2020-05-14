@@ -1,8 +1,7 @@
+from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
-from django.conf import settings
-
 from votefinder.main.models import BlogPost, GameStatusUpdate, Game
 
 

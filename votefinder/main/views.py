@@ -1,8 +1,8 @@
+import boto3
 import json as simplejson
 import math
 import urllib
-from math import ceil
-import boto3
+from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, VotecountFormatter
 from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import messages
@@ -18,11 +18,9 @@ from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.template.context_processors import csrf
+from math import ceil
 from PIL import Image, ImageDraw, ImageFont
 from pytz import timezone, common_timezones
-
-
-from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, VotecountFormatter
 from votefinder.main.models import AddCommentForm, AddPlayerForm, Alias, BlogPost, Comment, Game, GameDay, GameStatusUpdate, Player, PlayerState, Post, Theme, UserProfile, Vote, VotecountTemplate, VotecountTemplateForm
 
 
