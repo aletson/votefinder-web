@@ -27,7 +27,7 @@ jobs:
           MIGRATION=$((MIGRATION+1))
           while [ -f sql/migration_$MIGRATION.sql ]; do
             echo "Applying migration to $MIGRATION..."
-            mysql -h ${{ secrets.MYSQL_SERVER }} -u {{ secrets.DEV_DBUSER }} -p${{ secrets.DEV_DBPASSWD }} {{ secrets.DEV_DBNAME }} < sql/migration_$DBVERSION.sql
+            mysql -h ${{ secrets.MYSQL_SERVER }} -u {{ secrets.DEV_DBUSER }} -p${{ secrets.DEV_DBPASSWD }} {{ secrets.DEV_DBNAME }} < sql/migration_$MIGRATION.sql
             if [ $? -ne 0 ]; then
               echo "Error detected on migration!"
               exit 1
