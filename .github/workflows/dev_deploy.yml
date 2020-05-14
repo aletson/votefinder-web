@@ -8,8 +8,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Lint
         uses: wemake-services/wemake-python-styleguide@0.13.3
-      - name: Install Node.js
-        uses: actions/setup-node@v1
       - name: Deploy to Dev
         if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         uses: easingthemes/ssh-deploy@v2.1.1
@@ -18,3 +16,21 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.DEV_TARGET }}
+      - name: Verify database connection
+        if: ${{ success() }}
+        run: |
+          sudo apt-get install -y mysql-client
+          export MIGRATION=`mysql -h ${{ secrets.MYSQL_SERVER }} -u ${{ secrets.DEV_DBUSER }} -p${{ secrets.DEV_DBPASSWD }} {{ secrets.DEV_DBNAME }} -e "SELECT version FROM migration_version" -sN`
+          echo "::set-env name=MIGRATION::$MIGRATION"
+      - name: Run migrations
+        run: |
+          MIGRATION=$((MIGRATION+1))
+          while [ -f sql/migration_$MIGRATION.sql ]; do
+            echo "Applying migration to $MIGRATION..."
+            mysql -h ${{ secrets.MYSQL_SERVER }} -u {{ secrets.DEV_DBUSER }} -p${{ secrets.DEV_DBPASSWD }} {{ secrets.DEV_DBNAME }} < sql/migration_$DBVERSION.sql
+            if [ $? -ne 0 ]; then
+              echo "Error detected on migration!"
+              exit 1
+            fi
+            MIGRATION=$((MIGRATION+1))
+          done
