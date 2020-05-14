@@ -33,7 +33,7 @@
             <th>Size</th>
             <th>Players</th>
             <th>Created</th>
-            <th>Last Post</th>
+            <th>Closed</th>
         </tr>
         </thead>
         <tfoot>
@@ -43,7 +43,7 @@
             <th>Size</th>
             <th>Players</th>
             <th>Created</th>
-            <th>Last Post</th>
+            <th>Closed</th>
         </tr>
         </tfoot>
         <tbody>
@@ -53,8 +53,8 @@
                 <td><a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></td>
                 <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
                 <td>{{ game.players_count }}</td>
-                <td data-sort="{{ game.first_post|date:"U" }}">{{ game.first_post|date }}</td>
-                <td data-sort="{{ game.last_post|date:"U" }}">{{ game.last_post|date }}</td>
+                <td data-sort="{{ game.created_on|date:"U" }}">{{ game.created_on|date }}</td>
+                <td data-sort="{{ game.lastUpdated|date:"U" }}">{{ game.lastUpdated|date }}</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -110,6 +110,7 @@ class Game(models.Model):
     current_day = models.IntegerField(default=0)
     living_count = models.IntegerField(default=0)
     players_count = models.IntegerField(default=0)
+    created_on = models.DateTimeField(auto_now_add=True, blank=True)
 
     def update_counts(self):
         self.players_count = self.count_players()
