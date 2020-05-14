@@ -78,7 +78,7 @@ class VoteCounter:
         if not game.post_lynches:
             return
 
-        message = random.choice(LynchMessage.objects.all()).text
+        message = random.choice(LynchMessage.objects.all()).text  # noqa: S311
         v = VotecountFormatter.VotecountFormatter(game)
         v.go()
         message += '\n\n'

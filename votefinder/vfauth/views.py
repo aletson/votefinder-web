@@ -11,7 +11,7 @@ from votefinder.vfauth.models import CreateUserForm
 
 
 def create_step_1(request):
-    profileKey = random.randint(10000000, 99999999)
+    profileKey = random.randint(10000000, 99999999)  # noqa: S311
     request.session['profileKey'] = profileKey
     return render(request, 'step1.html', {'profileKey': profileKey})
 
