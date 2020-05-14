@@ -25,8 +25,9 @@ def get_default_player():
 
 def SlugifyUniquely(value, model, slugfield='slug'):
     suffix = 1
-    potential = slugify(value)[:45]
-    base = slugify(value)[:45]
+    maximum_slug_length = 45
+    potential = slugify(value)[:maximum_slug_length]
+    base = slugify(value)[:maximum_slug_length]
     while True:
         if suffix > 1:
             potential = '-'.join([base, str(suffix)])
@@ -126,7 +127,6 @@ class Game(models.Model):
 
     def status_update(self, message):
         self.status_update_noncritical(message)
-        tag = ''.join([w.capitalize() for w in re.split(re.compile(r'[\W_-]*'), self.slug)])
 
     def status_update_noncritical(self, message):
         u = GameStatusUpdate(game=self, message=message)
