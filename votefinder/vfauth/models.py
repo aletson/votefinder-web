@@ -1,7 +1,9 @@
-import urllib
+import urllib, re
 from votefinder.main.ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import UserProfile,Player
 from django.contrib.auth.models import User
+from django import forms
+from django.db import models
 
 
 class CreateUserForm(forms.Form):
