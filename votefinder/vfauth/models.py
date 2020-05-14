@@ -3,7 +3,6 @@ import urllib
 
 from django import forms
 from django.contrib.auth.models import User
-from django.db import models
 from votefinder.main.ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import Player, UserProfile
 
@@ -43,7 +42,7 @@ class CreateUserForm(forms.Form):
             if data.find(str(self.required_key)) == -1:
                 raise forms.ValidationError("Unable to find the correct key ({}) in {}'s SA profile".format(self.required_key, login))
             else:
-                matcher = re.compile('userid=(?P<userid>\d+)').search(data)
+                matcher = re.compile(r'userid=(?P<userid>\d+)').search(data)
                 if matcher:
                     self.userid = matcher.group('userid')
                     try:
@@ -60,8 +59,6 @@ class CreateUserForm(forms.Form):
                     matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(data)
                     if matcher:
                         login = matcher.group('login')
-
-                    return login
                 else:
                     raise forms.ValidationError(
                         'Unable to find the userID of {}.  Please talk to the site admin.'.format(login))

@@ -887,7 +887,6 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
         (warning_x, ypos) = draw_wordwrap_text(draw, warning_text, 0, ypos, max_width, bold_font)
         x_size = max(x_size, warning_x)
 
-
     return (max(header_x_size, vc_x_size, x_size), ypos)
 
 
@@ -924,7 +923,7 @@ def votecount_image(request, slug):
         img = Image.frombytes('RGBA', img_dict['size'], img_dict['data'])
 
     response = HttpResponse(content_type='image/png')
-    img.save(response, 'PNG')  # , transparency=(255, 255, 255))
+    img.save(response, 'PNG')  #  transparency=(255, 255, 255))
     return response
 
 
@@ -932,7 +931,7 @@ def autoupdate(request):
     games = Game.objects.exclude(state='closed').order_by('-lastUpdated')
     for game in games:
         key = '{}-vc-image'.format(game.slug)
-        cache.delete(key) # image will regenerate on next GET
+        cache.delete(key) #  image will regenerate on next GET
         game = check_update_game(game)
         post = game.posts.order_by('-timestamp')[:1][0]
 
@@ -1130,15 +1129,13 @@ def my_classes(c):
         return True
     return False
 
+
 def common_games(request, slug_a, slug_b):
     player_a = get_object_or_404(Player, slug = slug_a)
     player_b = get_object_or_404(Player, slug = slug_b)
     games_a = [state.game for state in PlayerState.objects.filter(player = player_a) if not (state.moderator or state.spectator)]
     games_b = [state.game for state in PlayerState.objects.filter(player = player_b) if not (state.moderator or state.spectator)]
     common_games = [game for game in games_a if game in games_b]
-
-    if settings.DEBUG:
-        print(common_games)
 
     context = {
         'player_a': player_a,
