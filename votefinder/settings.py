@@ -35,14 +35,13 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': VF_MYSQL_NAME,
         'USER': VF_MYSQL_USER,
         'PASSWORD': VF_MYSQL_PASS,
         'HOST': VF_MYSQL_HOST,
-        'PORT': 5432,
-        'OPTIONS': {'options': '-c search_path=' + VF_MYSQL_NAME}, #  Comment if not using postgresql
-#        'OPTIONS': {'charset': 'utf8mb4'},  Uncomment if using mysql
+        'PORT': 3306,
+        'OPTIONS': {'charset': 'utf8mb4'},  Uncomment if using mysql
     }
 }
 
