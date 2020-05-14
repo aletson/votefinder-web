@@ -1069,8 +1069,8 @@ def votechart_all(request, gameslug):
                   {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
                    'now': datetime.now(), 'toLynch': toLynch,
                    'votes': voteLog, 'numVotes': len(voteLog),
-                   'players': [ p.player.name for p in game.living_players() ],
-                   'allPlayers': [ p.player for p in game.living_players() ]},
+                   'players': [p.player.name for p in game.living_players()],
+                   'allPlayers': [p.player for p in game.living_players()]},
                   )
 
 
@@ -1082,7 +1082,7 @@ def votechart_player(request, gameslug, playerslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = [ v for v in vc.GetVoteLog() if v['player'] == player.name ]
+    voteLog = [v for v in vc.GetVoteLog() if v['player'] == player.name]
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
