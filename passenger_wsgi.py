@@ -7,7 +7,7 @@ VENV = os.environ['ENVIRONMENT']
 PYTHON_BIN = '{}/bin/python'.format(VENV)
 
 if sys.executable != PYTHON_BIN:
-    os.execl(PYTHON_BIN, PYTHON_BIN, *sys.argv)
+    os.execl(PYTHON_BIN, PYTHON_BIN, *sys.argv)  # noqa: S606
 
 cwd = os.getcwd()
 sys.path.append(cwd)
