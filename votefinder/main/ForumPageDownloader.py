@@ -1,10 +1,11 @@
 import requests
+import re
 from datetime import datetime
 
 from django.conf import settings
 
 from bs4 import BeautifulSoup
-from votefinder.main.models import *
+from votefinder.main.models import Game
 
 
 class ForumPageDownloader():

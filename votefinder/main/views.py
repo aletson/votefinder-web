@@ -3,7 +3,7 @@ import math
 import urllib
 from math import ceil
 import boto3
-
+from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -23,7 +23,7 @@ from pytz import timezone, common_timezones
 
 
 from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, VotecountFormatter
-from votefinder.main.models import *
+from votefinder.main.models import AddCommentForm, AddPlayerForm, Alias, BlogPost, Comment, Game, GameDay, GameStatusUpdate, Player, PlayerState, Post, Theme, UserProfile, Vote, VotecountTemplate, VotecountTemplateForm
 
 
 def check_mod(request, game):

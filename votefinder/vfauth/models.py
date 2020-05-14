@@ -1,4 +1,5 @@
-import urllib, re
+import urllib
+import re
 from votefinder.main.ForumPageDownloader import ForumPageDownloader
 from votefinder.main.models import UserProfile,Player
 from django.contrib.auth.models import User

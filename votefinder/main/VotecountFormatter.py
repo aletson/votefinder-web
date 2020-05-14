@@ -8,7 +8,7 @@ from django.utils.timesince import timeuntil
 from pytz import timezone
 
 from . import VoteCounter
-from votefinder.main.models import *
+from votefinder.main.models import VotecountTemplate, Comment
 
 
 class VotecountFormatter:

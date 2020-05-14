@@ -3,7 +3,7 @@ import re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup, Comment
 from . import ForumPageDownloader
-from votefinder.main.models import *
+from votefinder.main.models import Player, Alias, Vote, Game, GameDay, PlayerState, Post
 
 
 class PageParser:
