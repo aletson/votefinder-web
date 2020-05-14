@@ -41,7 +41,7 @@ DATABASES = {
         'PASSWORD': VF_MYSQL_PASS,
         'HOST': VF_MYSQL_HOST,
         'PORT': 3306,
-        'OPTIONS': {'charset': 'utf8mb4'},  Uncomment if using mysql
+        'OPTIONS': {'charset': 'utf8mb4'},
     }
 }
 
