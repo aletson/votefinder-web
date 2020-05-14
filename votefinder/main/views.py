@@ -856,11 +856,8 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
     draw = ImageDraw.Draw(img)
     regular_font = ImageFont.truetype(settings.REGULAR_FONT_PATH, 15)
     bold_font = ImageFont.truetype(settings.BOLD_FONT_PATH, 15)
-    try:
-        tid = int(game.template_id)
-    except TypeError:
-        tid = 11  # Default template
-    game.template = VotecountTemplate.objects.get(id=11)  # Or id=tid, if we go to custom image templates.
+    tid = 11  # default template, no custom image template support yet
+    game.template = VotecountTemplate.objects.get(id=tid)
     vc = VotecountFormatter.VotecountFormatter(game)
     vc.go(show_comment=False)
     split_vc = re.compile(r'\[.*?\]').sub('', vc.bbcode_votecount).split('\r\n')
@@ -923,7 +920,7 @@ def votecount_image(request, slug):
         img = Image.frombytes('RGBA', img_dict['size'], img_dict['data'])
 
     response = HttpResponse(content_type='image/png')
-    img.save(response, 'PNG')  #  transparency=(255, 255, 255))
+    img.save(response, 'PNG')  # transparency=(255, 255, 255))
     return response
 
 
@@ -931,7 +928,7 @@ def autoupdate(request):
     games = Game.objects.exclude(state='closed').order_by('-lastUpdated')
     for game in games:
         key = '{}-vc-image'.format(game.slug)
-        cache.delete(key) #  image will regenerate on next GET
+        cache.delete(key)  # image will regenerate on next GET
         game = check_update_game(game)
         post = game.posts.order_by('-timestamp')[:1][0]
 
