@@ -1,4 +1,4 @@
-from django.conf.urls import *
+from django.conf.urls import url
 from django.views.generic.base import TemplateView
 from . import views
 from . import feeds

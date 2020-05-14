@@ -1,5 +1,5 @@
 from django.contrib.auth import views as django_views
-from django.conf.urls import *
+from django.conf.urls import url
 
 from votefinder.vfauth import views as auth_views
 
