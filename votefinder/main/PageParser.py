@@ -1,9 +1,12 @@
 import re
 import time
-from . import ForumPageDownloader
-from bs4 import BeautifulSoup, Comment
 from datetime import datetime, timedelta
-from votefinder.main.models import Player, Alias, Vote, Game, GameDay, PlayerState, Post
+
+from bs4 import BeautifulSoup, Comment
+from votefinder.main.models import (Alias, Game, GameDay, Player, PlayerState,
+                                    Post, Vote)
+
+from . import ForumPageDownloader
 
 
 class PageParser:

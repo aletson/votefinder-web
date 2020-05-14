@@ -1,6 +1,7 @@
-from . import feeds, views
 from django.conf.urls import url
 from django.views.generic.base import TemplateView
+
+from . import feeds, views
 
 urlpatterns = [
     url(r'^$', views.index),

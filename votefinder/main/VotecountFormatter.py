@@ -1,12 +1,15 @@
 import math
 import re
-from . import VoteCounter
 from datetime import datetime
+
+from pytz import timezone
+
 from django.conf import settings
 from django.utils.dateformat import format
 from django.utils.timesince import timeuntil
-from pytz import timezone
-from votefinder.main.models import VotecountTemplate, Comment
+from votefinder.main.models import Comment, VotecountTemplate
+
+from . import VoteCounter
 
 
 class VotecountFormatter:

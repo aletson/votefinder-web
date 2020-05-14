@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.shortcuts import get_object_or_404
 from django.utils.feedgenerator import Atom1Feed
-from votefinder.main.models import BlogPost, GameStatusUpdate, Game
+from votefinder.main.models import BlogPost, Game, GameStatusUpdate
 
 
 class LatestRss(Feed):

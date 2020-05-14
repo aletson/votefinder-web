@@ -1,6 +1,8 @@
 import os
 import sys
 
+from django.core.wsgi import get_wsgi_application
+
 VENV = os.environ['ENVIRONMENT']
 PYTHON_BIN = VENV + '/bin/python'
 
@@ -13,7 +15,5 @@ sys.path.append(os.path.join(cwd, '/votefinder'))
 sys.path.insert(0, '{v}/lib/python3.7/site-packages'.format(v=VENV))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'votefinder.settings'
-
-from django.core.wsgi import get_wsgi_application
 
 application = get_wsgi_application()

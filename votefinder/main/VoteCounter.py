@@ -1,7 +1,9 @@
 import math
 import random
-from . import ForumPageDownloader, VotecountFormatter
+
 from votefinder.main.models import GameDay, LynchMessage, Player, Vote
+
+from . import ForumPageDownloader, VotecountFormatter
 
 
 class VoteCounter:

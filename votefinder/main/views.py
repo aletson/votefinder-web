@@ -1,27 +1,31 @@
-import boto3
 import json as simplejson
 import math
 import urllib
-from . import ForumPageDownloader, GameListDownloader, PageParser, VoteCounter, VotecountFormatter
 from datetime import datetime, timedelta
+from math import ceil
+
+import boto3
+from pytz import common_timezones, timezone
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import connections
-from django.db.models import Q, Max, Min
-from django.http import HttpResponse
-from django.http import HttpResponseForbidden
-from django.http import HttpResponseNotFound
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_list_or_404
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.db.models import Max, Min, Q
+from django.http import (HttpResponse, HttpResponseForbidden,
+                         HttpResponseNotFound, HttpResponseRedirect)
+from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.template.context_processors import csrf
-from math import ceil
 from PIL import Image, ImageDraw, ImageFont
-from pytz import timezone, common_timezones
-from votefinder.main.models import AddCommentForm, AddPlayerForm, Alias, BlogPost, Comment, Game, GameDay, GameStatusUpdate, Player, PlayerState, Post, Theme, UserProfile, Vote, VotecountTemplate, VotecountTemplateForm
+from votefinder.main.models import (AddCommentForm, AddPlayerForm, Alias,
+                                    BlogPost, Comment, Game, GameDay,
+                                    GameStatusUpdate, Player, PlayerState,
+                                    Post, Theme, UserProfile, Vote,
+                                    VotecountTemplate, VotecountTemplateForm)
+
+from . import (ForumPageDownloader, GameListDownloader, PageParser,
+               VoteCounter, VotecountFormatter)
 
 
 def check_mod(request, game):
