@@ -1,24 +1,18 @@
 on: push
-name: Lint Python
+name: CI/CD
 jobs:
-  lint:
+  cicd:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: wemake-services/wemake-python-styleguide@0.13.3
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Lint
+        uses: wemake-services/wemake-python-styleguide@0.13.3
+      - name: Build
+        if: ${{ success() }}
       - name: Install Node.js
         uses: actions/setup-node@v1
-        with:
-          node-version: '10.x'
-      - name: Install npm dependencies
-        run: npm install
-      - name: Run build task
-        run: npm run build --if-present
-      - name: Deploy
+      - name: Deploy to Dev
         uses: easingthemes/ssh-deploy@v2.1.1
         env: 
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
