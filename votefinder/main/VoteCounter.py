@@ -32,24 +32,24 @@ class VoteCounter:
         self.game = game
         self.voteLog = []
 
-        for p in self.livingPlayers:
-            self.results[p] = {'count': 0, 'votes': []}
-            self.currentVote[p] = None
+        for single_player in self.livingPlayers:
+            self.results[single_player] = {'count': 0, 'votes': []}
+            self.currentVote[single_player] = None
 
-        for v in votes:
-            if v.author in self.livingPlayers and self.TargetIsValid(v):
-                if v.unvote:
-                    self.HandleUnvote(v)
+        for single_vote in votes:
+            if single_vote.author in self.livingPlayers and self.TargetIsValid(single_vote):
+                if single_vote.unvote:
+                    self.HandleUnvote(single_vote)
                 else:
-                    self.HandleVote(v)
+                    self.HandleVote(single_vote)
 
         # ensure manual votes are applied after all real votes
-        for v in manual_votes:
-            if self.TargetIsValid(v):
-                if v.unvote:
-                    self.HandleUnvote(v)
+        for single_manual_vote in manual_votes:
+            if self.TargetIsValid(single_manual_vote):
+                if single_manual_vote.unvote:
+                    self.HandleUnvote(single_manual_vote)
                 else:
-                    self.HandleVote(v)
+                    self.HandleVote(single_manual_vote)
 
         self.RunNotify(game, gameday)
 
