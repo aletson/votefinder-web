@@ -36,7 +36,7 @@ class GameListDownloader():
         return True
 
     def IsGameTracked(self, url):
-        matcher = re.compile('threadid=(?P<threadid>\d+)').search(url)
+        matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
         if matcher:
             try:
                 Game.objects.all().get(threadId=matcher.group('threadid'))

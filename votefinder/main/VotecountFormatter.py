@@ -94,9 +94,6 @@ class VotecountFormatter:
 
         self.html_votecount = self.ConvertBBCodeToHTML(self.bbcode_votecount)
 
-    def f(self, x):
-        test = x
-
     def to_lynch(self, count):
         return int(math.floor(count / 2.0) + 1)
 

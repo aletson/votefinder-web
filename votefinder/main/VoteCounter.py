@@ -24,7 +24,6 @@ class VoteCounter:
             manual_votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=True,
                                                                 post__id__gte=gameday.startPost.id).order_by('id')
             self.votesFound = True
-            nextDay = None
         except Vote.DoesNotExist:
             return
 

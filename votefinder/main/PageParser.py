@@ -113,17 +113,16 @@ class PageParser:
         if post.game.is_player_mod(post.author):
             # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
             # pattern search for ##deadline and # of hours
-            pattern = re.compile('##\\s*deadline[:\\s+](\\d+)', re.I)
+            pattern = re.compile(r'##\\s*deadline[:\\s+](\\d+)', re.I)
             pos = 0
             match = pattern.search(line, pos)
             while match:
                 (numHrs,) = match.groups()
-                if numHrs and numHrs > 0: # Check if int - or modify regex
+                if numHrs and numHrs > 0:  # Check if int - or modify regex
                     numHrs = int(numHrs)
                     newDeadline = post.timestamp + timedelta(hours=numHrs)
                     post.game.deadline = newDeadline
                     post.game.save()
-
 
     def ReadVotes(self, post):
         for quote in post.bodySoup.findAll('div', 'quote well'):
@@ -254,7 +253,7 @@ class PageParser:
         post.bodySoup = node.find('td', 'postbody')
         for quote in post.bodySoup.findAll('div', 'bbc-block'):
             quote['class'] = 'quote well'
-        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img['src']+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')] # See #44.
+        [img.replaceWith('<div class="embedded-image not-loaded" data-image="'+img['src']+'">Click to load image...</div>') for img in post.bodySoup.find_all('img')]  # See #44.
         comments = post.bodySoup.find_all(text=lambda text: isinstance(text, Comment))
         for match in comments:
             match.decompose()
@@ -276,7 +275,7 @@ class PageParser:
         authorString = re.sub('<.*?>', '', authorString)
         authorString = re.sub('&\\w+?;', '', authorString).strip()
 
-        matcher = re.compile('userid=(?P<uid>\d+)').search(post.authorSearch)
+        matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.authorSearch)
         if matcher:
             authorUid = matcher.group('uid')
         else:
