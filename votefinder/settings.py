@@ -33,7 +33,7 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': VF_MYSQL_NAME,
         'USER': VF_MYSQL_USER,
         'PASSWORD': VF_MYSQL_PASS,
@@ -65,7 +65,7 @@ STATIC_ROOT = 'votefinder/static/'
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/New_York'  # Set to the time zone set on the SA forums account.
+TIME_ZONE = 'America/New_York'  # Set to the TZ of the SA forum account.
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
