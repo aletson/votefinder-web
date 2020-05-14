@@ -8,11 +8,10 @@ jobs:
         uses: actions/checkout@v2
       - name: Lint
         uses: wemake-services/wemake-python-styleguide@0.13.3
-      - name: Build
-        if: ${{ success() }}
       - name: Install Node.js
         uses: actions/setup-node@v1
       - name: Deploy to Dev
+        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         uses: easingthemes/ssh-deploy@v2.1.1
         env: 
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
