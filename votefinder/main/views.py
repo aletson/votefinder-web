@@ -821,9 +821,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         line = []
         line['size'] = this_size_x
         (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
-        max_x = x_size1
-        ypos = y_bottom1
-        return (max_x, ypos)
+        return (x_size1, y_bottom1)
     for line in results:
         text = '{} ({})'.format(line['target'].name, line['count'])
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
