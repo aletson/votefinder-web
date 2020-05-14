@@ -80,7 +80,7 @@ class VoteCounter:
         message = random.choice(LynchMessage.objects.all()).text  # noqa: S311
         v = VotecountFormatter.VotecountFormatter(game)
         v.go()
-        message += '\n\n'
+        message = '{}\n\n'.format(message)
         message += v.bbcode_votecount
         dl = ForumPageDownloader()
         dl.ReplyToThread(game.threadId, ':redhammer: ' + (message % name))

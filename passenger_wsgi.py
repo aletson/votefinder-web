@@ -4,7 +4,7 @@ import sys
 from django.core.wsgi import get_wsgi_application
 
 VENV = os.environ['ENVIRONMENT']
-PYTHON_BIN = VENV + '/bin/python'
+PYTHON_BIN = '{}/bin/python'.format(VENV)
 
 if sys.executable != PYTHON_BIN:
     os.execl(PYTHON_BIN, PYTHON_BIN, *sys.argv)

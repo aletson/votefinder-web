@@ -792,7 +792,7 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
             remaining = max_width - word_width
         elif output_text:
             output = output_text.pop()
-            output += ' ' + word
+            output = '{} {}'.format(output, word)
             output_text.append(output)
             remaining = remaining - (word_width + space_width)
         else:
@@ -987,7 +987,7 @@ def delete_alias(request, aliasid):
     player = alias.player
     alias.delete()
 
-    return HttpResponseRedirect('/player/' + player.slug)
+    return HttpResponseRedirect('/player/{}'.format(player.slug))
 
 
 @login_required
