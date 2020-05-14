@@ -7,7 +7,7 @@ from votefinder.main.models import BlogPost, Game, GameStatusUpdate
 
 class LatestRss(Feed):
     title = 'VoteFinder Updates'
-    link = 'https://'+ settings.PRIMARY_DOMAIN + '/'
+    link = 'https://' + settings.PRIMARY_DOMAIN + '/'
     author_name = 'Alli'
     feed_url = 'https://' + settings.PRIMARY_DOMAIN + '/rss'
     description = 'Changes and updates to the VoteFinder site.'
@@ -47,7 +47,7 @@ class GameStatusRss(Feed):
 
     def item_title(self, item):
         if item.game:
-            return '[%s] %s' % (item.game.name, item.message)
+            return '[{}] {}'.format(item.game.name, item.message)
         return item.message
 
     def item_description(self, item):
@@ -83,7 +83,7 @@ class SpecificGameStatusRss(Feed):
 
     def item_title(self, item):
         if item.game:
-            return '[%s] %s' % (item.game.name, item.message)
+            return '[{}] {}'.format(item.game.name, item.message)
         return item.message
 
     def item_description(self, item):

@@ -35,13 +35,13 @@ class CreateUserForm(forms.Form):
         if self.required_key:
             downloader = ForumPageDownloader()
             data = downloader.download(
-                'https://forums.somethingawful.com/member.php?action=getinfo&username=%s' % urllib.parse.quote_plus(login))
+                'https://forums.somethingawful.com/member.php?action=getinfo&username={}'.format(urllib.parse.quote_plus(login)))
 
             if data is None:
-                raise forms.ValidationError('There was a problem downloading the profile for the SA user %s.' % login)
+                raise forms.ValidationError('There was a problem downloading the profile for the SA user {}.'.format(login))
 
             if data.find(str(self.required_key)) == -1:
-                raise forms.ValidationError("Unable to find the correct key (%s) in %s's SA profile" % (self.required_key, login))
+                raise forms.ValidationError("Unable to find the correct key ({}) in {}'s SA profile".format(self.required_key, login))
             else:
                 matcher = re.compile('userid=(?P<userid>\d+)').search(data)
                 if matcher:
@@ -50,7 +50,7 @@ class CreateUserForm(forms.Form):
                         existingPlayer = Player.objects.all().get(uid=self.userid)
                         existingUserProfile = UserProfile.objects.all().get(player_id=existingPlayer.id)
                         existingUser = UserProfile.objects.all().get(id=existingUserProfile.user_id)
-                        raise forms.ValidationError('%s is already registered with that user ID. Has your forum name changed?' % existingUser.username)
+                        raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existingUser.username))
                     except UserProfile.DoesNotExist:
                         pass
                     except Player.DoesNotExist:
@@ -64,6 +64,6 @@ class CreateUserForm(forms.Form):
                     return login
                 else:
                     raise forms.ValidationError(
-                        'Unable to find the userID of %s.  Please talk to the site admin.' % login)
+                        'Unable to find the userID of {}.  Please talk to the site admin.'.format(login))
 
         return login

@@ -23,7 +23,7 @@ class GameListDownloader():
 
     def DownloadList(self, page):
         return self.downloader.download(
-            'http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber=%s' % page)
+            'http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
 
     def ParseGameList(self, data):
         soup = BeautifulSoup(data, 'html.parser')
@@ -39,7 +39,7 @@ class GameListDownloader():
         matcher = re.compile('threadid=(?P<threadid>\d+)').search(url)
         if matcher:
             try:
-                game = Game.objects.all().get(threadId=matcher.group('threadid'))
+                Game.objects.all().get(threadId=matcher.group('threadid'))
                 return True
             except Game.DoesNotExist:
                 pass

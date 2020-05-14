@@ -10,7 +10,7 @@ from votefinder.main.models import Game
 class ForumPageDownloader():
     def __init__(self):
         self.session = requests.Session()
-        self.session.headers.update({ 'User-Agent': 'Mozilla/5.0' }) # Required, as SA forums block the default user agent.
+        self.session.headers.update({'User-Agent': 'Mozilla/5.0'})  # Required, as SA forums block the default user agent.
 
     def download(self, page):
         data = self.PerformDownload(page)
@@ -37,8 +37,8 @@ class ForumPageDownloader():
         self.LogLoginAttempt()
 
         page_request = self.session.post('https://forums.somethingawful.com/account.php',
-            data={'action': 'login', 'username': settings.SA_LOGIN, 'password': settings.SA_PASSWORD,
-                'secure_login': ''})
+            data={'action': 'login', 'username': settings.SA_LOGIN,
+                'password': settings.SA_PASSWORD, 'secure_login': ''})
         data = page_request.text
 
         if self.IsLoggedInCorrectlyPage(data):
@@ -66,7 +66,7 @@ class ForumPageDownloader():
             return None
 
     def ReplyToThread(self, thread, message):
-        getUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid=%s' % thread
+        getUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid={}'.format(thread)
         postUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply'
 
         data = self.download(getUrl)
@@ -85,8 +85,7 @@ class ForumPageDownloader():
         del inputs['disablesmilies']
         del inputs['preview']
 
-        r = self.session.post(postUrl, data=inputs)
-        result = r.text
+        self.session.post(postUrl, data=inputs)
 
 
 if __name__ == '__main__':

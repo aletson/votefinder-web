@@ -71,7 +71,7 @@ class VoteCounter:
             gameday.save()
 
             if len(list(lynched)) == 1:
-                game.status_update('%s was executed on day %s!' % (lynched[0].name, gameday.dayNumber))
+                game.status_update('{} was executed on day {}!'.format(lynched[0].name, gameday.dayNumber))
                 self.PostLynchedMessage(game, lynched[0].name)
 
     def PostLynchedMessage(self, game, name):
@@ -117,15 +117,15 @@ class VoteCounter:
         resultItem = self.results[target]
         if unvote:
             resultItem['count'] -= 1
-            text = '%s unvotes' % author
+            text = '{} unvotes'.format(author)
         else:
             resultItem['count'] += 1
-            text = '%s votes %s' % (author, target)
+            text = '{} votes {}'.format(author, target)
 
         self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': resultItem['count'], 'text': text})
 
         resultItem['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
-                                    'url': 'http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s#post%s' % (
+                                    'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
                                         self.game.threadId, page, postid)})
 
     def HandleUnvote(self, vote):

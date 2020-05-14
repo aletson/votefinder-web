@@ -24,7 +24,7 @@ class PageParser:
     def Add(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.DownloadAndUpdate('http://forums.somethingawful.com/showthread.php?threadid=%s' % threadid,
+        return self.DownloadAndUpdate('http://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
                                       threadid)
 
     def DownloadAndUpdate(self, url, threadid):
@@ -45,7 +45,7 @@ class PageParser:
             page = game.currentPage + 1
 
         return self.DownloadAndUpdate(
-            'http://forums.somethingawful.com/showthread.php?threadid=%s&pagenumber=%s' % (game.threadId, page),
+            'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.threadId, page),
             game.threadId)
 
     def DownloadForumPage(self, url):

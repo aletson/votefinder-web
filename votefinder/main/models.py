@@ -43,7 +43,7 @@ class Player(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return '/player/%s' % self.slug
+        return '/player/{}'.format(self.slug)
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -83,10 +83,10 @@ class VotecountTemplate(models.Model):
 
     def __str__(self):
         if self.system_default:
-            return 'DEFAULT: %s [by %s]' % (self.name, self.creator)
+            return 'DEFAULT: {} [by {}]'.format(self.name, self.creator)
         elif self.shared:
-            return 'SHARED: %s [by %s]' % (self.name, self.creator)
-        return '%s [by %s]' % (self.name, self.creator)
+            return 'SHARED: {} [by {}]'.format(self.name, self.creator)
+        return '{} [by {}]'.format(self.name, self.creator)
 
 
 class Game(models.Model):
@@ -156,7 +156,7 @@ class Game(models.Model):
         super(Game, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return '/game/%s' % self.slug
+        return '/game/{}'.format(self.slug)
 
     def count_players(self):
         return self.players.filter(spectator=False, moderator=False).count()
@@ -202,7 +202,7 @@ class Comment(models.Model):
     comment = models.CharField(max_length=4096, blank=True, null=True)
 
     def __str__(self):
-        return '%s: %s' % (self.player, self.comment[:100])
+        return '{}: {}'.format(self.player, self.comment[:100])
 
 
 class PlayerState(models.Model):
@@ -234,7 +234,7 @@ class PlayerState(models.Model):
         return 'Dead'
 
     def __str__(self):
-        return '%s [%s]' % (self.player, self.state())
+        return '{} [{}]'.format(self.player, self.state())
 
 
 class Alias(models.Model):
@@ -259,7 +259,7 @@ class Post(models.Model):
     game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
     def __str__(self):
-        return '%s at %s' % (self.author.name, self.timestamp)
+        return '{} at {}'.format(self.author.name, self.timestamp)
 
 
 class PrivMsg(models.Model):
@@ -284,8 +284,8 @@ class Vote(models.Model):
 
     def __str__(self):
         if self.unvote:
-            return '%s unvotes' % self.author
-        return '%s votes %s' % (self.author, self.targetString)
+            return '{} unvotes'.format(self.author)
+        return '{} votes {}'.format(self.author, self.targetString)
 
 
 class GameStatusUpdate(models.Model):
@@ -296,7 +296,7 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid=%s' % self.game.posts.all().order_by('-id')[0].postId
+            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].postId)
             try:
                 if url is None:
                     self.url = postUrl
@@ -346,7 +346,7 @@ class GameDay(models.Model):
     notified = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'Day %s of %s' % (self.dayNumber, self.game)
+        return 'Day {} of {}'.format(self.dayNumber, self.game)
 
 
 class CookieStore(models.Model):
