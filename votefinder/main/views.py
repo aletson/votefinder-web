@@ -49,13 +49,11 @@ def index(request):
     post_count = Post.objects.count()
     vote_count = Vote.objects.count()
     player_count = Player.objects.count()
-
-    return render(request, 'index.html',
-                  {'pregame_games': pregame_list, 'big_games': big_games, 'mini_games': mini_games,
-                   'total': len(big_games) + len(mini_games), 'posts': posts,
-                   'game_count': game_count, 'post_count': post_count, 'vote_count': vote_count,
-                   'player_count': player_count, }
-                  )
+    context = {'pregame_games': pregame_list, 'big_games': big_games, 'mini_games': mini_games,
+               'total': len(big_games) + len(mini_games), 'posts': posts,
+               'game_count': game_count, 'post_count': post_count, 'vote_count': vote_count,
+               'player_count': player_count}
+    return render(request, 'index.html', context)
 
 
 @login_required
@@ -150,14 +148,12 @@ def game(request, slug):
         tzone = game.timezone
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
-
-    return render(request, 'game.html',
-                  {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
-                   'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
-                   'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
-                   'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-                   'updates': updates, }
-                  )
+    context = {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
+               'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
+               'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
+               'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
+               'updates': updates}
+    return render(request, 'game.html', context)
 
 
 def update(request, gameid):
@@ -188,11 +184,9 @@ def profile(request):
     player = request.user.profile.player
     games = player.games.select_related().all()
     themes = Theme.objects.all()
-
-    return render(request, 'profile.html',
-                  {'player': player, 'games': games, 'profile': request.user.profile, 'themes': themes,
-                   'show_delete': True, }
-                  )
+    context = {'player': player, 'games': games, 'profile': request.user.profile, 'themes': themes,
+               'show_delete': True}
+    return render(request, 'profile.html', context)
 
 
 @login_required
@@ -338,11 +332,10 @@ def votecount(request, gameid):
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
             minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
-
-    return render(request, 'votecount.html',
-                  {'post_vc_button': post_vc_button,
-                   'html_votecount': v.html_votecount, 'bbcode_votecount': v.bbcode_votecount, }
-                  )
+    context = {'post_vc_button': post_vc_button,
+               'html_votecount': v.html_votecount,
+               'bbcode_votecount': v.bbcode_votecount}
+    return render(request, 'votecount.html', context)
 
 
 def resolve(request, voteid, resolution):
@@ -381,11 +374,11 @@ def posts(request, gameid, page):
     posts = game.posts.select_related().filter(pageNumber=page).order_by('id')
     page = int(page)
     gameday = game.days.select_related().last()
-    return render(request, 'posts.html',
-                  {'game': game, 'posts': posts,
-                   'prevPage': page - 1, 'nextPage': page + 1, 'page': page,
-                   'pageNumbers': range(1, game.currentPage + 1),
-                   'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game), })
+    context = {'game': game, 'posts': posts,
+               'prevPage': page - 1, 'nextPage': page + 1, 'page': page,
+               'pageNumbers': range(1, game.currentPage + 1),
+               'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)}
+    return render(request, 'posts.html', context)
 
 
 @login_required
