@@ -26,7 +26,7 @@ class CreateUserForm(forms.Form):
         login = self.cleaned_data['login']
 
         try:
-            existingUser = User.objects.all().get(username=login)
+            existing_user = User.objects.all().get(username=login)
             raise forms.ValidationError('A user by that name already exists.')
         except User.DoesNotExist:
             pass
@@ -46,10 +46,10 @@ class CreateUserForm(forms.Form):
                 if matcher:
                     self.userid = matcher.group('userid')
                     try:
-                        existingPlayer = Player.objects.all().get(uid=self.userid)
-                        existingUserProfile = UserProfile.objects.all().get(player_id=existingPlayer.id)
-                        existingUser = UserProfile.objects.all().get(id=existingUserProfile.user_id)
-                        raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existingUser.username))
+                        existing_player = Player.objects.all().get(uid=self.userid)
+                        existing_userprofile = UserProfile.objects.all().get(player_id=existing_player.id)
+                        existing_user = UserProfile.objects.all().get(id=existing_userprofile.user_id)
+                        raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existing_user.username))
                     except UserProfile.DoesNotExist:
                         pass
                     except Player.DoesNotExist:

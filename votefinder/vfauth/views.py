@@ -11,9 +11,9 @@ from votefinder.vfauth.models import CreateUserForm
 
 
 def create_step_1(request):
-    profileKey = random.randint(10000000, 99999999)  # noqa: S311
-    request.session['profileKey'] = profileKey
-    return render(request, 'step1.html', {'profileKey': profileKey})
+    profile_key = random.randint(10000000, 99999999)  # noqa: S311
+    request.session['profileKey'] = profile_key
+    return render(request, 'step1.html', {'profileKey': profile_key})
 
 
 def create_step_2(request):
@@ -36,7 +36,7 @@ def create_step_3(request):
     form = CreateUserForm(request.POST)
     form.required_key = key
     if form.is_valid():
-        user = CreateUser(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'],
+        user = create_user(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'],
                           form.userid)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
@@ -46,7 +46,7 @@ def create_step_3(request):
     return render(request, 'step2.html', {'form': form})
 
 
-def CreateUser(login, email, password, userid):
+def create_user(login, email, password, userid):
     u = User.objects.create_user(login, email, password)
     u.save()
 
