@@ -2,7 +2,7 @@
     <div class="col-md-4">
         <div id="navigation">
     <div class="input-group input-group-sm">
-        <span class="input-group-addon" id="pagecount">Pages ({{ game.currentPage }}):</span>
+        <span class="input-group-addon" id="pagecount">Pages ({{ game.current_page }}):</span>
         <span class="input-group-btn">
       <button type="button" onclick="javascript:loadPage(1);" class="btn btn-xs" id="firstPage"
               {% ifequal page 1 %}disabled="disabled"{% endifequal %} title="First Page">&laquo;
@@ -20,11 +20,11 @@
       </select>{% endspaceless %}
         <span class="input-group-btn">
       <button type="button" onclick="javascript:loadPage({{ nextPage }});" class="btn btn-xs" id="nextPage"
-              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Next Page">&rsaquo;</button>
+              {% ifequal page game.current_page %}disabled="disabled"{% endifequal %} title="Next Page">&rsaquo;</button>
       </span>
       <span class="input-group-btn">
-      <button type="button" onclick="javascript:loadPage({{ game.maxPages }});" class="btn btn-xs" id="lastPage"
-              {% ifequal page game.currentPage %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;
+      <button type="button" onclick="javascript:loadPage({{ game.max_pages }});" class="btn btn-xs" id="lastPage"
+              {% ifequal page game.current_page %}disabled="disabled"{% endifequal %} title="Last Page">&raquo;
       </button>
       </span>
     </div>
@@ -54,7 +54,7 @@
                                             {% if v.unvote %}
                                                 <li>unvote</li>
                                             {% else %}
-                                                <li>vote: {% firstof v.target.name v.targetString %}
+                                                <li>vote: {% firstof v.target.name v.target_string %}
                                                     {% if not v.target %}
                                                         <i>(unresolved!)</i>
                                                     {% endif %}

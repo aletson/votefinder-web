@@ -40,13 +40,13 @@ class PageParser:
 
     def update(self, game):
         self.new_game = False
-        page = game.currentPage
-        if game.currentPage < game.maxPages:
-            page = game.currentPage + 1
+        page = game.current_page
+        if game.current_page < game.max_pages:
+            page = game.current_page + 1
 
         return self.download_and_update(
-            'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.threadId, page),
-            game.threadId)
+            'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.thread_id, page),
+            game.thread_id)
 
     def download_forum_page(self, url):
         return self.downloader.download(url)
@@ -93,17 +93,17 @@ class PageParser:
             v = Vote(post=post, game=post.game, author=post.author, unvote=True)
             (target_string,) = match.groups()
             if target_string:
-                v.targetString = target_string.strip()
-                v.target = self.autoresolve_vote(v.targetString)
+                v.target_string = target_string.strip()
+                v.target = self.autoresolve_vote(v.target_string)
                 v.unvote = False
 
-                if v.target is None and v.targetString.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
+                if v.target is None and v.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
                 player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
                 current_gameday = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.startPost_id or player_last_vote.unvote or v.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
+                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post_id or player_last_vote.unvote or v.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
                     v.save()
             except Game.DoesNotExist:
                 v.save()
@@ -149,7 +149,7 @@ class PageParser:
                 if not mod:
                     mod = new_post.author
 
-                new_post.pageNumber = self.pageNumber
+                new_post.page_number = self.pageNumber
                 self.posts.append(new_post)
         if self.new_game and self.state == 'pregame':
             day_number = 0
@@ -157,10 +157,10 @@ class PageParser:
             day_number = 1
             self.state = 'started'
 
-        game, game_created = Game.objects.get_or_create(threadId=threadid,
-                                                       defaults={'moderator': mod, 'name': self.gameName,
-                                                                 'currentPage': 1, 'maxPages': 1, 'state': self.state,
-                                                                 'added_by': self.user, 'current_day': day_number})
+        game, game_created = Game.objects.get_or_create(thread_id=threadid,
+                                                        defaults={'moderator': mod, 'name': self.gameName,
+                                                                  'current_page': 1, 'max_pages': 1, 'state': self.state,
+                                                                  'added_by': self.user, 'current_day': day_number})
 
         if game_created:
             player_state, created = PlayerState.objects.get_or_create(game=game, player=mod,
@@ -168,8 +168,8 @@ class PageParser:
         else:
             self.gamePlayers = [p.player for p in game.all_players()]
 
-        game.maxPages = self.maxPages
-        game.currentPage = self.pageNumber
+        game.max_pages = self.maxPages
+        game.current_page = self.pageNumber
         game.gameName = self.gameName
 
         for post in self.posts:
@@ -193,7 +193,7 @@ class PageParser:
                                                                       defaults={default_state: True})
 
         if game_created:
-            gameday = GameDay(game=game, dayNumber=day_number, startPost=self.posts[0])
+            gameday = GameDay(game=game, day_number=day_number, start_post=self.posts[0])
             gameday.save()
 
         game.save()
@@ -240,12 +240,12 @@ class PageParser:
             return None
 
         try:
-            post = Post.objects.get(postId=post_id)
+            post = Post.objects.get(post_id=post_id)
             return None
         except Post.DoesNotExist:
             post = Post()
 
-        post.postId = post_id
+        post.post_id = post_id
         title_node = node.find('dd', 'title')
         if title_node:
             post.avatar = str(title_node.find('img'))
@@ -269,13 +269,13 @@ class PageParser:
 
         anchor_list = post_date_node.findAll('a')
         if anchor_list:
-            post.authorSearch = anchor_list[-1]['href']
+            post.author_search = anchor_list[-1]['href']
 
         author_string = node.find('dt', 'author').text
         author_string = re.sub('<.*?>', '', author_string)
         author_string = re.sub('&\\w+?;', '', author_string).strip()
 
-        matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.authorSearch)
+        matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.author_search)
         if matcher:
             author_uid = matcher.group('uid')
         else:

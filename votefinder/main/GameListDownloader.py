@@ -39,7 +39,7 @@ class GameListDownloader():
         matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
         if matcher:
             try:
-                Game.objects.all().get(threadId=matcher.group('threadid'))
+                Game.objects.all().get(thread_id=matcher.group('threadid'))
                 return True
             except Game.DoesNotExist:
                 pass

@@ -70,7 +70,7 @@ def add_game(request):
         state = request.POST.get('addState')
         if state in {'started', 'pregame'}:
             try:
-                game = Game.objects.get(threadId=threadid)
+                game = Game.objects.get(thread_id=threadid)
                 data['url'] = game.get_absolute_url()
             except Game.DoesNotExist:
                 p = PageParser.PageParser()
@@ -96,7 +96,7 @@ def add_game(request):
                             },
                             'threadId': {
                                 'DataType': 'Number',
-                                'StringValue': game.threadId,
+                                'StringValue': game.thread_id,
                             },
                         },
                         MessageBody=(
@@ -137,7 +137,7 @@ def game(request, slug):
     updates = GameStatusUpdate.objects.filter(game=game).order_by('-timestamp')
 
     gameday = game.days.select_related().last()
-    manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.startPost.id).order_by('id')
+    manual_votes = Vote.objects.filter(game=game, manual=True, post__id__gte=gameday.start_post.id).order_by('id')
 
     if game.deadline:
         tz = timezone(game.timezone)
@@ -150,7 +150,7 @@ def game(request, slug):
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
                'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
-               'nextDay': gameday.dayNumber + 1, 'deadline': deadline, 'templates': templates,
+               'nextDay': gameday.day_number + 1, 'deadline': deadline, 'templates': templates,
                'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
                'updates': updates}
     return render(request, 'game.html', context)
@@ -169,7 +169,7 @@ def update(request, gameid):
         new_game = p.Update(game)
         if new_game:
             return HttpResponse(
-                simplejson.dumps({'success': True, 'curPage': new_game.currentPage, 'maxPages': new_game.maxPages}),
+                simplejson.dumps({'success': True, 'curPage': new_game.current_page, 'maxPages': new_game.max_pages}),
                 content_type='application/json')
         game.save()
         return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
@@ -340,7 +340,7 @@ def votecount(request, gameid):
 
 def resolve(request, voteid, resolution):
     vote = get_object_or_404(Vote, id=voteid)
-    votes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
+    votes = Vote.objects.filter(game=vote.game, target_string__iexact=vote.target_string, target=None, unvote=False,
                                 ignored=False)
 
     if resolution == '-1':
@@ -355,15 +355,15 @@ def resolve(request, voteid, resolution):
             v.target = player
             v.save()
 
-        alias, created = Alias.objects.get_or_create(player=player, alias=vote.targetString)
+        alias, created = Alias.objects.get_or_create(player=player, alias=vote.target_string)
         if created:
             alias.save()
 
     key = '{}-vc-image'.format(vote.game.slug)
     cache.delete(key)
 
-    new_votes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
-                                   ignored=False, nolynch=False)
+    new_votes = Vote.objects.filter(game=vote.game, target_string__iexact=vote.target_string, target=None, unvote=False,
+                                    ignored=False, nolynch=False)
 
     refresh = bool(len(votes) != 1 or not new_votes)
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
@@ -371,13 +371,13 @@ def resolve(request, voteid, resolution):
 
 def posts(request, gameid, page):
     game = get_object_or_404(Game, id=gameid)
-    posts = game.posts.select_related().filter(pageNumber=page).order_by('id')
+    posts = game.posts.select_related().filter(page_number=page).order_by('id')
     page = int(page)
     gameday = game.days.select_related().last()
     context = {'game': game, 'posts': posts,
                'prevPage': page - 1, 'nextPage': page + 1, 'page': page,
-               'pageNumbers': range(1, game.currentPage + 1),
-               'currentDay': gameday.dayNumber, 'nextDay': gameday.dayNumber + 1, 'moderator': check_mod(request, game)}
+               'pageNumbers': range(1, game.current_page + 1),
+               'currentDay': gameday.day_number, 'nextDay': gameday.day_number + 1, 'moderator': check_mod(request, game)}
     return render(request, 'posts.html', context)
 
 
@@ -560,9 +560,9 @@ def start_day(request, day, postid):
     if post.game.state != 'started' or not check_mod(request, post.game):
         return HttpResponseNotFound
 
-    gameday, created = GameDay.objects.get_or_create(game=post.game, dayNumber=day, defaults={'startPost': post})
+    gameday, created = GameDay.objects.get_or_create(game=post.game, day_number=day, defaults={'start_post': post})
     if not created:
-        gameday.startPost = post
+        gameday.start_post = post
     gameday.save()
 
     post.game.deadline = None
@@ -572,7 +572,7 @@ def start_day(request, day, postid):
 
     messages.add_message(request, messages.SUCCESS,
                          'Success! <strong>Day {}</strong> will now begin with post ({}) by {}.'
-                         .format(gameday.dayNumber, post.postId, post.author))
+                         .format(gameday.day_number, post.post_id, post.author))
 
     return HttpResponseRedirect(post.game.get_absolute_url())
 
@@ -706,7 +706,7 @@ def active_games_style(request, style):
 
 def active_games_json(request):
     game_list = sorted(({'name': g.name, 'mod': g.moderator.name,
-                        'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(g.threadId)} for g in
+                        'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(g.thread_id)} for g in
                        Game.objects.select_related().filter(state='started')), key=lambda g: g['name'])
 
     return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
@@ -724,7 +724,7 @@ def add_vote(request, gameid, player, votes, target):
         return HttpResponseNotFound
 
     gameday = game.days.select_related().last()
-    v = Vote(manual=True, post=gameday.startPost, game=game)
+    v = Vote(manual=True, post=gameday.start_post, game=game)
     if player == '-1':
         v.author = Player.objects.get(uid=0)  # anonymous
     else:
@@ -750,7 +750,7 @@ def add_vote_global(request, gameid):
     playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
-        v = Vote(manual=True, post=gameday.startPost, game=game, author=Player.objects.get(uid=0), target=target)
+        v = Vote(manual=True, post=gameday.start_post, game=game, author=Player.objects.get(uid=0), target=target)
         v.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -916,7 +916,7 @@ def votecount_image(request, slug):
 
 
 def autoupdate(request):
-    games = Game.objects.exclude(state='closed').order_by('-lastUpdated')
+    games = Game.objects.exclude(state='closed').order_by('-last_updated')
     for game in games:
         key = '{}-vc-image'.format(game.slug)
         cache.delete(key)  # image will regenerate on next GET
@@ -1043,7 +1043,7 @@ def post_vc(request, gameid):
         v.go()
 
         dl = ForumPageDownloader.ForumPageDownloader()
-        dl.reply_to_thread(game.threadId, v.bbcode_votecount)
+        dl.reply_to_thread(game.thread_id, v.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
@@ -1051,7 +1051,7 @@ def post_vc(request, gameid):
 
 def votechart_all(request, gameslug):
     game = get_object_or_404(Game, slug=gameslug)
-    day = GameDay.objects.get(game=game, dayNumber=game.current_day)
+    day = GameDay.objects.get(game=game, day_number=game.current_day)
     required_votes_to_execute = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
     vc = VoteCounter.VoteCounter()
@@ -1059,7 +1059,7 @@ def votechart_all(request, gameslug):
     vote_log = vc.get_votelog()
 
     return render(request, 'votechart.html',
-                  {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
+                  {'game': game, 'showAllPlayers': True, 'startDate': day.start_post.timestamp,
                    'now': datetime.now(), 'toLynch': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'players': [p.player.name for p in game.living_players()],
@@ -1070,7 +1070,7 @@ def votechart_all(request, gameslug):
 def votechart_player(request, gameslug, playerslug):
     game = get_object_or_404(Game, slug=gameslug)
     player = get_object_or_404(Player, slug=playerslug)
-    day = GameDay.objects.get(game=game, dayNumber=game.current_day)
+    day = GameDay.objects.get(game=game, day_number=game.current_day)
     required_votes_to_execute = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
     vc = VoteCounter.VoteCounter()
@@ -1078,7 +1078,7 @@ def votechart_player(request, gameslug, playerslug):
     vote_log = [v for v in vc.get_votelog() if v['player'] == player.name]
 
     return render(request, 'votechart.html',
-                  {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
+                  {'game': game, 'showAllPlayers': False, 'startDate': day.start_post.timestamp,
                    'now': datetime.now(), 'toLynch': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'allPlayers': [p.player for p in game.living_players()],

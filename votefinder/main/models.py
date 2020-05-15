@@ -95,11 +95,11 @@ class VotecountTemplate(models.Model):
 
 class Game(models.Model):
     name = models.CharField(max_length=255)
-    threadId = models.IntegerField(unique=True, db_index=True)
+    thread_id = models.IntegerField(unique=True, db_index=True)
     moderator = models.ForeignKey(Player, related_name='moderatingGames', on_delete=models.SET(get_default_player))
-    lastUpdated = models.DateTimeField(auto_now=True)
-    maxPages = models.IntegerField()
-    currentPage = models.IntegerField()
+    last_updated = models.DateTimeField(auto_now=True)
+    max_pages = models.IntegerField()
+    current_page = models.IntegerField()
     slug = models.SlugField()
     locked_at = models.DateTimeField(null=True, blank=True)
     state = models.CharField(max_length=32)
@@ -123,7 +123,7 @@ class Game(models.Model):
 
         days = self.days.order_by('-id')
         if days:
-            self.current_day = days[0].dayNumber
+            self.current_day = days[0].day_number
 
     def status_update(self, message):
         self.status_update_noncritical(message)
@@ -252,13 +252,13 @@ class Alias(models.Model):
 
 
 class Post(models.Model):
-    postId = models.IntegerField(unique=True, db_index=True)
+    post_id = models.IntegerField(unique=True, db_index=True)
     timestamp = models.DateTimeField()
     author = models.ForeignKey(Player, related_name='posts', on_delete=models.SET(get_default_player))
-    authorSearch = models.CharField(max_length=256)
+    author_search = models.CharField(max_length=256)
     body = models.TextField()
     avatar = models.CharField(max_length=256)
-    pageNumber = models.IntegerField()
+    page_number = models.IntegerField()
     game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
     def __str__(self):
@@ -279,7 +279,7 @@ class Vote(models.Model):
     game = models.ForeignKey(Game, related_name='votes', db_index=True, on_delete=models.CASCADE)
     author = models.ForeignKey(Player, related_name='votes', on_delete=models.CASCADE)
     target = models.ForeignKey(Player, related_name='target_of_votes', null=True, on_delete=models.CASCADE)
-    targetString = models.CharField(max_length=256)
+    target_string = models.CharField(max_length=256)
     unvote = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
     manual = models.BooleanField(default=False)
@@ -288,7 +288,7 @@ class Vote(models.Model):
     def __str__(self):
         if self.unvote:
             return '{} unvotes'.format(self.author)
-        return '{} votes {}'.format(self.author, self.targetString)
+        return '{} votes {}'.format(self.author, self.target_string)
 
 
 class GameStatusUpdate(models.Model):
@@ -299,7 +299,7 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            post_url = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].postId)
+            post_url = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].post_id)
             try:
                 if url is None:
                     self.url = post_url
@@ -344,12 +344,12 @@ class UserProfile(models.Model):
 
 class GameDay(models.Model):
     game = models.ForeignKey(Game, related_name='days', db_index=True, on_delete=models.CASCADE)
-    dayNumber = models.IntegerField(default=1)
-    startPost = models.ForeignKey(Post, on_delete=models.CASCADE)
+    day_number = models.IntegerField(default=1)
+    start_post = models.ForeignKey(Post, on_delete=models.CASCADE)
     notified = models.BooleanField(default=False)
 
     def __str__(self):
-        return 'Day {} of {}'.format(self.dayNumber, self.game)
+        return 'Day {} of {}'.format(self.day_number, self.game)
 
 
 class CookieStore(models.Model):

@@ -20,9 +20,9 @@ class VoteCounter:
 
         try:
             votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=False,
-                                                         post__id__gte=gameday.startPost.id).order_by('id')
+                                                         post__id__gte=gameday.start_post.id).order_by('id')
             manual_votes = Vote.objects.select_related().filter(game=game, ignored=False, manual=True,
-                                                                post__id__gte=gameday.startPost.id).order_by('id')
+                                                                post__id__gte=gameday.start_post.id).order_by('id')
             self.votesFound = True
         except Vote.DoesNotExist:
             return
@@ -63,15 +63,15 @@ class VoteCounter:
             return
 
         tolynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
-        lynched = filter(lambda key: self.results[key]['count'] >= tolynch, self.results)
+        executed = filter(lambda key: self.results[key]['count'] >= tolynch, self.results)
 
-        if list(lynched):
+        if list(executed):
             gameday.notified = True
             gameday.save()
 
-            if len(list(lynched)) == 1:
-                game.status_update('{} was executed on day {}!'.format(lynched[0].name, gameday.dayNumber))
-                self.post_execute_message(game, lynched[0].name)
+            if len(list(executed)) == 1:
+                game.status_update('{} was executed on day {}!'.format(executed[0].name, gameday.day_number))
+                self.post_execute_message(game, executed[0].name)
 
     def post_execute_message(self, game, name):
         if not game.post_lynches:
@@ -83,7 +83,7 @@ class VoteCounter:
         message = '{}\n\n'.format(message)
         message += v.bbcode_votecount
         dl = ForumPageDownloader()
-        dl.reply_to_thread(game.threadId, ':redhammer: ' + message.format(name))
+        dl.reply_to_thread(game.thread_id, ':redhammer: ' + message.format(name))
 
     def build_result_list(self):
         resultlist = []
@@ -108,8 +108,8 @@ class VoteCounter:
         if vote.nolynch:
             vote.target = self.nolynch_player
 
-        self.add_vote_to_player(vote.target, vote.author, False, vote.post.pageNumber, vote.post.postId,
-                             vote.post.timestamp)
+        self.add_vote_to_player(vote.target, vote.author, False, vote.post.page_number, vote.post.post_id,
+                                vote.post.timestamp)
         self.currentVote[vote.author] = vote.target
 
     def add_vote_to_player(self, target, author, unvote, page, postid, timestamp):
@@ -125,14 +125,14 @@ class VoteCounter:
 
         resultItem['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
                                     'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
-                                        self.game.threadId, page, postid)})
+                                        self.game.thread_id, page, postid)})
 
     def handle_unvote(self, vote):
         currentVote = self.player_is_voting(vote.author)
         if currentVote:
             self.disable_current_vote(vote.author, currentVote)
-            self.add_vote_to_player(currentVote, vote.author, True, vote.post.pageNumber, vote.post.postId,
-                                 vote.post.timestamp)
+            self.add_vote_to_player(currentVote, vote.author, True, vote.post.page_number, vote.post.post_id,
+                                    vote.post.timestamp)
         self.currentVote[vote.author] = None
 
     def disable_current_vote(self, player, target):
