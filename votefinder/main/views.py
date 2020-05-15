@@ -58,8 +58,8 @@ def index(request):
 
 @login_required
 def add(request):
-    defaultUrl = 'http://forums.somethingawful.com/showthread.php?threadid=3069667'
-    return render(request, 'add.html', {'defaultUrl': defaultUrl})
+    default_url = 'http://forums.somethingawful.com/showthread.php?threadid=3069667'
+    return render(request, 'add.html', {'defaultUrl': default_url})
 
 
 @login_required
@@ -166,10 +166,10 @@ def update(request, gameid):
         game.lock()
     try:
         p = PageParser.PageParser()
-        newGame = p.Update(game)
-        if newGame:
+        new_game = p.Update(game)
+        if new_game:
             return HttpResponse(
-                simplejson.dumps({'success': True, 'curPage': newGame.currentPage, 'maxPages': newGame.maxPages}),
+                simplejson.dumps({'success': True, 'curPage': new_game.currentPage, 'maxPages': new_game.maxPages}),
                 content_type='application/json')
         game.save()
         return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
@@ -362,10 +362,10 @@ def resolve(request, voteid, resolution):
     key = '{}-vc-image'.format(vote.game.slug)
     cache.delete(key)
 
-    newVotes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
+    new_votes = Vote.objects.filter(game=vote.game, targetString__iexact=vote.targetString, target=None, unvote=False,
                                    ignored=False, nolynch=False)
 
-    refresh = bool(len(votes) != 1 or not newVotes)
+    refresh = bool(len(votes) != 1 or not new_votes)
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
 
 
@@ -504,53 +504,53 @@ def replace(request, gameid, clear, outgoing, incoming):
     if game.state != 'started' or not check_mod(request, game):
         return HttpResponseNotFound
 
-    playerOut = get_object_or_404(Player, id=outgoing)
+    player_out = get_object_or_404(Player, id=outgoing)
     try:
-        playerIn = Player.objects.get(name__iexact=urllib.unquote(incoming))
+        player_in = Player.objects.get(name__iexact=urllib.unquote(incoming))
     except Player.DoesNotExist:
         messages.add_message(request, messages.ERROR, 'No player by the name <strong>{}</strong> was found!'.format(incoming))
         return HttpResponseRedirect(game.get_absolute_url())
 
-    clearVotes = bool(clear == 'true')
+    clear_votes = bool(clear == 'true')
 
     try:
-        playerState = PlayerState.objects.get(game=game, player=playerOut)
+        playerState = PlayerState.objects.get(game=game, player=player_out)
     except PlayerState.DoesNotExist:
-        messages.add_message(request, messages.ERROR, 'The player <strong>{}</strong> is not in that game!'.format(playerOut))
+        messages.add_message(request, messages.ERROR, 'The player <strong>{}</strong> is not in that game!'.format(player_out))
 
     try:
-        newPlayerState = PlayerState.objects.get(game=game, player=playerIn)
+        newPlayerState = PlayerState.objects.get(game=game, player=player_in)
         if newPlayerState.spectator:
             newPlayerState.delete()
         else:
             messages.add_message(request, messages.ERROR,
-                                 'The player <strong>{}</strong> is already in that game!'.format(playerIn))
+                                 'The player <strong>{}</strong> is already in that game!'.format(player_in))
             return HttpResponseRedirect(game.get_absolute_url())
     except PlayerState.DoesNotExist:
         pass
 
-    playerState.player = playerIn
+    playerState.player = player_in
     playerState.save()
-    votesAffected = 0
+    votes_affected = 0
 
-    voteList = game.votes.filter(Q(author=playerOut) | Q(target=playerOut))
-    votesAffected = len(voteList)
+    vote_list = game.votes.filter(Q(author=player_out) | Q(target=player_out))
+    votes_affected = len(vote_list)
 
-    if clearVotes:
-        voteList.delete()
+    if clear_votes:
+        vote_list.delete()
     else:
-        for v in voteList:
-            if v.author == playerOut:
-                v.author = playerIn
+        for v in vote_list:
+            if v.author == player_out:
+                v.author = player_in
             else:
-                v.target = playerIn
+                v.target = player_in
             v.save()
 
-    game.status_update_noncritical('{} is replaced by {}.'.format(playerOut, playerIn))
+    game.status_update_noncritical('{} is replaced by {}.'.format(player_out, player_in))
 
     messages.add_message(request, messages.SUCCESS,
                          'Success! <strong>{}</strong> was replaced by <strong>{}</strong>.  {} votes were affected.'
-                         .format(playerOut, playerIn, votesAffected))
+                         .format(player_out, player_in, votes_affected))
     return HttpResponseRedirect(game.get_absolute_url())
 
 
@@ -885,10 +885,10 @@ def check_update_game(game):
         game.lock()
 
     try:
-        p = PageParser.PageParser()
-        newGame = p.Update(game)
-        if newGame:
-            return newGame
+        page_parser = PageParser.PageParser()
+        new_game = page_parser.update(game)
+        if new_game:
+            return new_game
         game.save()
         return game
     except:
@@ -1056,7 +1056,7 @@ def votechart_all(request, gameslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = vc.GetVoteLog()
+    voteLog = vc.get_votelog()
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
@@ -1075,7 +1075,7 @@ def votechart_player(request, gameslug, playerslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = [v for v in vc.GetVoteLog() if v['player'] == player.name]
+    voteLog = [v for v in vc.get_votelog() if v['player'] == player.name]
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,

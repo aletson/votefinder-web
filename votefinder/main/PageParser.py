@@ -38,7 +38,7 @@ class PageParser:
 
         return game
 
-    def Update(self, game):
+    def update(self, game):
         self.new_game = False
         page = game.currentPage
         if game.currentPage < game.maxPages:

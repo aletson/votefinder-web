@@ -36,28 +36,28 @@ class VoteCounter:
             self.currentVote[single_player] = None
 
         for single_vote in votes:
-            if single_vote.author in self.livingPlayers and self.TargetIsValid(single_vote):
+            if single_vote.author in self.livingPlayers and self.target_is_valid(single_vote):
                 if single_vote.unvote:
-                    self.HandleUnvote(single_vote)
+                    self.handle_unvote(single_vote)
                 else:
-                    self.HandleVote(single_vote)
+                    self.handle_vote(single_vote)
 
         # ensure manual votes are applied after all real votes
         for single_manual_vote in manual_votes:
-            if self.TargetIsValid(single_manual_vote):
+            if self.target_is_valid(single_manual_vote):
                 if single_manual_vote.unvote:
-                    self.HandleUnvote(single_manual_vote)
+                    self.handle_unvote(single_manual_vote)
                 else:
-                    self.HandleVote(single_manual_vote)
+                    self.handle_vote(single_manual_vote)
 
-        self.RunNotify(game, gameday)
+        self.run_notify(game, gameday)
 
-        return self.BuildResultList()
+        return self.build_result_list()
 
-    def GetVoteLog(self):
+    def get_votelog(self):
         return self.voteLog
 
-    def RunNotify(self, game, gameday):
+    def run_notify(self, game, gameday):
         gameday = GameDay.objects.get(id=gameday.id)  # reload to prevent double posts from 2 threads updating at once
         if gameday.notified:
             return
@@ -71,9 +71,9 @@ class VoteCounter:
 
             if len(list(lynched)) == 1:
                 game.status_update('{} was executed on day {}!'.format(lynched[0].name, gameday.dayNumber))
-                self.PostLynchedMessage(game, lynched[0].name)
+                self.post_execute_message(game, lynched[0].name)
 
-    def PostLynchedMessage(self, game, name):
+    def post_execute_message(self, game, name):
         if not game.post_lynches:
             return
 
@@ -85,7 +85,7 @@ class VoteCounter:
         dl = ForumPageDownloader()
         dl.reply_to_thread(game.threadId, ':redhammer: ' + message.format(name))
 
-    def BuildResultList(self):
+    def build_result_list(self):
         resultlist = []
         for key, val in self.results.items():
             resultlist.append({'target': key, 'count': val['count'], 'votes': val['votes']})
@@ -94,25 +94,25 @@ class VoteCounter:
 
         return resultlist
 
-    def TargetIsValid(self, vote):
+    def target_is_valid(self, vote):
         if vote.nolynch and self.nolynch_player is None:
             self.nolynch_player = Player.objects.get(uid=-1)
             self.results[self.nolynch_player] = {'count': 0, 'votes': []}
 
         return vote.unvote or vote.nolynch or (vote.target in self.livingPlayers)
 
-    def HandleVote(self, vote):
-        if not vote.manual and self.PlayerIsVoting(vote.author):
-            self.HandleUnvote(vote)
+    def handle_vote(self, vote):
+        if not vote.manual and self.player_is_voting(vote.author):
+            self.handle_unvote(vote)
 
         if vote.nolynch:
             vote.target = self.nolynch_player
 
-        self.AddVoteToPlayer(vote.target, vote.author, False, vote.post.pageNumber, vote.post.postId,
+        self.add_vote_to_player(vote.target, vote.author, False, vote.post.pageNumber, vote.post.postId,
                              vote.post.timestamp)
         self.currentVote[vote.author] = vote.target
 
-    def AddVoteToPlayer(self, target, author, unvote, page, postid, timestamp):
+    def add_vote_to_player(self, target, author, unvote, page, postid, timestamp):
         resultItem = self.results[target]
         if unvote:
             resultItem['count'] -= 1
@@ -127,21 +127,21 @@ class VoteCounter:
                                     'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
                                         self.game.threadId, page, postid)})
 
-    def HandleUnvote(self, vote):
-        currentVote = self.PlayerIsVoting(vote.author)
+    def handle_unvote(self, vote):
+        currentVote = self.player_is_voting(vote.author)
         if currentVote:
-            self.DisableCurrentVote(vote.author, currentVote)
-            self.AddVoteToPlayer(currentVote, vote.author, True, vote.post.pageNumber, vote.post.postId,
+            self.disable_current_vote(vote.author, currentVote)
+            self.add_vote_to_player(currentVote, vote.author, True, vote.post.pageNumber, vote.post.postId,
                                  vote.post.timestamp)
         self.currentVote[vote.author] = None
 
-    def DisableCurrentVote(self, player, target):
+    def disable_current_vote(self, player, target):
         for item in self.results[target]['votes']:
             if item['author'] == player and item['unvote'] is False and item['enabled']:
                 item['enabled'] = False
                 return
 
-    def PlayerIsVoting(self, player):
+    def player_is_voting(self, player):
         if player in self.currentVote.keys():
             return self.currentVote[player]
         return None
