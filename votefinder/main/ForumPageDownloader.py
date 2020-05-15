@@ -14,51 +14,51 @@ class ForumPageDownloader():
         # we must set this, SA blocks the default UA
 
     def download(self, page):
-        data = self.PerformDownload(page)
+        data = self.perform_download(page)
 
         if data is None:
             return None
-        elif not self.IsNeedToLogInPage(data):
+        elif not self.needs_to_login(data):
             return data
-        elif self.LoginToForum():
-            data = self.PerformDownload(page)
+        elif self.login_to_forum():
+            data = self.perform_download(page)
 
-            if not self.IsNeedToLogInPage(data):
+            if not self.needs_to_login(data):
                 return data
             return None
         return None
 
-    def LogLoginAttempt(self):
+    def log_login_attempt(self):
         g = Game.objects.get(id=228)
         g.status_update('Trying to re-login to forums.  PM Alli if this happens a lot.')
 
-    def LoginToForum(self):
+    def login_to_forum(self):
         data = ''
 
-        self.LogLoginAttempt()
+        self.log_login_attempt()
 
         page_request = self.session.post('https://forums.somethingawful.com/account.php',
                                          data={'action': 'login', 'username': settings.SA_LOGIN,
                                                'password': settings.SA_PASSWORD, 'secure_login': ''})
         data = page_request.text
 
-        if self.IsLoggedInCorrectlyPage(data):
+        if self.is_logged_in_correctly(data):
             return True
         return False
 
-    def IsNeedToLogInPage(self, data):
+    def needs_to_login(self, data):
         if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) is None:
             return False
         return True
 
-    def IsLoggedInCorrectlyPage(self, data):
+    def is_logged_in_correctly(self, data):
         if not data:
             raise ValueError('Login failed, no data in response from login attempt')
         if re.search(re.compile(r'Login with username and password'), data) is None:
             return True
         return False
 
-    def PerformDownload(self, page):
+    def perform_download(self, page):
         try:
             page_request = self.session.get(page)
             data = page_request.text
@@ -66,11 +66,11 @@ class ForumPageDownloader():
         except:
             return None
 
-    def ReplyToThread(self, thread, message):
-        getUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid={}'.format(thread)
-        postUrl = 'https://forums.somethingawful.com/newreply.php?action=newreply'
+    def reply_to_thread(self, thread, message):
+        get_url = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid={}'.format(thread)
+        post_url = 'https://forums.somethingawful.com/newreply.php?action=newreply'
 
-        data = self.download(getUrl)
+        data = self.download(get_url)
         if data is None:
             return
 
@@ -86,7 +86,7 @@ class ForumPageDownloader():
         del inputs['disablesmilies']
         del inputs['preview']
 
-        self.session.post(postUrl, data=inputs)
+        self.session.post(post_url, data=inputs)
 
 
 if __name__ == '__main__':

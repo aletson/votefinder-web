@@ -75,7 +75,7 @@ def add_game(request):
             except Game.DoesNotExist:
                 p = PageParser.PageParser()
                 p.user = request.user
-                game = p.Add(threadid, state)
+                game = p.add_game(threadid, state)
                 if game:
                     data['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
@@ -1043,7 +1043,7 @@ def post_vc(request, gameid):
         v.go()
 
         dl = ForumPageDownloader.ForumPageDownloader()
-        dl.ReplyToThread(game.threadId, v.bbcode_votecount)
+        dl.reply_to_thread(game.threadId, v.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
@@ -1104,18 +1104,6 @@ def gamechart(request):
     return render(request, 'gamechart.html',
                   {'data': data, 'dataLen': len(data)},
                   )
-
-
-def my_classes(c):
-    if c is None:
-        return False
-    if c.has_key('class') and c['class'] == 'category':
-        return True
-    if c.has_key('class') and c['class'] == 'forum':
-        return True
-    if c.parent is not None and c.parent.has_key('class') and c.parent['class'] == 'subforums' and c.has_key('href'):
-        return True
-    return False
 
 
 def common_games(request, slug_a, slug_b):

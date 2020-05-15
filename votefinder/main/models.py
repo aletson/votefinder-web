@@ -23,7 +23,7 @@ def get_default_player():
     return Player.objects.get_or_create(name='votefinder')[0]
 
 
-def SlugifyUniquely(value, model, slugfield='slug'):
+def slugify_uniquely(value, model, slugfield='slug'):
     suffix = 1
     maximum_slug_length = 45
     potential = slugify(value)[:maximum_slug_length]
@@ -51,7 +51,7 @@ class Player(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = SlugifyUniquely(self.name, self.__class__)
+            self.slug = slugify_uniquely(self.name, self.__class__)
         super(Player, self).save(*args, **kwargs)
 
     def current_games(self):
@@ -151,9 +151,9 @@ class Game(models.Model):
             filtered_name = filtered_name.replace('mafia', '')
             filtered_name = filtered_name.replace('mini', '')
             if filtered_name.strip() == '':
-                self.slug = SlugifyUniquely(self.name.strip(), self.__class__)
+                self.slug = slugify_uniquely(self.name.strip(), self.__class__)
             else:
-                self.slug = SlugifyUniquely(filtered_name.strip(), self.__class__)
+                self.slug = slugify_uniquely(filtered_name.strip(), self.__class__)
         self.locked_at = None
         self.update_counts()
         super(Game, self).save(*args, **kwargs)
@@ -299,14 +299,14 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            postUrl = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].postId)
+            post_url = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].postId)
             try:
                 if url is None:
-                    self.url = postUrl
+                    self.url = post_url
                 else:
                     self.url = url
             except NameError:
-                self.url = postUrl
+                self.url = post_url
 
         super(GameStatusUpdate, self).save(*args, **kwargs)
 

@@ -21,18 +21,18 @@ class PageParser:
         self.user = None
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
-    def Add(self, threadid, state):
+    def add_game(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.DownloadAndUpdate('http://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
-                                      threadid)
+        return self.download_and_update('http://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
+                                        threadid)
 
-    def DownloadAndUpdate(self, url, threadid):
-        data = self.DownloadForumPage(url)
+    def download_and_update(self, url, threadid):
+        data = self.download_forum_page(url)
         if not data:
             return None
 
-        game = self.ParsePage(data, threadid)
+        game = self.parse_page(data, threadid)
         if not game:
             return None
 
@@ -44,14 +44,14 @@ class PageParser:
         if game.currentPage < game.maxPages:
             page = game.currentPage + 1
 
-        return self.DownloadAndUpdate(
+        return self.download_and_update(
             'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.threadId, page),
             game.threadId)
 
-    def DownloadForumPage(self, url):
+    def download_forum_page(self, url):
         return self.downloader.download(url)
 
-    def AutoResolveVote(self, text):
+    def autoresolve_vote(self, text):
         try:
             player = Player.objects.get(name__iexact=text)
             if player in self.players or player in self.gamePlayers:
@@ -83,7 +83,7 @@ class PageParser:
 
         return None
 
-    def SearchLineForActions(self, post, line):
+    def search_line_for_actions(self, post, line):
         # Votes
         pattern = re.compile('##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)', re.I)
         pos = 0
@@ -94,16 +94,16 @@ class PageParser:
             (targetStr,) = match.groups()
             if targetStr:
                 v.targetString = targetStr.strip()
-                v.target = self.AutoResolveVote(v.targetString)
+                v.target = self.autoresolve_vote(v.targetString)
                 v.unvote = False
 
                 if v.target is None and v.targetString.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
                     v.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
-                playersLastVote = Vote.objects.filter(game=post.game, author=post.author).last()
-                currentGameDay = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or playersLastVote is None or playersLastVote.post_id < currentGameDay.startPost_id or playersLastVote.unvote or v.unvote or PlayerState.get(game=game, player_id=playersLastVote.target).alive is False:
+                player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
+                current_gameday = GameDay.objects.filter(game=post.game).last()
+                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.startPost_id or player_last_vote.unvote or v.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
                     v.save()
             except Game.DoesNotExist:
                 v.save()
@@ -117,52 +117,52 @@ class PageParser:
             pos = 0
             match = pattern.search(line, pos)
             while match:
-                (numHrs,) = match.groups()
-                if numHrs and numHrs > 0:  # Check if int - or modify regex
-                    numHrs = int(numHrs)
-                    newDeadline = post.timestamp + timedelta(hours=numHrs)
-                    post.game.deadline = newDeadline
+                (num_hrs,) = match.groups()
+                if num_hrs and num_hrs > 0:  # Check if int - or modify regex
+                    num_hrs = int(num_hrs)
+                    new_deadline = post.timestamp + timedelta(hours=num_hrs)
+                    post.game.deadline = new_deadline
                     post.game.save()
 
-    def ReadVotes(self, post):
+    def read_votes(self, post):
         for quote in post.bodySoup.findAll('div', 'quote well'):
             quote.extract()
         for bold in post.bodySoup.findAll('b'):
-            postContent = ''.join([str(x) for x in bold.contents])
-            for line in postContent.splitlines():
-                self.SearchLineForActions(post, line)
+            post_content = ''.join([str(x) for x in bold.contents])
+            for line in post_content.splitlines():
+                self.search_line_for_actions(post, line)
 
-    def ParsePage(self, data, threadid):
+    def parse_page(self, data, threadid):
         soup = BeautifulSoup(data, 'html5lib')
-        self.pageNumber = self.FindPageNumber(soup)
-        self.maxPages = self.FindMaxPages(soup)
-        self.gameName = re.compile(r'\[.*?\]').sub('', self.ReadThreadTitle(soup)).strip()
+        self.pageNumber = self.find_page_number(soup)
+        self.maxPages = self.find_max_pages(soup)
+        self.gameName = re.compile(r'\[.*?\]').sub('', self.read_thread_title(soup)).strip()
 
         posts = soup.find_all('table', 'post')
         if not posts:
             return None
 
         mod = None
-        for postNode in posts:
-            newPost = self.ReadPostValues(postNode)
-            if newPost:
+        for post_node in posts:
+            new_post = self.read_post_values(post_node)
+            if new_post:
                 if not mod:
-                    mod = newPost.author
+                    mod = new_post.author
 
-                newPost.pageNumber = self.pageNumber
-                self.posts.append(newPost)
+                new_post.pageNumber = self.pageNumber
+                self.posts.append(new_post)
         if self.new_game and self.state == 'pregame':
-            dayNumber = 0
+            day_number = 0
         else:
-            dayNumber = 1
+            day_number = 1
             self.state = 'started'
 
-        game, gameCreated = Game.objects.get_or_create(threadId=threadid,
+        game, game_created = Game.objects.get_or_create(threadId=threadid,
                                                        defaults={'moderator': mod, 'name': self.gameName,
                                                                  'currentPage': 1, 'maxPages': 1, 'state': self.state,
-                                                                 'added_by': self.user, 'current_day': dayNumber})
+                                                                 'added_by': self.user, 'current_day': day_number})
 
-        if gameCreated:
+        if game_created:
             playerState, created = PlayerState.objects.get_or_create(game=game, player=mod,
                                                                      defaults={'moderator': True})
         else:
@@ -175,7 +175,7 @@ class PageParser:
         for post in self.posts:
             post.game = game
             post.save()
-            self.ReadVotes(post)
+            self.read_votes(post)
             if post.author not in self.players:
                 self.players.append(post.author)
             cur_player = post.author
@@ -193,13 +193,13 @@ class PageParser:
                                                                      defaults={defaultState: True})
 
         if gameCreated:
-            gameday = GameDay(game=game, dayNumber=dayNumber, startPost=self.posts[0])
+            gameday = GameDay(game=game, dayNumber=day_number, startPost=self.posts[0])
             gameday.save()
 
         game.save()
         return game
 
-    def FindPageNumber(self, soup):
+    def find_page_number(self, soup):
         pages = soup.find('div', 'pages')
         if pages:
             curPage = pages.find(attrs={'selected': 'selected'})
@@ -208,7 +208,7 @@ class PageParser:
             return '1'
         return '1'
 
-    def FindMaxPages(self, soup):
+    def find_max_pages(self, soup):
         pages = soup.find('div', 'pages')
         if pages:
             option_tags = pages.find_all('option')
@@ -218,13 +218,13 @@ class PageParser:
             return total_pages
         return 1
 
-    def ReadThreadTitle(self, soup):
+    def read_thread_title(self, soup):
         title = soup.find('title')
         if title:
             return title.text[:len(title.text) - 29]
         return None
 
-    def FindOrCreatePlayer(self, playername, playeruid):
+    def find_or_create_player(self, playername, playeruid):
         player, created = Player.objects.get_or_create(uid=playeruid,
                                                        defaults={'name': playername})
 
@@ -234,21 +234,21 @@ class PageParser:
 
         return player
 
-    def ReadPostValues(self, node):
-        postId = node['id'][4:]
-        if postId == '':
+    def read_post_values(self, node):
+        post_id = node['id'][4:]
+        if post_id == '':
             return None
 
         try:
-            post = Post.objects.get(postId=postId)
+            post = Post.objects.get(postId=post_id)
             return None
         except Post.DoesNotExist:
             post = Post()
 
-        post.postId = postId
-        titleNode = node.find('dd', 'title')
-        if titleNode:
-            post.avatar = str(titleNode.find('img'))
+        post.postId = post_id
+        title_node = node.find('dd', 'title')
+        if title_node:
+            post.avatar = str(title_node.find('img'))
 
         post.bodySoup = node.find('td', 'postbody')
         for quote in post.bodySoup.findAll('div', 'bbc-block'):
@@ -259,31 +259,31 @@ class PageParser:
             match.decompose()
         post.body = post.bodySoup.prettify(formatter=None)
         post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
-        postDateNode = node.find('td', 'postdate')
+        post_date_node = node.find('td', 'postdate')
 
-        if postDateNode:
-            dateText = postDateNode.text.replace('#', '').replace('?', '').strip()
-            post.timestamp = datetime(*time.strptime(dateText, '%b %d, %Y %H:%M')[:6])
+        if post_date_node:
+            date_text = post_date_node.text.replace('#', '').replace('?', '').strip()
+            post.timestamp = datetime(*time.strptime(date_text, '%b %d, %Y %H:%M')[:6])
         else:
             return None
 
-        anchorList = postDateNode.findAll('a')
-        if anchorList:
-            post.authorSearch = anchorList[-1]['href']
+        anchor_list = post_date_node.findAll('a')
+        if anchor_list:
+            post.authorSearch = anchor_list[-1]['href']
 
-        authorString = node.find('dt', 'author').text
-        authorString = re.sub('<.*?>', '', authorString)
-        authorString = re.sub('&\\w+?;', '', authorString).strip()
+        author_string = node.find('dt', 'author').text
+        author_string = re.sub('<.*?>', '', author_string)
+        author_string = re.sub('&\\w+?;', '', author_string).strip()
 
         matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.authorSearch)
         if matcher:
-            authorUid = matcher.group('uid')
+            author_uid = matcher.group('uid')
         else:
             return None
 
-        if authorString == 'Adbot':
+        if author_string == 'Adbot':
             return None
         else:
-            post.author = self.FindOrCreatePlayer(authorString, authorUid)
+            post.author = self.find_or_create_player(author_string, author_uid)
 
         return post
