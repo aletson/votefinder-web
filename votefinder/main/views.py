@@ -539,12 +539,12 @@ def replace(request, gameid, clear, outgoing, incoming):
     if clear_votes:
         vote_list.delete()
     else:
-        for v in vote_list:
-            if v.author == player_out:
-                v.author = player_in
+        for vote in vote_list:
+            if vote.author == player_out:
+                vote.author = player_in
             else:
-                v.target = player_in
-            v.save()
+                vote.target = player_in
+            vote.save()
 
     game.status_update_noncritical('{} is replaced by {}.'.format(player_out, player_in))
 
@@ -610,53 +610,53 @@ def create_template(request):
 
 @login_required
 def edit_template(request, templateid):
-    t = get_object_or_404(VotecountTemplate, id=templateid)
-    if not request.user.is_superuser and t.creator != request.user.profile.player:
+    old_temp = get_object_or_404(VotecountTemplate, id=templateid)
+    if not request.user.is_superuser and old_temp.creator != request.user.profile.player:
         return HttpResponseNotFound
 
     if request.method == 'GET':
         return render(request, 'template_edit.html',
-                      {'form': VotecountTemplateForm(instance=t), 'template': t, 'edit': True})
+                      {'form': VotecountTemplateForm(instance=old_temp), 'template': old_temp, 'edit': True})
 
     c = {}
     c.update(csrf(request))
     form = VotecountTemplateForm(request.POST)
     if form.is_valid():
         new_temp = form.save(commit=False)
-        new_temp.id = t.id
-        new_temp.creator = t.creator
-        new_temp.system_default = t.system_default
+        new_temp.id = old_temp.id
+        new_temp.creator = old_temp.creator
+        new_temp.system_default = old_temp.system_default
         new_temp.save()
 
-        if t.shared and not new_temp.shared:
+        if old_temp.shared and not new_temp.shared:
             player = request.user.profile.player
-            for g in Game.objects.filter(template=new_temp):
-                if not g.is_player_mod(player):
-                    g.template = None
-                    g.save()
+            for game in Game.objects.filter(template=new_temp):
+                if not game.is_player_mod(player):
+                    game.template = None
+                    game.save()
 
         messages.add_message(request, messages.SUCCESS,
                              'Success! The template <strong>{}</strong> was saved.'.format(new_temp.name))
         return HttpResponseRedirect('/templates')
-    return render(request, 'template_edit.html', {'form': form, 'template': t, 'edit': True})
+    return render(request, 'template_edit.html', {'form': form, 'template': old_temp, 'edit': True})
 
 
 @login_required
 def delete_template(request, templateid):
-    t = get_object_or_404(VotecountTemplate, id=templateid)
-    if not request.user.is_superuser and t.creator != request.user.profile.player:
+    template = get_object_or_404(VotecountTemplate, id=templateid)
+    if not request.user.is_superuser and template.creator != request.user.profile.player:
         return HttpResponseNotFound
 
-    if t.system_default:
+    if template.system_default:
         messages.add_message(request, messages.ERROR,
                              '<strong>Error!</strong> You cannot delete the system default template.')
         return HttpResponseRedirect('/templates')
 
-    for g in Game.objects.filter(template=t):
-        g.template = None
-        g.save()
+    for this_game in Game.objects.filter(template=template):
+        this_game.template = None
+        this_game.save()
 
-    t.delete()
+    template.delete()
 
     messages.add_message(request, messages.SUCCESS, 'Template was deleted!')
     return HttpResponseRedirect('/templates')
@@ -681,8 +681,8 @@ def game_template(request, gameid, templateid):
 def active_games(request):
     game_list = Game.objects.select_related().filter(state='started').order_by('name')
 
-    big_games = [g for g in game_list if g.is_big]
-    mini_games = [g for g in game_list if g.is_big is False]
+    big_games = [this_game for this_game in game_list if this_game.is_big]
+    mini_games = [this_game for this_game in game_list if this_game.is_big is False]
 
     return render(request, 'wiki_games.html',
                   {'big_games': big_games, 'mini_games': mini_games})
@@ -691,14 +691,14 @@ def active_games(request):
 def active_games_style(request, style):
     if style in {'default', 'verbose'}:
         game_list = Game.objects.select_related().filter(state='started').order_by('name')
-        big_games = [g for g in game_list if g.is_big]
-        mini_games = [g for g in game_list if not g.is_big]
+        big_games = [this_game for this_game in game_list if this_game.is_big]
+        mini_games = [this_game for this_game in game_list if not this_game.is_big]
 
         return render(request, 'wiki_games.html', {'big_games': big_games, 'mini_games': mini_games, 'style': style})
     elif style == 'closedmonthly':
         game_list = Game.objects.select_related().filter(state='closed').order_by('name').annotate(last_post=Max('posts__timestamp')).order_by(
             '-last_post')
-        game_list = [g for g in game_list if datetime.now() - g.last_post < timedelta(days=31)]
+        game_list = [this_game for this_game in game_list if datetime.now() - this_game.last_post < timedelta(days=31)]
 
         return render(request, 'wiki_closed_games.html', {'game_list': game_list})
     return HttpResponse('Style not supported')
@@ -904,8 +904,8 @@ def votecount_image(request, slug):
     if img_dict is None:
         game = check_update_game(game)
         img = Image.new('RGBA', (800, 1024), (255, 255, 255, 0))
-        (w, h) = votecount_to_image(img, game, 0, 0, 800)
-        img = img.crop((0, 0, w, h))
+        (width, height) = votecount_to_image(img, game, 0, 0, 800)
+        img = img.crop((0, 0, width, height))
         cache.set(key, {'size': img.size, 'data': img.tobytes()}, 120)
     else:
         img = Image.frombytes('RGBA', img_dict['size'], img_dict['data'])
@@ -954,11 +954,11 @@ def players_page(request, page):
     if not players:
         return HttpResponseRedirect('/players')
 
-    for p in players:
-        if p.total_games_played > 0:
-            p.posts_per_game = p.total_posts / (1.0 * p.total_games_played)
+    for player in players:
+        if player.total_games_played > 0:
+            player.posts_per_game = player.total_posts / (1.0 * player.total_games_played)
         else:
-            p.posts_per_game = 0
+            player.posts_per_game = 0
 
     return render(request, 'players.html',
                   {'players': players, 'page': page, 'total_pages': total_pages})
@@ -1039,11 +1039,11 @@ def post_vc(request, gameid):
 
         game = check_update_game(game)
 
-        v = VotecountFormatter.VotecountFormatter(game)
-        v.go()
+        vc_formatter = VotecountFormatter.VotecountFormatter(game)
+        vc_formatter.go()
 
         dl = ForumPageDownloader.ForumPageDownloader()
-        dl.reply_to_thread(game.thread_id, v.bbcode_votecount)
+        dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
@@ -1075,7 +1075,7 @@ def votechart_player(request, gameslug, playerslug):
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    vote_log = [v for v in vc.get_votelog() if v['player'] == player.name]
+    vote_log = [vote for vote in vc.get_votelog() if vote['player'] == player.name]
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.start_post.timestamp,
@@ -1099,10 +1099,10 @@ def gamechart(request):
     cursor = connections['default'].cursor()
     cursor.execute(
         'select cast(timestamp as date) as date, count(1)/count(distinct(game_id)) as activity, count(distinct(author_Id)) as posters, count(distinct(game_id)) as games, count(1) as posts from main_post group by date order by date')
-    data = dictfetchall(cursor)
+    gamedata_by_date = dictfetchall(cursor)
 
     return render(request, 'gamechart.html',
-                  {'data': data, 'dataLen': len(data)},
+                  {'data': gamedata_by_date, 'dataLen': len(gamedata_by_date)},
                   )
 
 
