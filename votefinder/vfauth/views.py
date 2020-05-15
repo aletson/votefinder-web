@@ -37,7 +37,7 @@ def create_step_3(request):
     form.required_key = key
     if form.is_valid():
         user = create_user(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'],
-                          form.userid)
+                           form.userid)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         messages.add_message(request, messages.SUCCESS,

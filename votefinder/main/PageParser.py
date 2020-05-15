@@ -91,9 +91,9 @@ class PageParser:
 
         while match:
             v = Vote(post=post, game=post.game, author=post.author, unvote=True)
-            (targetStr,) = match.groups()
-            if targetStr:
-                v.targetString = targetStr.strip()
+            (target_string,) = match.groups()
+            if target_string:
+                v.targetString = target_string.strip()
                 v.target = self.autoresolve_vote(v.targetString)
                 v.unvote = False
 
@@ -163,8 +163,8 @@ class PageParser:
                                                                  'added_by': self.user, 'current_day': day_number})
 
         if game_created:
-            playerState, created = PlayerState.objects.get_or_create(game=game, player=mod,
-                                                                     defaults={'moderator': True})
+            player_state, created = PlayerState.objects.get_or_create(game=game, player=mod,
+                                                                      defaults={'moderator': True})
         else:
             self.gamePlayers = [p.player for p in game.all_players()]
 
@@ -184,13 +184,13 @@ class PageParser:
             cur_player.save()
 
         if self.new_game or game.state == 'pregame':
-            defaultState = 'alive'
+            default_state = 'alive'
         else:
-            defaultState = 'spectator'
+            default_state = 'spectator'
 
         for player in self.players:
-            playerState, created = PlayerState.objects.get_or_create(game=game, player=player,
-                                                                     defaults={defaultState: True})
+            player_state, created = PlayerState.objects.get_or_create(game=game, player=player,
+                                                                      defaults={default_state: True})
 
         if game_created:
             gameday = GameDay(game=game, dayNumber=day_number, startPost=self.posts[0])
@@ -202,9 +202,9 @@ class PageParser:
     def find_page_number(self, soup):
         pages = soup.find('div', 'pages')
         if pages:
-            curPage = pages.find(attrs={'selected': 'selected'})
-            if curPage:
-                return curPage['value']
+            current_page = pages.find(attrs={'selected': 'selected'})
+            if current_page:
+                return current_page['value']
             return '1'
         return '1'
 

@@ -514,14 +514,14 @@ def replace(request, gameid, clear, outgoing, incoming):
     clear_votes = bool(clear == 'true')
 
     try:
-        playerState = PlayerState.objects.get(game=game, player=player_out)
+        player_state = PlayerState.objects.get(game=game, player=player_out)
     except PlayerState.DoesNotExist:
         messages.add_message(request, messages.ERROR, 'The player <strong>{}</strong> is not in that game!'.format(player_out))
 
     try:
-        newPlayerState = PlayerState.objects.get(game=game, player=player_in)
-        if newPlayerState.spectator:
-            newPlayerState.delete()
+        new_player_state = PlayerState.objects.get(game=game, player=player_in)
+        if new_player_state.spectator:
+            new_player_state.delete()
         else:
             messages.add_message(request, messages.ERROR,
                                  'The player <strong>{}</strong> is already in that game!'.format(player_in))
@@ -529,8 +529,8 @@ def replace(request, gameid, clear, outgoing, incoming):
     except PlayerState.DoesNotExist:
         pass
 
-    playerState.player = player_in
-    playerState.save()
+    player_state.player = player_in
+    player_state.save()
     votes_affected = 0
 
     vote_list = game.votes.filter(Q(author=player_out) | Q(target=player_out))
@@ -705,11 +705,11 @@ def active_games_style(request, style):
 
 
 def active_games_json(request):
-    gameList = sorted(({'name': g.name, 'mod': g.moderator.name,
+    game_list = sorted(({'name': g.name, 'mod': g.moderator.name,
                         'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(g.threadId)} for g in
                        Game.objects.select_related().filter(state='started')), key=lambda g: g['name'])
 
-    return HttpResponse(simplejson.dumps(gameList), content_type='application/json')
+    return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
 
 
 def closed_games(request):
@@ -1052,16 +1052,16 @@ def post_vc(request, gameid):
 def votechart_all(request, gameslug):
     game = get_object_or_404(Game, slug=gameslug)
     day = GameDay.objects.get(game=game, dayNumber=game.current_day)
-    toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
+    required_votes_to_execute = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = vc.get_votelog()
+    vote_log = vc.get_votelog()
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': True, 'startDate': day.startPost.timestamp,
-                   'now': datetime.now(), 'toLynch': toLynch,
-                   'votes': voteLog, 'numVotes': len(voteLog),
+                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'votes': vote_log, 'numVotes': len(vote_log),
                    'players': [p.player.name for p in game.living_players()],
                    'allPlayers': [p.player for p in game.living_players()]},
                   )
@@ -1071,16 +1071,16 @@ def votechart_player(request, gameslug, playerslug):
     game = get_object_or_404(Game, slug=gameslug)
     player = get_object_or_404(Player, slug=playerslug)
     day = GameDay.objects.get(game=game, dayNumber=game.current_day)
-    toLynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
+    required_votes_to_execute = int(math.floor(len(game.living_players()) / 2.0) + 1)
 
     vc = VoteCounter.VoteCounter()
     vc.run(game)
-    voteLog = [v for v in vc.get_votelog() if v['player'] == player.name]
+    vote_log = [v for v in vc.get_votelog() if v['player'] == player.name]
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.startPost.timestamp,
-                   'now': datetime.now(), 'toLynch': toLynch,
-                   'votes': voteLog, 'numVotes': len(voteLog),
+                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'votes': vote_log, 'numVotes': len(vote_log),
                    'allPlayers': [p.player for p in game.living_players()],
                    'selectedPlayer': player.name,
                    'players': [player.name]},
