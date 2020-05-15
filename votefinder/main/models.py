@@ -308,7 +308,7 @@ class GameStatusUpdate(models.Model):
             except NameError:
                 self.url = post_url
 
-        super(GameStatusUpdate, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class BlogPost(models.Model):
