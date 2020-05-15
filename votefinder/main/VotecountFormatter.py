@@ -92,7 +92,7 @@ class VotecountFormatter:
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}',
             until_deadline).replace('{{day}}', str(gameday.dayNumber)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}', str(alive))
 
-        self.html_votecount = self.ConvertBBCodeToHTML(self.bbcode_votecount)
+        self.html_votecount = self.convert_bbcode_to_html(self.bbcode_votecount)
 
     def to_lynch(self, count):
         return int(math.floor(count / 2.0) + 1)
@@ -101,7 +101,7 @@ class VotecountFormatter:
         return ''.join(
             ['[img]{}[/img]'.format(self.empty_tick if i < (total - ticked) else self.tick) for i in range(0, total)])
 
-    def ConvertBBCodeToHTML(self, bbcode):
+    def convert_bbcode_to_html(self, bbcode):
         results = bbcode
 
         results = results.replace('\n', '<br />\n').replace('[b]', '<b>').replace('[/b]', '</b>').replace('[i]', '<i>')

@@ -192,7 +192,7 @@ class PageParser:
             playerState, created = PlayerState.objects.get_or_create(game=game, player=player,
                                                                      defaults={defaultState: True})
 
-        if gameCreated:
+        if game_created:
             gameday = GameDay(game=game, dayNumber=day_number, startPost=self.posts[0])
             gameday.save()
 
