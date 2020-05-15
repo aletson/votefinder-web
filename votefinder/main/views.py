@@ -161,7 +161,7 @@ def update(request, gameid):
     if game.is_locked():
         return HttpResponse(simplejson.dumps(
             {'success': False, 'message': 'Someone else is updating that game right now.  Please wait.'}),
-                            content_type='application/json')
+            content_type='application/json')
     else:
         game.lock()
     try:
@@ -331,7 +331,7 @@ def votecount(request, gameid):
     v.go()
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
-            minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
+        minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'post_vc_button': post_vc_button,
                'html_votecount': v.html_votecount,
                'bbcode_votecount': v.bbcode_votecount}
@@ -946,10 +946,10 @@ def players_page(request, page):
     total_players = Player.objects.all().count()
     total_pages = int(ceil(1.0 * total_players / items_per_page))
     players = Player.objects.select_related().filter(uid__gt='0').order_by('name').extra(select={
-       'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
-       'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
-       'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
-             first_record: first_record + items_per_page]
+        'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
+        'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
+        'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
+        first_record: first_record + items_per_page]
 
     if not players:
         return HttpResponseRedirect('/players')
