@@ -129,8 +129,8 @@ class Game(models.Model):
         self.status_update_noncritical(message)
 
     def status_update_noncritical(self, message):
-        u = GameStatusUpdate(game=self, message=message)
-        u.save()
+        status_update = GameStatusUpdate(game=self, message=message)
+        status_update.save()
 
     def is_locked(self):
         if self.locked_at is None or datetime.now() - self.locked_at > timedelta(minutes=1):
@@ -166,20 +166,20 @@ class Game(models.Model):
 
     def all_players(self):
         return sorted(self.players.select_related().filter(spectator=False, moderator=False),
-                      key=lambda p: p.player.name.lower())
+                      key=lambda player: player.player.name.lower())
 
     def living_players(self):
-        return sorted(self.players.select_related().filter(alive=True), key=lambda p: p.player.name.lower())
+        return sorted(self.players.select_related().filter(alive=True), key=lambda player: player.player.name.lower())
 
     def dead_players(self):
         return sorted(self.players.select_related().filter(alive=False, moderator=False, spectator=False),
                       key=lambda p: p.player.name.lower())
 
     def spectators(self):
-        return sorted(self.players.select_related().filter(spectator=True), key=lambda p: p.player.name.lower())
+        return sorted(self.players.select_related().filter(spectator=True), key=lambda player: player.player.name.lower())
 
     def moderators(self):
-        return sorted(self.players.select_related().filter(moderator=True), key=lambda p: p.player.name.lower())
+        return sorted(self.players.select_related().filter(moderator=True), key=lambda player: player.player.name.lower())
 
     def is_player_mod(self, player):
         try:

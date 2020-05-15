@@ -77,8 +77,8 @@ class ForumPageDownloader():
         soup = BeautifulSoup(data, 'html.parser')
 
         inputs = {'message': message}
-        for i in soup.find_all('input', {'value': True}):
-            inputs[i['name']] = i['value']
+        for input_element in soup.find_all('input', {'value': True}):
+            inputs[input_element['name']] = input_element['value']
 
         if not inputs['disablesmilies']:
             # Thread is locked!

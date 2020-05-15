@@ -53,20 +53,20 @@ class VotecountFormatter:
 
             if item['votes']:
                 votelist = []
-                for v in item['votes']:
+                for vote in item['votes']:
                     thisvote = None
-                    if v['unvote']:
+                    if vote['unvote']:
                         if detail_level == 3:
                             thisvote = ''.join(
-                                [game_template.before_unvote, str(v['author'].name), game_template.after_unvote])
-                    elif v['enabled']:
-                        thisvote = ''.join([game_template.before_vote, str(v['author'].name), game_template.after_vote])
+                                [game_template.before_unvote, str(vote['author'].name), game_template.after_unvote])
+                    elif vote['enabled']:
+                        thisvote = ''.join([game_template.before_vote, str(vote['author'].name), game_template.after_vote])
                     elif detail_level >= 2:
                         thisvote = ''.join(
-                            [game_template.before_unvoted_vote, str(v['author'].name), game_template.after_unvoted_vote])
+                            [game_template.before_unvoted_vote, str(vote['author'].name), game_template.after_unvoted_vote])
 
                     if thisvote:
-                        votelist.append(thisvote.replace('{{url}}', v['url']))
+                        votelist.append(thisvote.replace('{{url}}', vote['url']))
 
                 if votelist:
                     this_line = game_template.single_line.replace('{{target}}', str(item['target'].name)).replace(
@@ -75,8 +75,8 @@ class VotecountFormatter:
                         this_line.replace('{{ticks}}', self.build_ticks(item['count'], self.tolynch)))
 
         self.not_voting_list = sorted(
-            filter(lambda x: self.vc.currentVote[x] is None and x in living_players, self.vc.currentVote),
-            key=lambda x: x.name.lower())
+            filter(lambda player: self.vc.currentVote[player] is None and player in living_players, self.vc.currentVote),
+            key=lambda player: player.name.lower())
         temp_not_voting = game_template.single_line.replace('{{target}}', 'Not Voting').replace('{{count}}', str(
             len(self.not_voting_list))).replace('{{ticks}}', self.build_ticks(0, self.tolynch))
 
@@ -86,7 +86,7 @@ class VotecountFormatter:
             map(lambda x: x.name, self.not_voting_list))))
 
         if comments:
-            temp_overall += '\n \n' + '\n \n'.join([c.comment for c in comments])
+            temp_overall += '\n \n' + '\n \n'.join([comment.comment for comment in comments])
 
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}', until_deadline).replace('{{day}}', str(gameday.day_number)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}', str(alive))
 
@@ -97,7 +97,7 @@ class VotecountFormatter:
 
     def build_ticks(self, ticked, total):
         return ''.join(
-            ['[img]{}[/img]'.format(self.empty_tick if i < (total - ticked) else self.tick) for i in range(0, total)])
+            ['[img]{}[/img]'.format(self.empty_tick if iterator < (total - ticked) else self.tick) for iterator in range(0, total)])
 
     def convert_bbcode_to_html(self, bbcode):
         results = bbcode

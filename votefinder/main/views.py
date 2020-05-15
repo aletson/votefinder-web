@@ -41,8 +41,8 @@ def index(request):
     active_game_list = Game.objects.select_related().filter(state='started').order_by('name')
     pregame_list = Game.objects.select_related().filter(state='pregame').order_by('name')
 
-    big_games = [g for g in active_game_list if g.is_big]
-    mini_games = [g for g in active_game_list if not g.is_big]
+    big_games = [this_game for this_game in active_game_list if this_game.is_big]
+    mini_games = [this_game for this_game in active_game_list if not this_game.is_big]
     posts = BlogPost.objects.all().order_by('-timestamp')[:5]
 
     game_count = Game.objects.count()
@@ -327,14 +327,14 @@ def votecount(request, gameid):
     except Vote.DoesNotExist:
         pass
 
-    v = VotecountFormatter.VotecountFormatter(game)
-    v.go()
+    vc_formatter = VotecountFormatter.VotecountFormatter(game)
+    vc_formatter.go()
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(
         minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'post_vc_button': post_vc_button,
-               'html_votecount': v.html_votecount,
-               'bbcode_votecount': v.bbcode_votecount}
+               'html_votecount': vc_formatter.html_votecount,
+               'bbcode_votecount': vc_formatter.bbcode_votecount}
     return render(request, 'votecount.html', context)
 
 
@@ -351,9 +351,9 @@ def resolve(request, voteid, resolution):
         vote.save()
     else:
         player = get_object_or_404(Player, id=int(resolution))
-        for v in votes:
-            v.target = player
-            v.save()
+        for this_vote in votes:
+            this_vote.target = player
+            this_vote.save()
 
         alias, created = Alias.objects.get_or_create(player=player, alias=vote.target_string)
         if created:
@@ -422,12 +422,12 @@ def add_comment(request, gameid):
 
 @login_required
 def delete_comment(request, commentid):
-    c = get_object_or_404(Comment, id=commentid)
-    if not check_mod(c.game):
+    comment = get_object_or_404(Comment, id=commentid)
+    if not check_mod(comment.game):
         return HttpResponseNotFound
 
-    url = c.game.get_absolute_url()
-    Comment.delete(c)
+    url = comment.game.get_absolute_url()
+    Comment.delete(comment)
     messages.add_message(request, messages.SUCCESS, 'The comment was deleted successfully.')
     return HttpResponseRedirect(url)
 
@@ -705,9 +705,9 @@ def active_games_style(request, style):
 
 
 def active_games_json(request):
-    game_list = sorted(({'name': g.name, 'mod': g.moderator.name,
-                        'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(g.thread_id)} for g in
-                       Game.objects.select_related().filter(state='started')), key=lambda g: g['name'])
+    game_list = sorted(({'name': game.name, 'mod': game.moderator.name,
+                        'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(game.thread_id)} for game in
+                       Game.objects.select_related().filter(state='started')), key=lambda g: game['name'])
 
     return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
 
@@ -724,18 +724,18 @@ def add_vote(request, gameid, player, votes, target):
         return HttpResponseNotFound
 
     gameday = game.days.select_related().last()
-    v = Vote(manual=True, post=gameday.start_post, game=game)
+    vote = Vote(manual=True, post=gameday.start_post, game=game)
     if player == '-1':
-        v.author = Player.objects.get(uid=0)  # anonymous
+        vote.author = Player.objects.get(uid=0)  # anonymous
     else:
-        v.author = get_object_or_404(Player, id=player)
+        vote.author = get_object_or_404(Player, id=player)
 
     if votes == 'unvotes':
-        v.unvote = True
+        vote.unvote = True
     else:
-        v.target = get_object_or_404(Player, id=target)
+        vote.target = get_object_or_404(Player, id=target)
 
-    v.save()
+    vote.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A new manual vote was saved.')
     return HttpResponseRedirect(game.get_absolute_url())
 
@@ -750,8 +750,8 @@ def add_vote_global(request, gameid):
     playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
-        v = Vote(manual=True, post=gameday.start_post, game=game, author=Player.objects.get(uid=0), target=target)
-        v.save()
+        vote = Vote(manual=True, post=gameday.start_post, game=game, author=Player.objects.get(uid=0), target=target)
+        vote.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
     return HttpResponseRedirect(game.get_absolute_url())
 

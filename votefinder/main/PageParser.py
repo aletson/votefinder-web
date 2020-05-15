@@ -28,11 +28,11 @@ class PageParser:
                                         threadid)
 
     def download_and_update(self, url, threadid):
-        data = self.download_forum_page(url)
-        if not data:
+        page_html = self.download_forum_page(url)
+        if not page_html:
             return None
 
-        game = self.parse_page(data, threadid)
+        game = self.parse_page(page_html, threadid)
         if not game:
             return None
 
@@ -75,7 +75,7 @@ class PageParser:
 
         try:
             if len(text) > 4:
-                players = Player.objects.filter(name__icontains=text, name__in=[p.name for p in self.gamePlayers])
+                players = Player.objects.filter(name__icontains=text, name__in=[player.name for player in self.gamePlayers])
                 if len(players) == 1:
                     return players[0]
         except Player.DoesNotExist:
@@ -90,23 +90,23 @@ class PageParser:
         match = pattern.search(line, pos)
 
         while match:
-            v = Vote(post=post, game=post.game, author=post.author, unvote=True)
+            vote = Vote(post=post, game=post.game, author=post.author, unvote=True)
             (target_string,) = match.groups()
             if target_string:
-                v.target_string = target_string.strip()
-                v.target = self.autoresolve_vote(v.target_string)
-                v.unvote = False
+                vote.target_string = target_string.strip()
+                vote.target = self.autoresolve_vote(vote.target_string)
+                vote.unvote = False
 
-                if v.target is None and v.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
-                    v.nolynch = True
+                if vote.target is None and vote.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
+                    vote.nolynch = True
             try:
                 game = Game.objects.get(id=post.game.id)
                 player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
                 current_gameday = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post_id or player_last_vote.unvote or v.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
-                    v.save()
+                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post_id or player_last_vote.unvote or vote.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
+                    vote.save()
             except Game.DoesNotExist:
-                v.save()
+                vote.save()
                 pass
             match = pattern.search(line, match.end())
 
@@ -128,12 +128,12 @@ class PageParser:
         for quote in post.bodySoup.findAll('div', 'quote well'):
             quote.extract()
         for bold in post.bodySoup.findAll('b'):
-            post_content = ''.join([str(x) for x in bold.contents])
+            post_content = ''.join([str(bold_string) for bold_string in bold.contents])
             for line in post_content.splitlines():
                 self.search_line_for_actions(post, line)
 
-    def parse_page(self, data, threadid):
-        soup = BeautifulSoup(data, 'html5lib')
+    def parse_page(self, page_html, threadid):
+        soup = BeautifulSoup(page_html, 'html5lib')
         self.pageNumber = self.find_page_number(soup)
         self.maxPages = self.find_max_pages(soup)
         self.gameName = re.compile(r'\[.*?\]').sub('', self.read_thread_title(soup)).strip()
@@ -166,7 +166,7 @@ class PageParser:
             player_state, created = PlayerState.objects.get_or_create(game=game, player=mod,
                                                                       defaults={'moderator': True})
         else:
-            self.gamePlayers = [p.player for p in game.all_players()]
+            self.gamePlayers = [player.player for player in game.all_players()]
 
         game.max_pages = self.maxPages
         game.current_page = self.pageNumber
