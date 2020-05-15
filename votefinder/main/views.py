@@ -117,9 +117,9 @@ def add_game(request):
 
 @login_required
 def game_list(request, page):
-    p = GameListDownloader.GameListDownloader()
-    p.GetGameList('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
-    return HttpResponse(simplejson.dumps(p.GameList), content_type='application/json')
+    downloader = GameListDownloader.GameListDownloader()
+    downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
+    return HttpResponse(simplejson.dumps(downloader.GameList), content_type='application/json')
 
 
 def game(request, slug):

@@ -11,31 +11,31 @@ class GameListDownloader():
         self.GameList = []
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
-    def GetGameList(self, page):
-        data = self.DownloadList(page)
+    def get_game_list(self, page):
+        data = self.download_list(page)
         if not data:
             return False
 
-        if not self.ParseGameList(data):
+        if not self.parse_game_list(data):
             return False
 
         return True
 
-    def DownloadList(self, page):
+    def download_list(self, page):
         return self.downloader.download(
             'http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
 
-    def ParseGameList(self, data):
+    def parse_game_list(self, data):
         soup = BeautifulSoup(data, 'html.parser')
 
         for thread in soup.find_all('a', 'thread_title'):
             if thread.text.lower().find('mafia') != -1:
-                game = {'name': thread.text, 'url': thread['href'], 'tracked': self.IsGameTracked(thread['href'])}
+                game = {'name': thread.text, 'url': thread['href'], 'tracked': self.is_game_tracked(thread['href'])}
                 self.GameList.append(game)
 
         return True
 
-    def IsGameTracked(self, url):
+    def is_game_tracked(self, url):
         matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
         if matcher:
             try:
