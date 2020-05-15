@@ -113,25 +113,25 @@ class VoteCounter:
         self.currentVote[vote.author] = vote.target
 
     def add_vote_to_player(self, target, author, unvote, page, postid, timestamp):
-        resultItem = self.results[target]
+        result_item = self.results[target]
         if unvote:
-            resultItem['count'] -= 1
+            result_item['count'] -= 1
             text = '{} unvotes'.format(author)
         else:
-            resultItem['count'] += 1
+            result_item['count'] += 1
             text = '{} votes {}'.format(author, target)
 
-        self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': resultItem['count'], 'text': text})
+        self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': result_item['count'], 'text': text})
 
-        resultItem['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
+        result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
                                     'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
                                         self.game.thread_id, page, postid)})
 
     def handle_unvote(self, vote):
-        currentVote = self.player_is_voting(vote.author)
-        if currentVote:
-            self.disable_current_vote(vote.author, currentVote)
-            self.add_vote_to_player(currentVote, vote.author, True, vote.post.page_number, vote.post.post_id,
+        current_vote = self.player_is_voting(vote.author)
+        if current_vote:
+            self.disable_current_vote(vote.author, current_vote)
+            self.add_vote_to_player(current_vote, vote.author, True, vote.post.page_number, vote.post.post_id,
                                     vote.post.timestamp)
         self.currentVote[vote.author] = None
 
