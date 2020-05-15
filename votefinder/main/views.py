@@ -174,7 +174,7 @@ def update(request, gameid):
         game.save()
         return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
                             content_type='application/json')
-    except:
+    except BaseException:
         game.save()
         raise
 
@@ -891,7 +891,7 @@ def check_update_game(game):
             return new_game
         game.save()
         return game
-    except:
+    except BaseException:
         return game
 
 

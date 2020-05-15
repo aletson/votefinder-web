@@ -63,7 +63,7 @@ class ForumPageDownloader():
             page_request = self.session.get(page)
             data = page_request.text
             return data
-        except:
+        except BaseException:
             return None
 
     def reply_to_thread(self, thread, message):
