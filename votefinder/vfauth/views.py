@@ -10,13 +10,13 @@ from votefinder.main.models import Player, UserProfile
 from votefinder.vfauth.models import CreateUserForm
 
 
-def create_step_1(request):
+def give_user_profile_key(request):
     profile_key = random.randint(10000000, 99999999)  # noqa: S311
     request.session['profileKey'] = profile_key
     return render(request, 'step1.html', {'profileKey': profile_key})
 
 
-def create_step_2(request):
+def get_votefinder_account_info(request):
     key = request.session['profileKey']
     if not key:
         return HttpResponseRedirect('/auth/create')
@@ -25,7 +25,7 @@ def create_step_2(request):
     return render(request, 'step2.html', {'form': form})
 
 
-def create_step_3(request):
+def validate_and_create_user(request):
     key = request.session['profileKey']
     if not key or request.method != 'POST':
         return HttpResponseRedirect('/auth/create')
