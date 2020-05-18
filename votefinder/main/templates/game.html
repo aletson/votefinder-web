@@ -52,7 +52,7 @@ $(document).ready(function () {
     });
     $('.button').button();
     $('#refreshbutton').button();
-	{% if game.state == 'started' %}
+	{% if game.state != 'pregame' %}
     $('#votecount_contents').load('/votecount/{{ game.id }}', function () {
         $('.button').button();
     });
