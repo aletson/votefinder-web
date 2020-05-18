@@ -230,7 +230,8 @@ $(document).ready(function () {
     <div id="tabs">
         <ul class="nav nav-pills">
             {% if moderator %}
-            <li class="single-tab{% if game.state == 'closed' %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>{% endif %}
+            <li class="single-tab{% if game.state == 'closed' %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>
+            {% endif %}
             <li class="single-tab{% if not moderator or game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
@@ -482,7 +483,7 @@ $(document).ready(function () {
     </div>
 	{% endif %}
 
-
+    {% if game.state != 'closed' %}
     {% if user.is_superuser %}
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="moderator-send-pm-heading">
@@ -500,7 +501,6 @@ $(document).ready(function () {
         </div>
     </div>
     {% endif %}
-
 
     <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="moderator-game-options-heading">
@@ -612,6 +612,7 @@ $(document).ready(function () {
         </div>
     </div>
 </div> <!-- open-game-accordion -->
+{% endif %}
 </div> <!-- moderator tab -->
 
 
