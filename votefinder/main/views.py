@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import connections
-from django.db.models import Max, Min, Q
+from django.db.models import Max, Min, Q  # noqa: WPS347
 from django.http import (HttpResponse, HttpResponseForbidden,
                          HttpResponseNotFound, HttpResponseRedirect)
 from django.shortcuts import get_list_or_404, get_object_or_404, render
