@@ -83,8 +83,8 @@ class ForumPageDownloader():
         if not inputs['disablesmilies']:
             # Thread is locked!
             return False
-        del inputs['disablesmilies']
-        del inputs['preview']
+        inputs.pop('disablesmilies')
+        inputs.pop('preview')
 
         self.session.post(post_url, data=inputs)
 
