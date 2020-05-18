@@ -28,13 +28,20 @@ jobs:
           fi
           sleep 10
       - name: Deploy to Dev
-        if: ${{ success() && github.ref == 'refs/heads/master' }}
-        uses: easingthemes/ssh-deploy@v2.1.1
-        env: 
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        uses: JimCronqvist/action-ssh@0.1.1
+        env:
           TARGET: ${{ secrets.DEV_TARGET }}
+          DEV_VENV_PATH: ${{ secrets.DEV_VENV_PATH }}
+          DEV_USER: ${{ secrets.DEV_USER }}
+        with: 
+          hosts: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}'
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: |
+            cd $TARGET
+            sudo git fetch
+            sudo git checkout $GITHUB_SHA
+            sudo $DEV_VENV_PATH/bin/pip install -r requirements.txt
+            sudo chown $DEV_USER:$DEV_USER $DEV_VENV_PATH -R
       - name: Remove IP from file deployment SG
         if: ${{ success() }}
         env: 
