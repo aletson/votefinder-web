@@ -29,7 +29,7 @@ class CreateUserForm(forms.Form):
             existing_user = User.objects.all().get(username=login)
             raise forms.ValidationError('A user by that name already exists.')
         except User.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
 
         if self.required_key:
             downloader = ForumPageDownloader()
@@ -51,11 +51,11 @@ class CreateUserForm(forms.Form):
                         existing_user = UserProfile.objects.all().get(id=existing_userprofile.user_id)
                         raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existing_user.username))
                     except UserProfile.DoesNotExist:
-                        pass
+                        pass  # noqa: WPS420
                     except Player.DoesNotExist:
-                        pass
+                        pass  # noqa: WPS420
                     except User.DoesNotExist:
-                        pass
+                        pass  # noqa: WPS420
                     matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(data)
                     if matcher:
                         login = matcher.group('login')

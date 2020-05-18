@@ -57,21 +57,21 @@ class PageParser:
             if player in self.players or player in self.gamePlayers:
                 return player
         except Player.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
 
         try:
             aliases = Alias.objects.filter(alias__iexact=text, player__in=self.players)
             if aliases:
                 return aliases[0].player
         except Alias.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
 
         try:
             aliases = Alias.objects.filter(alias__iexact=text, player__in=self.gamePlayers)
             if aliases:
                 return aliases[0].player
         except Alias.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
 
         try:
             if len(text) > 4:
@@ -79,7 +79,7 @@ class PageParser:
                 if len(players) == 1:
                     return players[0]
         except Player.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
 
         return None
 
@@ -100,14 +100,13 @@ class PageParser:
                 if vote.target is None and vote.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
                     vote.nolynch = True
             try:
-                game = Game.objects.get(id=post.game.id)
+                game = Game.objects.get(id=post.game.id)  # Is this line necessary? Can't we just use post.game?
                 player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
                 current_gameday = GameDay.objects.filter(game=post.game).last()
                 if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post_id or player_last_vote.unvote or vote.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
                     vote.save()
             except Game.DoesNotExist:
                 vote.save()
-                pass
             match = pattern.search(line, match.end())
 
         if post.game.is_player_mod(post.author):

@@ -42,6 +42,6 @@ class GameListDownloader():
                 Game.objects.all().get(thread_id=matcher.group('threadid'))
                 return True
             except Game.DoesNotExist:
-                pass
+                pass  # noqa: WPS420
 
         return False

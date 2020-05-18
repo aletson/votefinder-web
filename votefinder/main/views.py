@@ -221,7 +221,7 @@ def player(request, slug):
         profile = UserProfile.objects.get(player=player)
         pronouns = profile.pronouns
     except Alias.DoesNotExist:
-        pass
+        pass  # noqa: WPS420
     except UserProfile.DoesNotExist:
         pronouns = None
 
@@ -271,7 +271,7 @@ def player_list(request):
         for player in Player.objects.filter(name__icontains=request.GET['term']):
             results.append(player.name)
     except Player.DoesNotExist:
-        pass
+        pass  # noqa: WPS420
 
     return HttpResponse(simplejson.dumps(results), content_type='application/json')
 
@@ -325,7 +325,7 @@ def votecount(request, gameid):
             return render(request, 'unresolved.html',
                           {'game': game, 'votes': votes, 'players': players})
     except Vote.DoesNotExist:
-        pass
+        pass  # noqa: WPS420
 
     vc_formatter = VotecountFormatter.VotecountFormatter(game)
     vc_formatter.go()
@@ -527,7 +527,7 @@ def replace(request, gameid, clear, outgoing, incoming):
                                  'The player <strong>{}</strong> is already in that game!'.format(player_in))
             return HttpResponseRedirect(game.get_absolute_url())
     except PlayerState.DoesNotExist:
-        pass
+        pass  # noqa: WPS420
 
     player_state.player = player_in
     player_state.save()
