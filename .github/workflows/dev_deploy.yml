@@ -42,6 +42,7 @@ jobs:
             sudo git checkout $GITHUB_SHA
             sudo $DEV_VENV_PATH/bin/pip install -r requirements.txt
             sudo chown $DEV_USER:$DEV_USER $DEV_VENV_PATH -R
+            sudo systemctl reload nginx
       - name: Remove IP from file deployment SG
         if: ${{ success() }}
         env: 
