@@ -173,7 +173,7 @@ class Game(models.Model):
 
     def dead_players(self):
         return sorted(self.players.select_related().filter(alive=False, moderator=False, spectator=False),
-                      key=lambda p: p.player.name.lower())
+                      key=lambda player: player.player.name.lower())
 
     def spectators(self):
         return sorted(self.players.select_related().filter(spectator=True), key=lambda player: player.player.name.lower())
@@ -187,7 +187,7 @@ class Game(models.Model):
             if user_state.moderator:
                 return True
         except PlayerState.DoesNotExist:
-            pass
+            pass  # noqa: WPS420
         return False
 
     def is_user_mod(self, user):

@@ -29,8 +29,8 @@ class ForumPageDownloader():
         return None
 
     def log_login_attempt(self):
-        g = Game.objects.get(id=228)
-        g.status_update('Trying to re-login to forums.  PM Alli if this happens a lot.')
+        game = Game.objects.get(id=228)
+        game.status_update('Trying to re-login to forums.  PM Alli if this happens a lot.')
 
     def login_to_forum(self):
         data = ''

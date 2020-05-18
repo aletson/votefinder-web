@@ -83,7 +83,7 @@ class VotecountFormatter:
         temp_overall = game_template.overall.replace('{{votecount}}', '\n'.join(votecount_lines))
         temp_overall = temp_overall.replace('{{deadline}}', game_template.deadline_exists if self.game.deadline else game_template.deadline_not_set)
         temp_overall = temp_overall.replace('{{notvoting}}', temp_not_voting.replace('{{votelist}}', ', '.join(
-            map(lambda x: x.name, self.not_voting_list))))
+            map(lambda not_voting_player: not_voting_player.name, self.not_voting_list))))
 
         if comments:
             temp_overall += '\n \n' + '\n \n'.join([comment.comment for comment in comments])

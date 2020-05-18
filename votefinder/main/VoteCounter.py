@@ -78,10 +78,10 @@ class VoteCounter:
             return
 
         message = random.choice(LynchMessage.objects.all()).text  # noqa: S311
-        v = VotecountFormatter.VotecountFormatter(game)
-        v.go()
+        vc_formatter = VotecountFormatter.VotecountFormatter(game)
+        vc_formatter.go()
         message = '{}\n\n'.format(message)
-        message += v.bbcode_votecount
+        message += vc_formatter.bbcode_votecount
         dl = ForumPageDownloader()
         dl.reply_to_thread(game.thread_id, ':redhammer: ' + message.format(name))
 
@@ -90,7 +90,7 @@ class VoteCounter:
         for key, val in self.results.items():
             resultlist.append({'target': key, 'count': val['count'], 'votes': val['votes']})
 
-        resultlist.sort(key=lambda i: i['count'], reverse=True)
+        resultlist.sort(key=lambda result: result['count'], reverse=True)
 
         return resultlist
 

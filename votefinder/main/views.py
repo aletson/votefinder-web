@@ -73,9 +73,9 @@ def add_game(request):
                 game = Game.objects.get(thread_id=threadid)
                 data['url'] = game.get_absolute_url()
             except Game.DoesNotExist:
-                p = PageParser.PageParser()
-                p.user = request.user
-                game = p.add_game(threadid, state)
+                page_parser = PageParser.PageParser()
+                page_parser.user = request.user
+                game = page_parser.add_game(threadid, state)
                 if game:
                     data['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
@@ -165,8 +165,8 @@ def update(request, gameid):
     else:
         game.lock()
     try:
-        p = PageParser.PageParser()
-        new_game = p.Update(game)
+        page_parser = PageParser.PageParser()
+        new_game = page_parser.Update(game)
         if new_game:
             return HttpResponse(
                 simplejson.dumps({'success': True, 'curPage': new_game.current_page, 'maxPages': new_game.max_pages}),
@@ -266,14 +266,14 @@ def player_state(request, gameid, playerid, state):
 
 
 def player_list(request):
-    results = []
+    player_list = []
     try:
         for player in Player.objects.filter(name__icontains=request.GET['term']):
-            results.append(player.name)
+            player_list.append(player.name)
     except Player.DoesNotExist:
         pass  # noqa: WPS420
 
-    return HttpResponse(simplejson.dumps(results), content_type='application/json')
+    return HttpResponse(simplejson.dumps(player_list), content_type='application/json')
 
 
 @login_required
@@ -282,8 +282,8 @@ def add_player(request, gameid):
     if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
 
-    c = {}
-    c.update(csrf(request))
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
     form = AddPlayerForm(request.POST)
     if form.is_valid():
         current_state, created = PlayerState.objects.get_or_create(player=form.player, game=game)
@@ -309,8 +309,8 @@ def delete_spectators(request, gameid):
     if not check_mod(request, game):
         return HttpResponseNotFound
 
-    for p in game.spectators():
-        PlayerState.delete(p)
+    for player in game.spectators():
+        PlayerState.delete(player)
 
     messages.add_message(request, messages.SUCCESS, 'All spectators were deleted from the game.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -321,7 +321,7 @@ def votecount(request, gameid):
     try:
         votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
         if votes:
-            players = sorted(game.all_players(), key=lambda p: p.player.name.lower())
+            players = sorted(game.all_players(), key=lambda player: player.player.name.lower())
             return render(request, 'unresolved.html',
                           {'game': game, 'votes': votes, 'players': players})
     except Vote.DoesNotExist:
@@ -400,8 +400,8 @@ def add_comment(request, gameid):
     if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
 
-    c = {}
-    c.update(csrf(request))
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
     form = AddCommentForm(request.POST)
     if form.is_valid():
         comments = Comment.objects.filter(game=game)
@@ -594,8 +594,8 @@ def create_template(request):
         system_default.name = 'My New Template'
         return render(request, 'template_edit.html', {'form': VotecountTemplateForm(instance=system_default)})
 
-    c = {}
-    c.update(csrf(request))
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
     form = VotecountTemplateForm(request.POST)
     if form.is_valid():
         new_temp = form.save(commit=False)
@@ -618,8 +618,8 @@ def edit_template(request, templateid):
         return render(request, 'template_edit.html',
                       {'form': VotecountTemplateForm(instance=old_temp), 'template': old_temp, 'edit': True})
 
-    c = {}
-    c.update(csrf(request))
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
     form = VotecountTemplateForm(request.POST)
     if form.is_valid():
         new_temp = form.save(commit=False)
@@ -707,7 +707,7 @@ def active_games_style(request, style):
 def active_games_json(request):
     game_list = sorted(({'name': game.name, 'mod': game.moderator.name,
                         'url': 'http://forums.somethingawful.com/showthread.php?threadid={}'.format(game.thread_id)} for game in
-                       Game.objects.select_related().filter(state='started')), key=lambda g: game['name'])
+                       Game.objects.select_related().filter(state='started')), key=lambda game_name: game['name'])
 
     return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
 
@@ -792,19 +792,19 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
             output_text.append(word)
             remaining = remaining - (word_width + space_width)
 
-    for t in output_text:
-        cur_width, cur_height = draw.textsize(t, font=font)
+    for word in output_text:
+        cur_width, cur_height = draw.textsize(word, font=font)
         if (cur_width > used_width):
             used_width = cur_width
 
-        draw.text((xpos, ypos), t, font=font, fill=fill)
+        draw.text((xpos, ypos), word, font=font, fill=fill)
         ypos += text_size_y
 
     return used_width + xpos, ypos
 
 
 def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
-    results = [x for x in vc.results if x['count'] > 0]
+    results = [voted_player for voted_player in vc.results if voted_player['count'] > 0]
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(': ', font=font)
     max_x = 0
@@ -834,7 +834,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size2, y_bottom2) = draw_wordwrap_text(draw, ': ', x_size1, ypos, max_width, font)
 
         text = ', '.join(
-            [v['author'].name for v in filter(lambda v: v['unvote'] is False and v['enabled'], line['votes'])])
+            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line['votes'])])
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)
@@ -1062,8 +1062,8 @@ def votechart_all(request, gameslug):
                   {'game': game, 'showAllPlayers': True, 'startDate': day.start_post.timestamp,
                    'now': datetime.now(), 'toLynch': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
-                   'players': [p.player.name for p in game.living_players()],
-                   'allPlayers': [p.player for p in game.living_players()]},
+                   'players': [player.player.name for player in game.living_players()],
+                   'allPlayers': [player.player for player in game.living_players()]},
                   )
 
 
@@ -1081,7 +1081,7 @@ def votechart_player(request, gameslug, playerslug):
                   {'game': game, 'showAllPlayers': False, 'startDate': day.start_post.timestamp,
                    'now': datetime.now(), 'toLynch': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
-                   'allPlayers': [p.player for p in game.living_players()],
+                   'allPlayers': [player.player for player in game.living_players()],
                    'selectedPlayer': player.name,
                    'players': [player.name]},
                   )

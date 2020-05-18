@@ -33,16 +33,16 @@ class CreateUserForm(forms.Form):
 
         if self.required_key:
             downloader = ForumPageDownloader()
-            data = downloader.download(
+            page_data = downloader.download(
                 'https://forums.somethingawful.com/member.php?action=getinfo&username={}'.format(urllib.parse.quote_plus(login)))
 
-            if data is None:
+            if page_data is None:
                 raise forms.ValidationError('There was a problem downloading the profile for the SA user {}.'.format(login))
 
-            if data.find(str(self.required_key)) == -1:
+            if page_data.find(str(self.required_key)) == -1:
                 raise forms.ValidationError("Unable to find the correct key ({}) in {}'s SA profile".format(self.required_key, login))
             else:
-                matcher = re.compile(r'userid=(?P<userid>\d+)').search(data)
+                matcher = re.compile(r'userid=(?P<userid>\d+)').search(page_data)
                 if matcher:
                     self.userid = matcher.group('userid')
                     try:
@@ -56,7 +56,7 @@ class CreateUserForm(forms.Form):
                         pass  # noqa: WPS420
                     except User.DoesNotExist:
                         pass  # noqa: WPS420
-                    matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(data)
+                    matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(page_data)
                     if matcher:
                         login = matcher.group('login')
                 else:

@@ -30,8 +30,8 @@ def create_step_3(request):
     if not key or request.method != 'POST':
         return HttpResponseRedirect('/auth/create')
 
-    c = {}
-    c.update(csrf(request))
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
 
     form = CreateUserForm(request.POST)
     form.required_key = key
@@ -47,12 +47,12 @@ def create_step_3(request):
 
 
 def create_user(login, email, password, userid):
-    u = User.objects.create_user(login, email, password)
-    u.save()
+    user = User.objects.create_user(login, email, password)
+    user.save()
 
-    p, created = Player.objects.get_or_create(uid=userid, defaults={'name': login})
+    player, created = Player.objects.get_or_create(uid=userid, defaults={'name': login})
 
-    profile = UserProfile(player=p, user=u)
+    profile = UserProfile(player=player, user=user)
     profile.save()
 
-    return u
+    return user
