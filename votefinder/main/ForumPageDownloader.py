@@ -61,8 +61,7 @@ class ForumPageDownloader():
     def perform_download(self, page):
         try:
             page_request = self.session.get(page)
-            page_data = page_request.text
-            return page_data
+            return page_request.text
         except BaseException:
             return None
 
@@ -72,7 +71,7 @@ class ForumPageDownloader():
 
         page_data = self.download(get_url)
         if page_data is None:
-            return
+            return False  # Could not retrieve anything from the page.
 
         soup = BeautifulSoup(page_data, 'html.parser')
 
@@ -81,8 +80,7 @@ class ForumPageDownloader():
             inputs[input_element['name']] = input_element['value']
 
         if not inputs['disablesmilies']:
-            # Thread is locked!
-            return False
+            return False  # Thread is locked.
         inputs.pop('disablesmilies')
         inputs.pop('preview')
 

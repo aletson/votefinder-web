@@ -47,13 +47,13 @@ class VotecountFormatter:
         comments = Comment.objects.filter(game=self.game).order_by('-timestamp') if show_comment else ''
 
         votecount_lines = []
-        for item in self.counted_votes:
-            if item['count'] == 0 and game_template.hide_zero_votes:
+        for votecount_by_player in self.counted_votes:
+            if votecount_by_player['count'] == 0 and game_template.hide_zero_votes:
                 continue
 
-            if item['votes']:
+            if votecount_by_player['votes']:
                 votelist = []
-                for vote in item['votes']:
+                for vote in votecount_by_player['votes']:
                     thisvote = None
                     if vote['unvote']:
                         if detail_level == 3:
@@ -69,10 +69,10 @@ class VotecountFormatter:
                         votelist.append(thisvote.replace('{{url}}', vote['url']))
 
                 if votelist:
-                    this_line = game_template.single_line.replace('{{target}}', str(item['target'].name)).replace(
-                        '{{count}}', str(item['count'])).replace('{{votelist}}', ', '.join(votelist))
+                    this_line = game_template.single_line.replace('{{target}}', str(votecount_by_player['target'].name)).replace(
+                        '{{count}}', str(votecount_by_player['count'])).replace('{{votelist}}', ', '.join(votelist))
                     votecount_lines.append(
-                        this_line.replace('{{ticks}}', self.build_ticks(item['count'], self.tolynch)))
+                        this_line.replace('{{ticks}}', self.build_ticks(votecount_by_player['count'], self.tolynch)))
 
         self.not_voting_list = sorted(
             filter(lambda player: self.vc.currentVote[player] is None and player in living_players, self.vc.currentVote),
@@ -86,7 +86,7 @@ class VotecountFormatter:
             map(lambda not_voting_player: not_voting_player.name, self.not_voting_list))))
 
         if comments:
-            temp_overall += '\n \n' + '\n \n'.join([comment.comment for comment in comments])
+            temp_overall += '\n \n' + '\n \n'.join([comment.comment for comment in comments])  # noqa: WPS336
 
         self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}', until_deadline).replace('{{day}}', str(gameday.day_number)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}', str(alive))
 
