@@ -4,20 +4,44 @@ jobs:
   cicd:
     runs-on: ubuntu-latest
     steps:
+      - name: Get Public IP
+        id: ip
+        uses: haythem/public-ip@v1
       - name: Checkout
         uses: actions/checkout@v2
       - name: Lint
         uses: wemake-services/wemake-python-styleguide@0.13.3
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Add IP to AWS
+        if: ${{ success() }}
+        env:
+          SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          sleep 10
       - name: Deploy to Dev
-        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         uses: easingthemes/ssh-deploy@v2.1.1
         env: 
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.DEV_TARGET }}
+      - name: Remove IP from AWS
+        if: ${{ success () }}
+        env: 
+          SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 revoke-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          aws ec2 revoke-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
       - name: Verify database connection
-        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         env:
           MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
         run: |
