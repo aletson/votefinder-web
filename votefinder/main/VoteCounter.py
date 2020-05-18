@@ -8,7 +8,7 @@ from . import ForumPageDownloader, VotecountFormatter
 
 class VoteCounter:
     def __init__(self):
-        self.results = {}
+        self.results = {}  # noqa: WPS110
         self.currentVote = {}
         self.votesFound = False
         self.nolynch_player = None
@@ -87,8 +87,8 @@ class VoteCounter:
 
     def build_result_list(self):
         resultlist = []
-        for key, val in self.results.items():
-            resultlist.append({'target': key, 'count': val['count'], 'votes': val['votes']})
+        for key, result in self.results.items():
+            resultlist.append({'target': key, 'count': result['count'], 'votes': result['votes']})
 
         resultlist.sort(key=lambda result: result['count'], reverse=True)
 
@@ -136,9 +136,9 @@ class VoteCounter:
         self.currentVote[vote.author] = None
 
     def disable_current_vote(self, player, target):
-        for item in self.results[target]['votes']:
-            if item['author'] == player and item['unvote'] is False and item['enabled']:
-                item['enabled'] = False
+        for vote in self.results[target]['votes']:
+            if vote['author'] == player and vote['unvote'] is False and vote['enabled']:
+                vote['enabled'] = False
                 return
 
     def player_is_voting(self, player):

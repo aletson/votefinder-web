@@ -12,11 +12,11 @@ class GameListDownloader():
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
     def get_game_list(self, page):
-        data = self.download_list(page)
-        if not data:
+        game_raw_html = self.download_list(page)
+        if not game_raw_html:
             return False
 
-        if not self.parse_game_list(data):
+        if not self.parse_game_list(game_raw_html):
             return False
 
         return True
@@ -25,8 +25,8 @@ class GameListDownloader():
         return self.downloader.download(
             'http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
 
-    def parse_game_list(self, data):
-        soup = BeautifulSoup(data, 'html.parser')
+    def parse_game_list(self, game_raw_html):
+        soup = BeautifulSoup(game_raw_html, 'html.parser')
 
         for thread in soup.find_all('a', 'thread_title'):
             if thread.text.lower().find('mafia') != -1:

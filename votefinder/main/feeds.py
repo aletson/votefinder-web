@@ -13,19 +13,19 @@ class LatestRss(Feed):
     description = 'Changes and updates to the VoteFinder site.'
     guid = '/'
 
-    def items(self):
+    def items(self):  # noqa: WPS110
         return BlogPost.objects.all().order_by('-timestamp')[:5]
 
-    def item_title(self, item):
+    def item_title(self, item):  # noqa: WPS110
         return item.title
 
-    def item_description(self, item):
+    def item_description(self, item):  # noqa: WPS110
         return item.text
 
-    def item_link(self, item):
+    def item_link(self, item):  # noqa: WPS110
         return 'https://{}/'.format(settings.PRIMARY_DOMAIN)
 
-    def item_pubdate(self, item):
+    def item_pubdate(self, item):  # noqa: WPS110
         return item.timestamp
 
 
@@ -42,21 +42,21 @@ class GameStatusRss(Feed):
     description = 'Game status updates for games tracked by VoteFinder.'
     guid = '/'
 
-    def items(self):
+    def items(self):  # noqa: WPS110
         return GameStatusUpdate.objects.all().order_by('-id')[:5]
 
-    def item_title(self, item):
+    def item_title(self, item):  # noqa: WPS110
         if item.game:
             return '[{}] {}'.format(item.game.name, item.message)
         return item.message
 
-    def item_description(self, item):
+    def item_description(self, item):  # noqa: WPS110
         return item.message
 
-    def item_link(self, item):
+    def item_link(self, item):  # noqa: WPS110
         return item.url
 
-    def item_pubdate(self, item):
+    def item_pubdate(self, item):  # noqa: WPS110
         return item.timestamp
 
 
@@ -78,21 +78,21 @@ class SpecificGameStatusRss(Feed):
         self.game = get_object_or_404(Game, slug=slug)
         return self.game
 
-    def items(self):
+    def items(self):  # noqa: WPS110
         return GameStatusUpdate.objects.filter(game=self.game).order_by('-id')[:5]
 
-    def item_title(self, item):
+    def item_title(self, item):  # noqa: WPS110
         if item.game:
             return '[{}] {}'.format(item.game.name, item.message)
         return item.message
 
-    def item_description(self, item):
+    def item_description(self, item):  # noqa: WPS110
         return item.message
 
-    def item_link(self, item):
+    def item_link(self, item):  # noqa: WPS110
         return item.url
 
-    def item_pubdate(self, item):
+    def item_pubdate(self, item):  # noqa: WPS110
         return item.timestamp
 
 
