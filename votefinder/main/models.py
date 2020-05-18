@@ -52,7 +52,7 @@ class Player(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify_uniquely(self.name, self.__class__)
-        super(Player, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def current_games(self):
         return PlayerState.objects.filter(player=self, spectator=False, game__state='started')
@@ -139,7 +139,7 @@ class Game(models.Model):
 
     def lock(self, *args, **kwargs):
         self.locked_at = datetime.now()
-        super(Game, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -156,7 +156,7 @@ class Game(models.Model):
                 self.slug = slugify_uniquely(filtered_name.strip(), self.__class__)
         self.locked_at = None
         self.update_counts()
-        super(Game, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         return '/game/{}'.format(self.slug)
