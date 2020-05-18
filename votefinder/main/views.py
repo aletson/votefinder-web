@@ -792,12 +792,12 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
             output_text.append(word)
             remaining = remaining - (word_width + space_width)
 
-    for word in output_text:
-        cur_width, cur_height = draw.textsize(word, font=font)
+    for text_element in output_text:
+        cur_width, cur_height = draw.textsize(text_element, font=font)
         if (cur_width > used_width):
             used_width = cur_width
 
-        draw.text((xpos, ypos), word, font=font, fill=fill)
+        draw.text((xpos, ypos), text_element, font=font, fill=fill)
         ypos += text_size_y
 
     return used_width + xpos, ypos
@@ -822,19 +822,19 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         if this_size_x > longest_name:
             longest_name = this_size_x
 
-    for line in results:
-        pct = 1.0 * line['count'] / vc.tolynch
+    for line_again in results:
+        pct = float(line_again['count']) / vc.tolynch
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],
                        fill=(int(155 + (pct * 100)), 100, 100, int(pct * 255)))
 
-        text = '{} ({})'.format(line['target'].name, line['count'])
-        (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, longest_name - line['size'], ypos, max_width, bold_font)
+        text = '{} ({})'.format(line_again['target'].name, line_again['count'])
+        (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, longest_name - line_again['size'], ypos, max_width, bold_font)
 
         (x_size2, y_bottom2) = draw_wordwrap_text(draw, ': ', x_size1, ypos, max_width, font)
 
         text = ', '.join(
-            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line['votes'])])  # noqa: WPS426
+            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line_again['votes'])])  # noqa: WPS426
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)
@@ -944,7 +944,7 @@ def players_page(request, page):
     first_record = (page - 1) * items_per_page
 
     total_players = Player.objects.all().count()
-    total_pages = int(ceil(1.0 * total_players / items_per_page))
+    total_pages = int(ceil(float(total_players) / items_per_page))
     players = Player.objects.select_related().filter(uid__gt='0').order_by('name').extra(select={
         'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
         'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
@@ -956,7 +956,7 @@ def players_page(request, page):
 
     for player in players:
         if player.total_games_played > 0:
-            player.posts_per_game = player.total_posts / (1.0 * player.total_games_played)
+            player.posts_per_game = player.total_posts / (float(player.total_games_played))
         else:
             player.posts_per_game = 0
 
