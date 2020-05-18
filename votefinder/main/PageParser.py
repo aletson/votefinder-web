@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup, Comment
 from votefinder.main.models import (Alias, Game, GameDay, Player, PlayerState,
                                     Post, Vote)
 
-from . import ForumPageDownloader
+from votefinder.main import ForumPageDownloader
 
 
 class PageParser:

@@ -25,8 +25,8 @@ from votefinder.main.models import (AddCommentForm, AddPlayerForm, Alias,
                                     Post, Theme, UserProfile, Vote,
                                     VotecountTemplate, VotecountTemplateForm)
 
-from . import (ForumPageDownloader, GameListDownloader, PageParser,
-               VoteCounter, VotecountFormatter)
+from votefinder.main import (ForumPageDownloader, GameListDownloader, PageParser,
+                             VoteCounter, VotecountFormatter)
 
 
 def check_mod(request, game):

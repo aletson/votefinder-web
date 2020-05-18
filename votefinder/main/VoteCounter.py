@@ -3,7 +3,7 @@ import random
 
 from votefinder.main.models import GameDay, ExecutionMessage, Player, Vote
 
-from . import ForumPageDownloader, VotecountFormatter
+from votefinder.main import ForumPageDownloader, VotecountFormatter
 
 
 class VoteCounter:

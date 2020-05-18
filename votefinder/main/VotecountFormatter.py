@@ -9,7 +9,7 @@ from django.utils.dateformat import format
 from django.utils.timesince import timeuntil
 from votefinder.main.models import Comment, VotecountTemplate
 
-from . import VoteCounter
+from votefinder.main import VoteCounter
 
 
 class VotecountFormatter:
