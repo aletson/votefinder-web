@@ -819,7 +819,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         if this_size_x > longest_name:
             longest_name = this_size_x
 
-    for line_again in votes_by_player:
+    for line_again in votes_by_player:  # noqa: WPS426
         pct = float(line_again['count']) / vc.tolynch
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],
@@ -831,7 +831,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size2, y_bottom2) = draw_wordwrap_text(draw, ': ', x_size1, ypos, max_width, font)
 
         text = ', '.join(
-            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line_again['votes'])])  # noqa: WPS426
+            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line_again['votes'])])
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)
