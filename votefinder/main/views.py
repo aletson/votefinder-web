@@ -31,10 +31,9 @@ from votefinder.main import (ForumPageDownloader, GameListDownloader, PageParser
 
 def check_mod(request, game):
     try:
-        moderator = game.is_user_mod(request.user) or request.user.is_superuser
+        return (game.is_user_mod(request.user) or request.user.is_superuser)
     except AttributeError:
-        moderator = False
-    return moderator
+        return False
 
 
 def index(request):
@@ -64,20 +63,20 @@ def add(request):
 
 @login_required
 def add_game(request):
-    data = {'success': True, 'message': 'Success!', 'url': ''}
+    return_status = {'success': True, 'message': 'Success!', 'url': ''}
     if request.method == 'POST':
         threadid = request.POST.get('threadid')
         state = request.POST.get('addState')
         if state in {'started', 'pregame'}:
             try:
                 game = Game.objects.get(thread_id=threadid)
-                data['url'] = game.get_absolute_url()
+                return_status['url'] = game.get_absolute_url()
             except Game.DoesNotExist:
                 page_parser = PageParser.PageParser()
                 page_parser.user = request.user
                 game = page_parser.add_game(threadid, state)
                 if game:
-                    data['url'] = game.get_absolute_url()
+                    return_status['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
                     sqs = boto3.client('sqs')
@@ -104,15 +103,15 @@ def add_game(request):
                         ),
                     )
                 else:
-                    data['success'] = False
-                    data['message'] = "Couldn't download or parse the forum thread.  Sorry!"
+                    return_status['success'] = False
+                    return_status['message'] = "Couldn't download or parse the forum thread.  Sorry!"
         else:
-            data['success'] = False
-            data['message'] = "Couldn\'t validate the starting game state. Please contact support."
+            return_status['success'] = False
+            return_status['message'] = "Couldn\'t validate the starting game state. Please contact support."
     else:
-        data['success'] = False
-        data['message'] = 'Form was submitted incorrectly. Please use the add game page.'
-    return HttpResponse(simplejson.dumps(data), content_type='application/json')
+        return_status['success'] = False
+        return_status['message'] = 'Form was submitted incorrectly. Please use the add game page.'
+    return HttpResponse(simplejson.dumps(return_status), content_type='application/json')
 
 
 @login_required
@@ -804,25 +803,23 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
 
 
 def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
-    results = [voted_player for voted_player in vc.results if voted_player['count'] > 0]
+    votes_by_player = [voted_player for voted_player in vc.results if voted_player['count'] > 0]
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(': ', font=font)
     max_x = 0
-    if results is None:  # No votes found
+    if votes_by_player is None:  # No votes found
         text = 'No votes found in vc.results~'
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
-        line = []
-        line['size'] = this_size_x
         (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
         return (x_size1, y_bottom1)
-    for line in results:
+    for line in votes_by_player:
         text = '{} ({})'.format(line['target'].name, line['count'])
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
         line['size'] = this_size_x
         if this_size_x > longest_name:
             longest_name = this_size_x
 
-    for line_again in results:
+    for line_again in votes_by_player:
         pct = float(line_again['count']) / vc.tolynch
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],

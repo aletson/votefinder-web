@@ -25,7 +25,7 @@ class VoteCounter:
                                                                 post__id__gte=gameday.start_post.id).order_by('id')
             self.votesFound = True
         except Vote.DoesNotExist:
-            return
+            return None
 
         self.livingPlayers = Player.objects.select_related().filter(games__in=game.living_players())
         self.game = game
@@ -88,8 +88,8 @@ class VoteCounter:
 
     def build_result_list(self):
         resultlist = []
-        for key, result in self.results.items():
-            resultlist.append({'target': key, 'count': result['count'], 'votes': result['votes']})
+        for key, votes_by_player in self.results.items():
+            resultlist.append({'target': key, 'count': votes_by_player['count'], 'votes': votes_by_player['votes']})
 
         resultlist.sort(key=lambda sorter: sorter['count'], reverse=True)
 
@@ -109,7 +109,7 @@ class VoteCounter:
         if vote.nolynch:
             vote.target = self.nolynch_player
 
-        self.add_vote_to_player(vote.target, vote.author, False, vote.post.page_number, vote.post.post_id,
+        self.add_vote_to_player(vote.target, vote.author, False, vote.post.page_number, vote.post.post_id,  # noqa: WPS425
                                 vote.post.timestamp)
         self.currentVote[vote.author] = vote.target
 
@@ -132,7 +132,7 @@ class VoteCounter:
         current_vote = self.player_is_voting(vote.author)
         if current_vote:
             self.disable_current_vote(vote.author, current_vote)
-            self.add_vote_to_player(current_vote, vote.author, True, vote.post.page_number, vote.post.post_id,
+            self.add_vote_to_player(current_vote, vote.author, True, vote.post.page_number, vote.post.post_id,  # noqa: WPS425
                                     vote.post.timestamp)
         self.currentVote[vote.author] = None
 
