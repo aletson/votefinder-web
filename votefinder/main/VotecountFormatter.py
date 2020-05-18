@@ -21,7 +21,7 @@ class VotecountFormatter:
         self.game = game
 
     def go(self, show_comment=True):
-        self.results = self.vc.run(self.game)
+        self.counted_votes = self.vc.run(self.game)
 
         game_template = self.game.template
         if game_template is None:
@@ -47,7 +47,7 @@ class VotecountFormatter:
         comments = Comment.objects.filter(game=self.game).order_by('-timestamp') if show_comment else ''
 
         votecount_lines = []
-        for item in self.results:
+        for item in self.counted_votes:
             if item['count'] == 0 and game_template.hide_zero_votes:
                 continue
 
@@ -100,14 +100,14 @@ class VotecountFormatter:
             ['[img]{}[/img]'.format(self.empty_tick if iterator < (total - ticked) else self.tick) for iterator in range(0, total)])
 
     def convert_bbcode_to_html(self, bbcode):
-        results = bbcode
+        bbcode_votecount = bbcode
 
-        results = results.replace('\n', '<br />\n').replace('[b]', '<b>').replace('[/b]', '</b>').replace('[i]', '<i>')
-        results = results.replace('[/i]', '</i>').replace('[u]', '<u>').replace('[/u]', '</u>').replace('[super]', '<sup>')
-        results = results.replace('[/super]', '</sup>').replace('[sub]', '<sub>').replace('[/sub]', '</sub>').replace('[s]', '<del>')
-        results = results.replace('[/s]', '</del>').replace('[list]', '<list>').replace('[/list]', '</list><br/>').replace('[*]', '<li>')
+        html_votecount = bbcode_votecount.replace('\n', '<br />\n').replace('[b]', '<b>').replace('[/b]', '</b>').replace('[i]', '<i>')
+        html_votecount = html_votecount.replace('[/i]', '</i>').replace('[u]', '<u>').replace('[/u]', '</u>').replace('[super]', '<sup>')
+        html_votecount = html_votecount.replace('[/super]', '</sup>').replace('[sub]', '<sub>').replace('[/sub]', '</sub>').replace('[s]', '<del>')
+        html_votecount = html_votecount.replace('[/s]', '</del>').replace('[list]', '<list>').replace('[/list]', '</list><br/>').replace('[*]', '<li>')
 
-        results = re.compile(r'\[img\](.*?)\[/img\]', re.I | re.S).sub(r'<img src="\1">', results)
-        results = re.compile(r'\[url=(.*?)\](.*?)\[/url\]', re.I | re.S).sub(r'<u><a href="\1">\2</a></u>', results)
+        html_votecount = re.compile(r'\[img\](.*?)\[/img\]', re.I | re.S).sub(r'<img src="\1">', html_votecount)
+        html_votecount = re.compile(r'\[url=(.*?)\](.*?)\[/url\]', re.I | re.S).sub(r'<u><a href="\1">\2</a></u>', html_votecount)
 
-        return results
+        return html_votecount

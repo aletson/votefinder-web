@@ -14,17 +14,17 @@ class ForumPageDownloader():
         # we must set this, SA blocks the default UA
 
     def download(self, page):
-        data = self.perform_download(page)
+        page_data = self.perform_download(page)
 
-        if data is None:
+        if page_data is None:
             return None
-        elif not self.needs_to_login(data):
-            return data
+        elif not self.needs_to_login(page_data):
+            return page_data
         elif self.login_to_forum():
-            data = self.perform_download(page)
+            page_data = self.perform_download(page)
 
-            if not self.needs_to_login(data):
-                return data
+            if not self.needs_to_login(page_data):
+                return page_data
             return None
         return None
 
@@ -33,36 +33,36 @@ class ForumPageDownloader():
         game.status_update('Trying to re-login to forums.  PM Alli if this happens a lot.')
 
     def login_to_forum(self):
-        data = ''
+        page_text = ''
 
         self.log_login_attempt()
 
         page_request = self.session.post('https://forums.somethingawful.com/account.php',
                                          data={'action': 'login', 'username': settings.SA_LOGIN,
                                                'password': settings.SA_PASSWORD, 'secure_login': ''})
-        data = page_request.text
+        page_text = page_request.text
 
-        if self.is_logged_in_correctly(data):
+        if self.is_logged_in_correctly(page_text):
             return True
         return False
 
-    def needs_to_login(self, data):
-        if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), data) is None:
+    def needs_to_login(self, page_data):
+        if re.search(re.compile(r'\*\*\* LOG IN \*\*\*'), page_data) is None:
             return False
         return True
 
-    def is_logged_in_correctly(self, data):
-        if not data:
+    def is_logged_in_correctly(self, page_data):
+        if not page_data:
             raise ValueError('Login failed, no data in response from login attempt')
-        if re.search(re.compile(r'Login with username and password'), data) is None:
+        if re.search(re.compile(r'Login with username and password'), page_data) is None:
             return True
         return False
 
     def perform_download(self, page):
         try:
             page_request = self.session.get(page)
-            data = page_request.text
-            return data
+            page_data = page_request.text
+            return page_data
         except BaseException:
             return None
 
@@ -70,11 +70,11 @@ class ForumPageDownloader():
         get_url = 'https://forums.somethingawful.com/newreply.php?action=newreply&threadid={}'.format(thread)
         post_url = 'https://forums.somethingawful.com/newreply.php?action=newreply'
 
-        data = self.download(get_url)
-        if data is None:
+        page_data = self.download(get_url)
+        if page_data is None:
             return
 
-        soup = BeautifulSoup(data, 'html.parser')
+        soup = BeautifulSoup(page_data, 'html.parser')
 
         inputs = {'message': message}
         for input_element in soup.find_all('input', {'value': True}):
@@ -91,4 +91,4 @@ class ForumPageDownloader():
 
 if __name__ == '__main__':
     dl = ForumPageDownloader()
-    result = dl.download('https://forums.somethingawful.com/showthread.php?threadid=3552086')
+    result = dl.download('https://forums.somethingawful.com/showthread.php?threadid=3552086')  # noqa: WPS110

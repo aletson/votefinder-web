@@ -23,16 +23,16 @@ def get_default_player():
     return Player.objects.get_or_create(name='votefinder')[0]
 
 
-def slugify_uniquely(value, model, slugfield='slug'):
+def slugify_uniquely(potential_slug, model, slugfield='slug'):
     suffix = 1
     maximum_slug_length = 45
-    potential = slugify(value)[:maximum_slug_length]
-    base = slugify(value)[:maximum_slug_length]
+    actual_slug = slugify(potential_slug)[:maximum_slug_length]
+    base = slugify(potential_slug)[:maximum_slug_length]
     while True:
         if suffix > 1:
-            potential = '-'.join([base, str(suffix)])
-        if not model.objects.filter(**{slugfield: potential}).count():
-            return potential
+            actual_slug = '-'.join([base, str(suffix)])
+        if not model.objects.filter(**{slugfield: actual_slug}).count():
+            return actual_slug
         suffix += 1
 
 
