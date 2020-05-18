@@ -4,20 +4,72 @@ jobs:
   cicd:
     runs-on: ubuntu-latest
     steps:
+      - name: Get Public IP
+        id: ip
+        uses: haythem/public-ip@v1
       - name: Checkout
         uses: actions/checkout@v2
       - name: Lint
         uses: wemake-services/wemake-python-styleguide@0.13.3
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Add IP to file deployment SG
+        if: ${{ success() }}
+        env:
+          SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          if [ "${{ steps.ip.outputs.ipv4 }}" != "${{ steps.ip.outputs.ipv6 }}" ]; then
+            aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          fi
+          sleep 10
       - name: Deploy to Dev
-        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
-        uses: easingthemes/ssh-deploy@v2.1.1
-        env: 
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
+        uses: JimCronqvist/action-ssh@0.1.1
+        env:
           TARGET: ${{ secrets.DEV_TARGET }}
+          DEV_VENV_PATH: ${{ secrets.DEV_VENV_PATH }}
+          DEV_USER: ${{ secrets.DEV_USER }}
+        with: 
+          hosts: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}'
+          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
+          command: |
+            cd $TARGET
+            sudo git fetch
+            sudo git checkout $GITHUB_SHA
+            sudo $DEV_VENV_PATH/bin/pip install -r requirements.txt
+            sudo chown $DEV_USER:$DEV_USER $DEV_VENV_PATH -R
+            NGINX_CONFIG=`sudo nginx -c /etc/nginx/nginx.conf -t 2>&1`
+            if [[ "$NGINX_CONFIG" =~ "syntax is ok" ]]; then
+              sudo systemctl reload nginx
+            else
+              exit 1
+            fi
+      - name: Remove IP from file deployment SG
+        if: ${{ success() }}
+        env: 
+          SECURITY_GROUP_ID: ${{ secrets.SECURITY_GROUP_ID }}
+        run: |
+          aws ec2 revoke-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          if [ "${{ steps.ip.outputs.ipv4 }}" != "${{ steps.ip.outputs.ipv6 }}" ]; then
+            aws ec2 revoke-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          fi
+      - name: Add IP to DB SG
+        if: ${{ success() }}
+        env:
+          SECURITY_GROUP_ID: ${{ secrets.DB_SECURITY_GROUP }}
+        run: |
+          aws ec2 authorize-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          if [ "${{ steps.ip.outputs.ipv4 }}" != "${{ steps.ip.outputs.ipv6 }}" ]; then
+            aws ec2 authorize-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          fi
+          sleep 10
       - name: Verify database connection
-        if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         env:
           MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
         run: |
@@ -47,3 +99,12 @@ jobs:
             fi
             MIGRATION=$((MIGRATION+1))
           done
+      - name: Remove IP from DB SG
+        if: ${{ success() }}
+        env: 
+          SECURITY_GROUP_ID: ${{ secrets.DB_SECURITY_GROUP }}
+        run: |
+          aws ec2 revoke-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
+          if [ "${{ steps.ip.outputs.ipv4 }}" != "${{ steps.ip.outputs.ipv6 }}" ]; then
+            aws ec2 revoke-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          fi
