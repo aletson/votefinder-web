@@ -834,7 +834,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size2, y_bottom2) = draw_wordwrap_text(draw, ': ', x_size1, ypos, max_width, font)
 
         text = ', '.join(
-            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line['votes'])])
+            [vote['author'].name for vote in filter(lambda vote: vote['unvote'] is False and vote['enabled'], line['votes'])])  # noqa: WPS426
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)

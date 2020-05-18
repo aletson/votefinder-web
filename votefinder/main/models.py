@@ -139,7 +139,7 @@ class Game(models.Model):
 
     def lock(self, *args, **kwargs):
         self.locked_at = datetime.now()
-        super().save(*args, **kwargs)
+        super().save(*args, **kwargs)  # noqa: WPS613
 
     def __str__(self):
         return self.name
