@@ -1,6 +1,6 @@
 from django.contrib import admin
 from votefinder.main.models import (Alias, BlogPost, Comment, CookieStore,
-                                    Game, GameDay, LynchMessage, Player,
+                                    Game, GameDay, ExecutionMessage, Player,
                                     PlayerState, Post, UserProfile, Vote,
                                     VotecountTemplate)
 
@@ -16,7 +16,7 @@ admin.site.register(Comment)
 admin.site.register(GameDay)
 admin.site.register(CookieStore)
 admin.site.register(VotecountTemplate)
-admin.site.register(LynchMessage)
+admin.site.register(ExecutionMessage)
 
 
 class PostAdmin(admin.ModelAdmin):

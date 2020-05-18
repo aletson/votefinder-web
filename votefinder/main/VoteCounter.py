@@ -1,7 +1,7 @@
 import math
 import random
 
-from votefinder.main.models import GameDay, LynchMessage, Player, Vote
+from votefinder.main.models import GameDay, ExecutionMessage, Player, Vote
 
 from . import ForumPageDownloader, VotecountFormatter
 
@@ -77,7 +77,7 @@ class VoteCounter:
         if not game.post_lynches:
             return
 
-        message = random.choice(LynchMessage.objects.all()).text  # noqa: S311
+        message = random.choice(ExecutionMessage.objects.all()).text  # noqa: S311
         vc_formatter = VotecountFormatter.VotecountFormatter(game)
         vc_formatter.go()
         message = '{}\n\n'.format(message)

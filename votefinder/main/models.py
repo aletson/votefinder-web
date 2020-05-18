@@ -387,7 +387,7 @@ class VotecountTemplateForm(ModelForm):
         fields = '__all__'
 
 
-class LynchMessage(models.Model):
+class ExecutionMessage(models.Model):
     text = models.CharField(max_length=512)
 
     def __str__(self):
