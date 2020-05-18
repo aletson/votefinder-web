@@ -48,7 +48,7 @@ $(document).ready(function () {
     });
 
     $('#voteImgButton').click(function () {
-        prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]http://votefinder.org/img/{{ game.slug }}[/img][/url]");
+        prompt("Copy and paste the following BBCode to make an auto-updating votecount image:", "[url=https://votefinder.org{{ game.get_absolute_url }}#votecount][img]https://votefinder.org/img/{{ game.slug }}[/img][/url]");
     });
     $('.button').button();
     $('#refreshbutton').button();
@@ -186,7 +186,7 @@ $(document).ready(function () {
     <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
     <div class="btn-group">
         <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
-           href="http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}" id="liveThread"><i class="fa fa-link"></i></a>
+           href="https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}" id="liveThread"><i class="fa fa-link"></i></a>
         {% if game.state != 'closed' %}
             <a title="Votecount Image" class="button btn btn-sm btn-default" id="voteImgButton"><i class="fa fa-image"></i></a>
             <a title="Update" href="#" id="updateButton" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i></a>
@@ -208,7 +208,7 @@ $(document).ready(function () {
         <tr>
             <td>Game Day:</td>
             <td><a target="_blank"
-                   href="http://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.start_post.post_id }}">Day {{ gameday.day_number }}</a>
+                   href="https://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.start_post.post_id }}">Day {{ gameday.day_number }}</a>
                 began {{ gameday.start_post.timestamp|timesince }} ago on {{ gameday.start_post.timestamp }}</td>
         </tr>
         {% if game.deadline %}
@@ -255,12 +255,12 @@ $(document).ready(function () {
                         <div id="moderator-add-wiki-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-add-wiki-heading">
                             <div class="panel-body">
                             This game is over and you're the moderator! Have you added it to the <a
-                                href="http://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed
+                                href="https://samafia.net/wiki/Games_List" target="_blank">SA Mafia Wiki's Completed
                             Games List</a>? <b>It's your responsibility!</b> Here is some sample wiki code you can use.
                             Just edit in the winning team:</div>
 
                             <p><textarea rows="2"
-                                         cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
+                                         cols="80">* [https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
                             </p>
                         </div>
                     </div>
@@ -619,7 +619,7 @@ $(document).ready(function () {
         {% endif %}
     <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
         {% if game.state == 'pregame' %}
-            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}">thread</a> if you'd like to sign up.</div>
+            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}">thread</a> if you'd like to sign up.</div>
         {% else %}
             <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
         {% endif %}
