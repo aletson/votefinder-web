@@ -85,7 +85,7 @@ class PageParser:
 
     def search_line_for_actions(self, post, line):
         # Votes
-        pattern = re.compile('##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)', re.I)
+        pattern = re.compile(r'##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)', re.I)
         pos = 0
         match = pattern.search(line, pos)
 
@@ -271,8 +271,8 @@ class PageParser:
             post.author_search = anchor_list[-1]['href']
 
         author_string = node.find('dt', 'author').text
-        author_string = re.sub('<.*?>', '', author_string)
-        author_string = re.sub('&\\w+?;', '', author_string).strip()
+        author_string = re.sub(r'<.*?>', '', author_string)
+        author_string = re.sub(r'&\\w+?;', '', author_string).strip()
 
         matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.author_search)
         if matcher:

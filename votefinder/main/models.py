@@ -247,7 +247,7 @@ class Alias(models.Model):
     def __str__(self):
         return self.alias
 
-    class Meta:
+    class Meta:  # noqa: WPS306
         verbose_name_plural = 'Aliases'
 
 
