@@ -19,7 +19,7 @@ jobs:
       - name: Verify database connection
         if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         env:
-          MYSQL_SERVER = ${{ secrets.MYSQL_SERVER }}
+          MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
         run: |
           mysqladmin ping -h $MYSQL_SERVER --silent
           if [ $? -ne 0 ]; then
@@ -28,10 +28,10 @@ jobs:
       - name: Run migrations
         if: ${{ success() && github.ref == 'refs/heads/master' && github.event_name == 'push' }}
         env:
-          MYSQL_SERVER = ${{ secrets.MYSQL_SERVER }}
-          DEV_DBUSER = ${{ secrets.DEV_DBUSER }}
-          DEV_DBPASSWD = ${{ secrets.DEV_DBPASSWD }}
-          DEV_DBNAME = ${{ secrets.DEV_DBNAME }}
+          MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
+          DEV_DBUSER: ${{ secrets.DEV_DBUSER }}
+          DEV_DBPASSWD: ${{ secrets.DEV_DBPASSWD }}
+          DEV_DBNAME: ${{ secrets.DEV_DBNAME }}
         run: |
           MIGRATION=`mysql -h $MYSQL_SERVER -u $DEV_DBUSER -p$DEV_DBPASSWD $DEV_DBNAME -e "SELECT version FROM migration_version" -sN`
           if [ MIGRATION -eq 0 ]; then
