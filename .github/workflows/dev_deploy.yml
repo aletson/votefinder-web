@@ -86,7 +86,7 @@ jobs:
           DEV_DBNAME: ${{ secrets.DEV_DBNAME }}
         run: |
           MIGRATION=`mysql -h $MYSQL_SERVER -u $DEV_DBUSER -p$DEV_DBPASSWD $DEV_DBNAME -e "SELECT version FROM migration_version" -sN`
-          if [ MIGRATION -eq 0 ]; then
+          if [ $MIGRATION -eq 0 ]; then
             exit 1
           fi
           MIGRATION=$((MIGRATION+1))
@@ -107,4 +107,13 @@ jobs:
           aws ec2 revoke-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv4 }}/32 --group-id $SECURITY_GROUP_ID
           if [ "${{ steps.ip.outputs.ipv4 }}" != "${{ steps.ip.outputs.ipv6 }}" ]; then
             aws ec2 revoke-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
+          fi
+      - name: Smoke test in dev
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: |
+          sleep 2
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/)
+          if [ "$response" != "200" ]
+          then
+            exit 1
           fi
