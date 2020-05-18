@@ -1,5 +1,7 @@
-on: push
-name: Nonprod CI
+on:
+  release:
+    types: [published]
+name: Prod CI
 jobs:
   cicd:
     runs-on: ubuntu-latest
@@ -27,13 +29,13 @@ jobs:
             aws ec2 authorize-security-group-ingress --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
           fi
           sleep 10
-      - name: Deploy to Dev
-        if: ${{ success() && github.ref == 'refs/heads/master' }}
+      - name: Deploy to Prod
+        if: ${{ success() }}
         uses: JimCronqvist/action-ssh@0.1.1
         env:
-          TARGET: ${{ secrets.DEV_TARGET }}
-          VENV_PATH: ${{ secrets.DEV_VENV_PATH }}
-          USER: ${{ secrets.DEV_USER }}
+          TARGET: ${{ secrets.PROD_TARGET }}
+          VENV_PATH: ${{ secrets.PROD_VENV_PATH }}
+          USER: ${{ secrets.PROD_USER }}
         with: 
           hosts: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}'
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -69,7 +71,7 @@ jobs:
           fi
           sleep 10
       - name: Verify database connection
-        if: ${{ success() && github.ref == 'refs/heads/master' }}
+        if: ${{ success() }}
         env:
           MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
         run: |
@@ -78,12 +80,12 @@ jobs:
             exit 1
           fi
       - name: Run migrations
-        if: ${{ success() && github.ref == 'refs/heads/master' }}
+        if: ${{ success() }}
         env:
           MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
-          DBUSER: ${{ secrets.DEV_DBUSER }}
-          DBPASSWD: ${{ secrets.DEV_DBPASSWD }}
-          DBNAME: ${{ secrets.DEV_DBNAME }}
+          DBUSER: ${{ secrets.PROD_DBUSER }}
+          DBPASSWD: ${{ secrets.PROD_DBPASSWD }}
+          DBNAME: ${{ secrets.PROD_DBNAME }}
         run: |
           MIGRATION=`mysql -h $MYSQL_SERVER -u $DBUSER -p$DBPASSWD $DBNAME -e "SELECT version FROM migration_version" -sN`
           if [ $MIGRATION -eq 0 ]; then
@@ -109,23 +111,22 @@ jobs:
             aws ec2 revoke-security-group-ingress --protocol tcp --port 3306 --cidr ${{ steps.ip.outputs.ipv6 }}/128 --group-id $SECURITY_GROUP_ID
           fi
       - name: Smoke test in dev
-        if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           sleep 2
           STATUS=0
-          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/)
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://votefinder.org/)
           if [ "$response" != "200" ]; then
             echo "Index page failed"
             STATUS=1
           fi
           sleep 1
-          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/closed)
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://votefinder.org/closed)
           if [ "$response" != "200" ]; then
             echo "Closed games page failed"
             STATUS=1
           fi
           sleep 1
-          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/game/a-game-of-chess)
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://votefinder.org/game/a-game-of-chess)
           if [ "$response" != "200" ]; then
             echo "Single game page failed"
             STATUS=1
