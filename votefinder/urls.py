@@ -8,9 +8,9 @@ from votefinder.vfauth import urls as auth_urls
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^auth/', include(main_urls)),
+    url(r'^auth/', include(auth_urls)),
     url(r'^admin/', admin.site.urls),
-    url(r'', include(auth_urls)),
+    url(r'', include(main_urls)),
 ]
 
 if settings.DEBUG:
