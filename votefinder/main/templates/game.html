@@ -11,10 +11,10 @@ function loadPage(x) {
 function dataReceived(data) {
     if (data.success) {
         curPage = parseInt(data.curPage);
-        maxPages = parseInt(data.maxPages);
+        maxPages = parseInt(data.max_pages);
         $('#readPages').html(curPage + ' / ' + maxPages);
 
-        if (curPage < maxPages) {
+        if (curPage < max_pages) {
             updateGame();
         } else {
             $('#dialog').modal('hide');
@@ -36,8 +36,8 @@ function updateGame() {
     $.getJSON('/update/{{ game.id }}/', dataReceived);
 } /* function updateGame */
 
-var curPage = {{ game.currentPage }};
-var maxPages = {{ game.maxPages }};
+var curPage = {{ game.current_page }};
+var maxPages = {{ game.max_pages }};
 var pushed = false;
 $(document).ready(function () {
 
@@ -60,7 +60,7 @@ $(document).ready(function () {
     $.get('/post_histories/{{ game.id }}', function (data) {
         $('#playerPostHistories').html(data);
     });
-    loadPage({{ game.currentPage }});
+    loadPage({{ game.current_page }});
     {% if moderator %}
     $('.collapse').collapse();
     {% if game.state != 'closed' %}
@@ -120,7 +120,7 @@ $(document).ready(function () {
         location.href = '/add_vote_global/{{ game.id }}';
     });
     $('#submitNewDay').click(function () {
-        var day = $('#dayNumber').val();
+        var day = $('#day_number').val();
         $('#newDayStatus').html('<img src="/static/loading.gif" class="loadingImg"/> Starting New Day...').show();
         location.href = '/new_day/{{ game.id }}/' + day;
     });
@@ -186,7 +186,7 @@ $(document).ready(function () {
     <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
     <div class="btn-group">
         <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
-           href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}" id="liveThread"><i class="fa fa-link"></i></a>
+           href="http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}" id="liveThread"><i class="fa fa-link"></i></a>
         {% if game.state != 'closed' %}
             <a title="Votecount Image" class="button btn btn-sm btn-default" id="voteImgButton"><i class="fa fa-image"></i></a>
             <a title="Update" href="#" id="updateButton" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i></a>
@@ -203,13 +203,13 @@ $(document).ready(function () {
         </tr>
         <tr>
             <td>Thread ID:</td>
-            <td>{{ game.threadId }}</td>
+            <td>{{ game.thread_id }}</td>
         </tr>
         <tr>
             <td>Game Day:</td>
             <td><a target="_blank"
-                   href="http://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.startPost.postId }}">Day {{ gameday.dayNumber }}</a>
-                began {{ gameday.startPost.timestamp|timesince }} ago on {{ gameday.startPost.timestamp }}</td>
+                   href="http://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.start_post.post_id }}">Day {{ gameday.day_number }}</a>
+                began {{ gameday.start_post.timestamp|timesince }} ago on {{ gameday.start_post.timestamp }}</td>
         </tr>
         {% if game.deadline %}
             <tr>
@@ -219,11 +219,11 @@ $(document).ready(function () {
         {% endif %}
         <tr>
             <td>Read pages:</td>
-            <td><span id="readPages">{{ game.currentPage }} / {{ game.maxPages }}</span></td>
+            <td><span id="readPages">{{ game.current_page }} / {{ game.max_pages }}</span></td>
         </tr>
         <tr>
             <td>Last updated:</td>
-            <td>{{ game.lastUpdated|timesince }} ago</td>
+            <td>{{ game.last_updated|timesince }} ago</td>
         </tr>
     </table><p></p>
 
@@ -259,7 +259,7 @@ $(document).ready(function () {
                             Just edit in the winning team:</div>
 
                             <p><textarea rows="2"
-                                         cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
+                                         cols="80">* [http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
                             </p>
                         </div>
                     </div>
@@ -301,9 +301,9 @@ $(document).ready(function () {
             <div class="panel-body">
 
                 {% if game.deadline %}
-                The current deadline for day {{ gameday.dayNumber }} is:
+                The current deadline for day {{ gameday.day_number }} is:
                 {% else %}
-                No deadline is currently set for day {{ gameday.dayNumber }}.  <p/>Set it now:
+                No deadline is currently set for day {{ gameday.day_number }}.  <p/>Set it now:
                 {% endif %}
                 <input type="text" size="5" id="deadlineDate" value="{{ deadline|date:"m/d/Y" }}">
                 at <input type="text" size="2" maxlength="2" id="deadlineHour"
@@ -349,8 +349,8 @@ $(document).ready(function () {
                     most
                     recent post that VoteFinder knows about to be marked as the start of a new day.</p>
 
-                <label for="dayNumber">Day number:
-                    <input type="text" id="dayNumber" maxlength="2" size="2" value="{{ nextDay }}">
+                <label for="day_number">Day number:
+                    <input type="text" id="day_number" maxlength="2" size="2" value="{{ nextDay }}">
                     <button type="button" id="submitNewDay" class="button btn btn-default">Begins Now!</button>
                     <!-- TODO input group -->
                     <span id="newDayStatus"></span></label>
@@ -618,7 +618,7 @@ $(document).ready(function () {
         {% endif %}
     <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
         {% if game.state == 'pregame' %}
-            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{ game.threadId }}">thread</a> if you'd like to sign up.</div>
+            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="http://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}">thread</a> if you'd like to sign up.</div>
         {% else %}
             <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
         {% endif %}

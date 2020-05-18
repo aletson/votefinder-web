@@ -1,6 +1,9 @@
+import re
+
 from bs4 import BeautifulSoup
-from . import ForumPageDownloader
-from votefinder.main.models import *
+from votefinder.main.models import Game
+
+from votefinder.main import ForumPageDownloader
 
 
 class GameListDownloader():
@@ -8,37 +11,37 @@ class GameListDownloader():
         self.GameList = []
         self.downloader = ForumPageDownloader.ForumPageDownloader()
 
-    def GetGameList(self, page):
-        data = self.DownloadList(page)
-        if not data:
+    def get_game_list(self, page):
+        game_raw_html = self.download_list(page)
+        if not game_raw_html:
             return False
 
-        if not self.ParseGameList(data):
+        if not self.parse_game_list(game_raw_html):
             return False
 
         return True
 
-    def DownloadList(self, page):
+    def download_list(self, page):
         return self.downloader.download(
-            "http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber=%s" % page)
+            'http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
 
-    def ParseGameList(self, data):
-        soup = BeautifulSoup(data, 'html.parser')
+    def parse_game_list(self, game_raw_html):
+        soup = BeautifulSoup(game_raw_html, 'html.parser')
 
-        for thread in soup.find_all("a", "thread_title"):
-            if thread.text.lower().find("mafia") != -1:
-                game = {'name': thread.text, 'url': thread["href"], 'tracked': self.IsGameTracked(thread["href"])}
+        for thread in soup.find_all('a', 'thread_title'):
+            if thread.text.lower().find('mafia') != -1:
+                game = {'name': thread.text, 'url': thread['href'], 'tracked': self.is_game_tracked(thread['href'])}
                 self.GameList.append(game)
 
         return True
 
-    def IsGameTracked(self, url):
-        matcher = re.compile("threadid=(?P<threadid>\d+)").search(url)
+    def is_game_tracked(self, url):
+        matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
         if matcher:
             try:
-                game = Game.objects.all().get(threadId=matcher.group('threadid'))
+                Game.objects.all().get(thread_id=matcher.group('threadid'))
                 return True
             except Game.DoesNotExist:
-                pass
+                pass  # noqa: WPS420
 
         return False

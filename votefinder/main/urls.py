@@ -1,11 +1,7 @@
-from django.conf.urls import *
+from django.conf.urls import url
 from django.views.generic.base import TemplateView
 
-
-
-
-from . import views
-from . import feeds
+from votefinder.main import feeds, views
 
 urlpatterns = [
     url(r'^$', views.index),
@@ -51,7 +47,7 @@ urlpatterns = [
     url(r'^closed/*$', views.closed_games),
     url(r'^add_vote/(?P<gameid>\d+)/(?P<player>[\d-]+)/(?P<votes>\w+)/(?P<target>\d+)$',
         views.add_vote),
-    url(r'^add_vote_global/(?P<gameid>\d+)$',views.add_vote_global),
+    url(r'^add_vote_global/(?P<gameid>\d+)$', views.add_vote_global),
     url(r'^delete_vote/(?P<voteid>\d+)$', views.delete_vote),
     url(r'^img/(?P<slug>[\w-]+)/*$', views.votecount_image),
     url(r'^autoupdate$', views.autoupdate),
@@ -68,5 +64,5 @@ urlpatterns = [
     url(r'^gamechart$', views.gamechart),
     url(r'^update_user_theme$', views.update_user_theme),
     url(r'^update_user_pronouns$', views.update_user_pronouns),
-    url(r'^players/common_games/(?P<slug_a>[\w-]+)/(?P<slug_b>[\w-]+)', views.common_games)
+    url(r'^players/common_games/(?P<slug_a>[\w-]+)/(?P<slug_b>[\w-]+)', views.common_games),
 ]

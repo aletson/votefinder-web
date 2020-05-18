@@ -18,12 +18,10 @@ VF_ADMIN_NAME = os.environ.get('VF_ADMIN_NAME') or 'Your Name'
 VF_ADMIN_EMAIL = os.environ.get('VF_ADMIN_EMAIL') or 'you@yourname.com'
 VF_DEBUG_STR = os.environ.get('VF_DEBUG_STR') or False
 SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL') or ''
-PRIMARY_DOMAIN = VF_DOMAINS.split(" ", 1)[0]
+SECRET_KEY = os.environ.get('SECRET_KEY') or 'Insert your secret key here'
+PRIMARY_DOMAIN = VF_DOMAINS.split(' ', 1)[0]
 
-if VF_DEBUG_STR == 'True':
-    DEBUG = True
-else:
-    DEBUG = False
+DEBUG = bool(VF_DEBUG_STR == 'True')
 
 ALLOWED_HOSTS = VF_DOMAINS.split()
 
@@ -35,14 +33,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': VF_MYSQL_NAME,
         'USER': VF_MYSQL_USER,
         'PASSWORD': VF_MYSQL_PASS,
         'HOST': VF_MYSQL_HOST,
         'PORT': 3306,
         'OPTIONS': {'charset': 'utf8mb4'},
-    }
+    },
 }
 
 LOGIN_URL = '/auth/login'
@@ -60,14 +58,14 @@ DEFAULT_FROM_EMAIL = VF_FROM_EMAIL
 
 WEB_ROOT = 'votefinder/'
 REGULAR_FONT_PATH = 'votefinder/static/MyriadPro-Regular.otf'
-BOLD_FONT_PATH =    'votefinder/static/MyriadPro-Bold.otf'
+BOLD_FONT_PATH = 'votefinder/static/MyriadPro-Bold.otf'
 STATIC_ROOT = 'votefinder/static/'
 
 # On Unix systems, a value of None will cause Django to use the same
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/New_York' # Set to the time zone set on the SA forums account.
+TIME_ZONE = 'America/New_York'  # Set to the TZ of the SA forum account.
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -85,8 +83,7 @@ USE_I18N = True
 # calendars according to the current locale
 USE_L10N = True
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
+# Absolute path to the directory that holds media. Example: "/home/media"
 MEDIA_ROOT = ''
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
@@ -99,14 +96,11 @@ MEDIA_URL = 'http://media.votefinder.org/media/'
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = 'http://media.votefinder.org/admin/'
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'insert your secret key here'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'votefinder/main/templates'
+            'votefinder/main/templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -120,7 +114,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-		'django.template.context_processors.request',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -133,7 +127,7 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
     'django.contrib.auth.hashers.SHA1PasswordHasher',
-    'django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher'
+    'django.contrib.auth.hashers.UnsaltedSHA1PasswordHasher',
 ]
 
 MIDDLEWARE = (
@@ -141,7 +135,7 @@ MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware'
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'votefinder.urls'
