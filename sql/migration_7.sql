@@ -1,3 +1,4 @@
+update migration_version set version = 7;
 ALTER TABLE main_game CHANGE threadId thread_id int,
                       CHANGE lastUpdated last_updated datetime,
                       CHANGE maxPages max_pages int,
