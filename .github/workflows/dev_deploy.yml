@@ -112,8 +112,29 @@ jobs:
         if: ${{ github.ref == 'refs/heads/master' }}
         run: |
           sleep 2
+          STATUS=0
           response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/)
-          if [ "$response" != "200" ]
-          then
-            exit 1
+          if [ "$response" != "200" ]; then
+            echo "Index page failed"
+            STATUS=1
           fi
+          sleep 1
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/auth/login)
+          if [ "response" != "200" ]; then 
+            echo "Login page failed"
+            STATUS=1
+          fi
+          sleep 1
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/closed)
+          if [ "$response" != "200" ]; then
+            echo "Closed games page failed"
+            STATUS=1
+          fi
+          sleep 1
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/game/a-game-of-chess)
+          if [ "$response" != "200" ]; then
+            echo "Single game page failed"
+            STATUS=1
+          fi
+          exit $STATUS
+          response
