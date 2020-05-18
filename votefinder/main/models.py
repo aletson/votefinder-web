@@ -216,16 +216,24 @@ class PlayerState(models.Model):
     moderator = models.BooleanField(default=False)
 
     def set_moderator(self):
-        (self.spectator, self.moderator, self.alive) = (False, True, False)
+        self.spectator = False
+        self.moderator = True
+        self.alive = False
 
     def set_alive(self):
-        (self.spectator, self.moderator, self.alive) = (False, False, True)
+        self.spectator = False
+        self.moderator = False
+        self.alive = True
 
     def set_dead(self):
-        (self.spectator, self.moderator, self.alive) = (False, False, False)
+        self.spectator = False
+        self.moderator = False
+        self.alive = False
 
     def set_spectator(self):
-        (self.spectator, self.moderator, self.alive) = (True, False, False)
+        self.spectator = True
+        self.moderator = False
+        self.alive = False
 
     def state(self):
         if self.moderator:
