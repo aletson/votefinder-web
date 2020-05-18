@@ -82,8 +82,9 @@ class VoteCounter:
         vc_formatter.go()
         message = '{}\n\n'.format(message)
         message += vc_formatter.bbcode_votecount
+        message = ':redhammer: {}'.format(message)
         dl = ForumPageDownloader()
-        dl.reply_to_thread(game.thread_id, ':redhammer: ' + message.format(name))
+        dl.reply_to_thread(game.thread_id, message.format(name))
 
     def build_result_list(self):
         resultlist = []
