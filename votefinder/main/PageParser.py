@@ -103,7 +103,7 @@ class PageParser:
                 game = Game.objects.get(id=post.game.id)  # Is this line necessary? Can't we just use post.game?
                 player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
                 current_gameday = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post_id or player_last_vote.unvote or vote.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
+                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post.id or player_last_vote.unvote or vote.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
                     vote.save()
             except Game.DoesNotExist:
                 vote.save()
