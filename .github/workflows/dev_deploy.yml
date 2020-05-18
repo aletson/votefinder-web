@@ -28,6 +28,7 @@ jobs:
           fi
           sleep 10
       - name: Deploy to Dev
+        if: ${{ success() && github.ref == 'refs/heads/master' }}
         uses: JimCronqvist/action-ssh@0.1.1
         env:
           TARGET: ${{ secrets.DEV_TARGET }}
@@ -42,7 +43,12 @@ jobs:
             sudo git checkout $GITHUB_SHA
             sudo $DEV_VENV_PATH/bin/pip install -r requirements.txt
             sudo chown $DEV_USER:$DEV_USER $DEV_VENV_PATH -R
-            sudo systemctl reload nginx
+            NGINX_CONFIG=`sudo nginx -c /etc/nginx/nginx.conf -t 2>&1`
+            if [[ "$NGINX_CONFIG" =~ "syntax is ok" ]]; then
+              sudo systemctl reload nginx
+            else
+              exit 1
+            fi
       - name: Remove IP from file deployment SG
         if: ${{ success() }}
         env: 
