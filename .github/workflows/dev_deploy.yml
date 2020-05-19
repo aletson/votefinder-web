@@ -35,7 +35,7 @@ jobs:
           VENV_PATH: ${{ secrets.DEV_VENV_PATH }}
           USER: ${{ secrets.DEV_USER }}
         with: 
-          hosts: '${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}'
+          hosts: '${{ secrets.REMOTE_USER }}@${{ secrets.DEV_REMOTE_HOST }}'
           privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
           command: |
             cd $TARGET
