@@ -3,7 +3,7 @@ boto3==1.5.13
 chardet==3.0.4
 ConfigArgParse==0.13.0
 configobj==5.0.6
-Django==2.2.10
+Django==2.2.13
 django-contrib-comments
 html5lib==1.0.1
 image==1.5.19
