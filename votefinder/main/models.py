@@ -200,10 +200,10 @@ class Game(models.Model):
 
 
 class FactionType(Enum):
-    town = "Town"
-    scum = "Scum"
-    third = "Third Party"
-    cult = "Cult"
+    town = 'Town'
+    scum = 'Scum'
+    third = 'Third Party'
+    cult = 'Cult'
 
 
 class GameFaction(models.Model):
