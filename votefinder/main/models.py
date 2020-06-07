@@ -1,5 +1,6 @@
 import re
 from datetime import datetime, timedelta
+from enum import Enum
 
 from django import forms
 from django.conf import settings
@@ -196,6 +197,24 @@ class Game(models.Model):
         elif user.is_authenticated:
             return self.is_player_mod(user.profile.player)
         return False
+
+
+class FactionType(Enum):
+    town = "Town"
+    scum = "Scum"
+    third = "Third Party"
+    cult = "Cult"
+
+
+class GameFaction(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    faction_name = models.CharField(max_length=255)
+    faction_type = models.CharField(max_length=5, choices=[(faction, faction.value) for faction in FactionType])
+
+
+class PlayerFaction(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    faction = models.ForeignKey(GameFaction, on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
