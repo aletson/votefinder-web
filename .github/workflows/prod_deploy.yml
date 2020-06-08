@@ -87,7 +87,7 @@ jobs:
         if: ${{ success() }}
         env:
           VF_MYSQL_HOST: ${{ secrets.MYSQL_SERVER }}
-          DBUSVF_MYSQL_USERER: ${{ secrets.PROD_DBUSER }}
+          VF_MYSQL_USER: ${{ secrets.PROD_DBUSER }}
           VF_MYSQL_PASS: ${{ secrets.PROD_DBPASSWD }}
           VF_MYSQL_NAME: ${{ secrets.PROD_DBNAME }}
         run: |
