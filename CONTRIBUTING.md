@@ -11,6 +11,7 @@
 
 - 4 spaces, please
 - This is language agnostic
+- review flake8 output from CI/CD when committing, or set up flake8 in your editor before submitting a PR
 
 ## PR Format
 
