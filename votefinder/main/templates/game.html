@@ -636,10 +636,14 @@ $(document).ready(function () {
                     </thead>
                     <tbody>
                         {% for faction in game.factions.all %}
-                        <tr><td>{{ faction.faction_name }}</td><td>{{ faction.faction_type }}</td><td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td></tr>
+                        <tr>
+                            <td>{{ faction.faction_name }}</td>
+                            <td>{{ faction.faction_type }}</td>
+                            <td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td>
+                        </tr>
                         {% endfor %}
                     </tbody>
-                </table>>
+                </table>
                 {% endif %}
             </div>
         </div>
