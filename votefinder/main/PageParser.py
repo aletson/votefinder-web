@@ -2,7 +2,7 @@ import re
 import time
 from datetime import datetime, timedelta
 
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup
 from votefinder.main.models import (Alias, Game, GameDay, Player, PlayerState,
                                     Post, Vote)
 
