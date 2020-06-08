@@ -316,14 +316,13 @@ def add_faction(request, gameid):
     csrf_resp = {}
     csrf_resp.update(csrf(request))
     form = AddFactionForm(request.POST)
-    current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.faction_name, faction_type=form.faction_type))
+    current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.faction_name, faction_type=form.faction_type)
     faction.save()
     if created:
         messages.add_message(request, messages.SUCCESS, '<strong>{}</strong> was created!'.format(form.faction_name))
     else:
         messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
     return HttpResponseRedirect(game.get_absolute_url)
-
 
 @login_required
 def delete_faction(request, factionid):
