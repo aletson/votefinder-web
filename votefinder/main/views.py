@@ -154,6 +154,8 @@ def game(request, slug):
             player_state = False
         except PlayerState.DoesNotExist:
             player_state = False
+    else:
+        player_state = False
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
