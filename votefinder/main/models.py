@@ -216,11 +216,6 @@ class GameFaction(models.Model):
     winning = models.BooleanField(default=False)
 
 
-class PlayerFaction(models.Model):
-    player = models.ForeignKey(Player, related_name='factions', on_delete=models.CASCADE)
-    faction = models.ForeignKey(GameFaction, on_delete=models.CASCADE)
-
-
 class Comment(models.Model):
     player = models.ForeignKey(Player, on_delete=models.SET(get_root_user))
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -237,6 +232,7 @@ class PlayerState(models.Model):
     spectator = models.BooleanField(default=False)
     alive = models.BooleanField(default=False)
     moderator = models.BooleanField(default=False)
+    faction = models.ManyToManyField(GameFaction)
 
     def set_moderator(self):
         self.spectator = False
