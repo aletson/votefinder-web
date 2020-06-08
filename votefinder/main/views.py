@@ -175,7 +175,7 @@ def update(request, gameid):
         game.lock()
     try:
         page_parser = PageParser.PageParser()
-        new_game = page_parser.Update(game)
+        new_game = page_parser.update(game)
         if new_game:
             return HttpResponse(
                 simplejson.dumps({'success': True, 'curPage': new_game.current_page, 'maxPages': new_game.max_pages}),
