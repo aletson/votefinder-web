@@ -635,7 +635,7 @@ $(document).ready(function () {
                         </tr>
                     </thead>
                     <tbody>
-                        {% for faction in game.factions.all() %}
+                        {% for faction in game.factions.all %}
                         <tr><td>{{ faction.faction_name }}</td><td>{{ faction.faction_type }}</td><td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td></tr>
                         {% endfor %}
                     </tbody>
@@ -662,7 +662,7 @@ $(document).ready(function () {
                 <form>
                     {% if game.factions %}
                     <select name="winning_faction" id="close-game-faction-select" class="form-control">
-                        {% for faction in game.factions.all() %}
+                        {% for faction in game.factions.all %}
                         <option value="{{ faction.id }}">{{ faction.faction_name }}</option>
                         {% endfor %}
                     </select>
