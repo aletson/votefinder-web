@@ -328,7 +328,7 @@ def add_faction(request, gameid):
             messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
     else:
         messages.add_message(request, messages.ERROR, 'Invalid form submission, please review.')
-    return HttpResponseRedirect(game.get_absolute_url)
+    return HttpResponseRedirect(game.get_absolute_url())
 
 
 @login_required
@@ -337,7 +337,7 @@ def delete_faction(request, factionid):
     if request.method != 'POST' or not check_mod(request, faction.game):
         return HttpResponseNotFound
     faction.delete()
-    return HttpResponseRedirect(game.get_absolute_url)
+    return HttpResponseRedirect(faction.game.get_absolute_url())
 
 
 @login_required
