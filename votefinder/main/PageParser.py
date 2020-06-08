@@ -84,7 +84,6 @@ class PageParser:
         return None
 
     def search_line_for_actions(self, post, line):
-        raise Exception("line was being parsed: {}".format(line))
         # Votes
         pattern = re.compile(r'##\s*unvote|##\s*vote[:\s+]([^<\r\n]+)', re.I)
         pos = 0
