@@ -14,7 +14,7 @@ function dataReceived(data) {
         maxPages = parseInt(data.max_pages);
         $('#readPages').html(curPage + ' / ' + maxPages);
 
-        if (curPage < max_pages) {
+        if (curPage < maxPages) {
             updateGame();
         } else {
             $('#dialog').modal('hide');
