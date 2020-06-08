@@ -11,6 +11,10 @@ jobs:
         uses: haythem/public-ip@v1
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
       - name: Lint
         uses: wemake-services/wemake-python-styleguide@0.13.3
       - name: Configure AWS
@@ -82,25 +86,13 @@ jobs:
       - name: Run migrations
         if: ${{ success() }}
         env:
-          MYSQL_SERVER: ${{ secrets.MYSQL_SERVER }}
-          DBUSER: ${{ secrets.PROD_DBUSER }}
-          DBPASSWD: ${{ secrets.PROD_DBPASSWD }}
-          DBNAME: ${{ secrets.PROD_DBNAME }}
+          VF_MYSQL_HOST: ${{ secrets.MYSQL_SERVER }}
+          DBUSVF_MYSQL_USERER: ${{ secrets.PROD_DBUSER }}
+          VF_MYSQL_PASS: ${{ secrets.PROD_DBPASSWD }}
+          VF_MYSQL_NAME: ${{ secrets.PROD_DBNAME }}
         run: |
-          MIGRATION=`mysql -h $MYSQL_SERVER -u $DBUSER -p$DBPASSWD $DBNAME -e "SELECT version FROM migration_version" -sN`
-          if [ $MIGRATION -eq 0 ]; then
-            exit 1
-          fi
-          MIGRATION=$((MIGRATION+1))
-          while [ -f sql/migration_$MIGRATION.sql ]; do
-            echo "Applying migration to $MIGRATION..."
-            mysql -h $MYSQL_SERVER -u $DBUSER -p$DBPASSWD $DBNAME < sql/migration_$MIGRATION.sql
-            if [ $? -ne 0 ]; then
-              echo "Error detected on migration!"
-              exit 1
-            fi
-            MIGRATION=$((MIGRATION+1))
-          done
+          pip install -r requirements.txt
+          python manage.py migrate --noinput
       - name: Remove IP from DB SG
         if: ${{ success() }}
         env: 
