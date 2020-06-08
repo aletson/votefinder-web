@@ -500,7 +500,7 @@ def close_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
     if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
-    if request.POST.get('winning_faction') > 0:
+    if int(request.POST.get('winning_faction')) > 0:
         faction = GameFaction.objects.get(id=request.POST.get('winning_faction'))
         faction.winning = True
         faction.save()
