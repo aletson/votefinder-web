@@ -98,6 +98,9 @@ $(document).ready(function () {
         location.href = '/game_template/{{ game.id }}/' + $('#templates').val();
     });
     {% endif %}
+    {% if playerstate and playerstate.alive %}
+    $('.collapse').collapse();
+    {% endif %}
 	{% if game.state == 'started' %}
     $("#deadlineDate").datepicker();
     $('#submitNewDeadline').click(function () {
@@ -232,7 +235,10 @@ $(document).ready(function () {
             {% if moderator %}
             <li class="single-tab{% if game.state == 'closed' %} active{% endif %}"><a data-toggle="pill" href="#moderator">Moderator</a></li>
             {% endif %}
-            <li class="single-tab{% if not moderator or game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
+            {% if game.state != 'closed' and playerstate and playerstate.alive %}
+            <!-- <li class="single-tab active"><a data-toggle="pill" href="#player">Player</a></li> -->
+            {% endif %}
+            <li class="single-tab{% if not moderator and not playerstate and not playerstate.alive or game.state != 'closed' %} active{% endif %}"><a data-toggle="pill" href="#votecount">Votecount</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#players">Players</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#posts">Posts</a></li>
             <li class="single-tab"><a data-toggle="pill" href="#updates">Game Updates</a></li>
@@ -593,6 +599,53 @@ $(document).ready(function () {
     </div>
 
     <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="moderator-manage-faction-heading">
+
+            <h3 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#moderator-open-game-accordion" href="#moderator-manage-faction-collapse" aria-expanded="true" aria-controls="moderator-manage-faction-collapse">
+                    Manage Factions
+                </a>
+            </h3>
+        </div>
+        <div id="moderator-manage-faction-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-manage-faction-heading">
+            <div class="panel-body">
+                <p>Here, you can manage factions for your game.</p>
+                <form action="/add_faction/{{ game.id }}" method="post">{% csrf_token %}
+                    <table border="0" cellpadding="5" cellspacing="0">
+                        <tr>
+                            <td valign="top">Faction name:</td>
+                            <td>{{ faction_form.faction_name }}</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">Faction type:</td>
+                            <td>{{ faction_form.faction_type }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="right"><input type="submit" value="Add Faction"
+                                                                 id="submitAddFaction" class="button btn btn-default"/></td>
+                        </tr>
+                    </table>
+                </form>
+                <hr/>
+                {% if game.factions %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Faction name</th><th>Type</th><th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for faction in game.factions %}
+                        <tr><td>{{ faction.faction_name }}</td><td>{{ faction.faction_type }}</td><td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
         <div class="panel-heading" role="tab" id="moderator-close-game-heading">
 
             <h3 class="panel-title">
@@ -606,8 +659,18 @@ $(document).ready(function () {
                 <p>Closing the game will move it out of the list of currently tracked games on the main
                     page, and will prevent
                     anyone from refreshing the votecount.</p>
-
-                <a href="/close_game/{{ game.id }}" class="button btn btn-default">Close Game!</a>
+                <form>
+                    {% if game.factions %}
+                    <select name="winning_faction" id="close-game-faction-select" class="form-control">
+                        {% for faction in game.factions %}
+                        <option value="{{ faction.id }}">{{ faction.faction_name }}</option>
+                        {% endfor %}
+                    </select>
+                    {% else %}
+                    <input type="hidden" name="winning_faction" value="-1" />
+                    {% endif %}
+                    <input type="submit" value="Close Game!" id="submitCloseGame" class="button btn btn-default" />
+                </form>
             </div>
         </div>
     </div>
@@ -617,6 +680,33 @@ $(document).ready(function () {
 
 
         {% endif %}
+        {% if game.state != 'closed' and playerstate and playerstate.alive %}
+       <!-- <div id="player" class="tab-panel fade in active">
+            <div class="panel-group" id="player-open-game-accordion" role="tablist" aria-multiselectable="true">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="player-my-reads">
+            
+                        <h3 class="panel-title">
+                            <a role="button" data-toggle="collapse" data-parent="#player-open-game-accordion" href="#player-my-reads-collapse" aria-expanded="true" aria-controls="player-my-reads-collapse">
+                                My Reads
+                            </a>
+                        </h3>
+                    </div>
+                    <div id="player-my-reads-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="player-my-reads-heading">
+                        <div class="panel-body">
+                            <p>Review my reads by player:</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> panel-group
+        </div> end player tab -->
+{% endif %} 
+
+
+
+
     <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
         {% if game.state == 'pregame' %}
             <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}">thread</a> if you'd like to sign up.</div>

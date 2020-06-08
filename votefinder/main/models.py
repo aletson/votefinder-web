@@ -198,6 +198,9 @@ class Game(models.Model):
             return self.is_player_mod(user.profile.player)
         return False
 
+    def winning_faction(self):
+        return self.factions.get(winning=True)
+
 
 class FactionType(Enum):
     town = 'Town'
@@ -207,13 +210,14 @@ class FactionType(Enum):
 
 
 class GameFaction(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, related_name='factions', on_delete=models.CASCADE)
     faction_name = models.CharField(max_length=255)
     faction_type = models.CharField(max_length=5, choices=[(faction, faction.value) for faction in FactionType])
+    winning = models.BooleanField(default=False)
 
 
 class PlayerFaction(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, related_name='factions', on_delete=models.CASCADE)
     faction = models.ForeignKey(GameFaction, on_delete=models.CASCADE)
 
 
@@ -394,6 +398,11 @@ class AddPlayerForm(forms.Form):
             raise forms.ValidationError('No player by that name.')
 
         return self.player.name
+
+
+class AddFactionForm(forms.Form):
+    faction_name = forms.CharField()
+    faction_type = forms.ChoiceField(choices=[(faction, faction.value) for faction in FactionType])
 
 
 class AddCommentForm(forms.Form):

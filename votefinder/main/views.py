@@ -19,10 +19,10 @@ from django.http import (HttpResponse, HttpResponseForbidden,
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.template.context_processors import csrf
 from PIL import Image, ImageDraw, ImageFont
-from votefinder.main.models import (AddCommentForm, AddPlayerForm, Alias,
-                                    BlogPost, Comment, Game, GameDay,
-                                    GameStatusUpdate, Player, PlayerState,
-                                    Post, Theme, UserProfile, Vote,
+from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerForm,
+                                    Alias, BlogPost, Comment, Game, GameDay,
+                                    GameFaction, GameStatusUpdate, Player,
+                                    PlayerState, Post, Theme, UserProfile, Vote,
                                     VotecountTemplate, VotecountTemplateForm)
 
 from votefinder.main import (ForumPageDownloader, GameListDownloader, PageParser,
@@ -130,6 +130,7 @@ def game(request, slug):
         comment_form = AddCommentForm(initial={'comment': comment.comment})
     except Comment.DoesNotExist:
         comment_form = AddCommentForm()
+    faction_form = AddFactionForm()
 
     moderators = [ps.player for ps in game.moderators()]
     templates = VotecountTemplate.objects.select_related().filter(Q(creator__in=moderators) | Q(shared=True))
@@ -146,12 +147,17 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
+    if request.user.is_authenticated:
+        playerstate = PlayerState.objects.get(game=game, player=request.user.profile.player)
+    else:
+        playerstate = False
+
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
                'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
                'nextDay': gameday.day_number + 1, 'deadline': deadline, 'templates': templates,
                'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-               'updates': updates}
+               'updates': updates, 'playerstate': playerstate, 'faction_form': faction_form}
     return render(request, 'game.html', context)
 
 
@@ -300,6 +306,32 @@ def add_player(request, gameid):
                              'Unable to find a player named <strong>{}</strong>.'.format(form.data['name']))
 
     return HttpResponseRedirect(game.get_absolute_url())
+
+
+@login_required
+def add_faction(request, gameid):
+    game = get_object_or_404(Game, id=gameid)
+    if request.method != 'POST' or not check_mod(request, game):
+        return HttpResponseNotFound
+    csrf_resp = {}
+    csrf_resp.update(csrf(request))
+    form = AddFactionForm(request.POST)
+    current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.faction_name, faction_type=form.faction_type))
+    faction.save()
+    if created: 
+        messages.add_message(request, messages.SUCCESS, '<strong>{}</strong> was created!'.format(form.faction_name))
+    else:
+        messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
+    return HttpResponseRedirect(game.get_absolute_url)
+
+
+@login_required
+def delete_faction(request, factionid):
+    faction = get_object_or_404(GameFaction, id=factionid)
+    if request.method != 'POST' or not check_mod(request, faction.game):
+        return HttpResponseNotFound
+    faction.delete()
+    return HttpResponseRedirect(game.get_absolute_url)
 
 
 @login_required
@@ -460,13 +492,15 @@ def deadline(request, gameid, month, day, year, hour, minute, ampm, tzname):
 @login_required
 def close_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
-    if not check_mod(request, game):
+    if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
-
+    if request.POST.get('winning_faction') > 0:
+        faction = GameFaction.objects.get(id=request.POST.get('winning_faction'))
+        faction.winning = True
+        faction.save()
     game.state = 'closed'
     game.save()
-
-    game.status_update('The game is over.')
+    game.status_update('The game is over. {} has won.'.format(faction.faction_name))
 
     messages.add_message(request, messages.SUCCESS,
                          'The game was <strong>closed</strong>!  Make sure to add it to the wiki!')
