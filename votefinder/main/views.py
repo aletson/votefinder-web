@@ -131,7 +131,6 @@ def game(request, slug):
     except Comment.DoesNotExist:
         comment_form = AddCommentForm()
     faction_form = AddFactionForm()
-
     moderators = [ps.player for ps in game.moderators()]
     templates = VotecountTemplate.objects.select_related().filter(Q(creator__in=moderators) | Q(shared=True))
     updates = GameStatusUpdate.objects.filter(game=game).order_by('-timestamp')
@@ -321,11 +320,14 @@ def add_faction(request, gameid):
     csrf_resp = {}
     csrf_resp.update(csrf(request))
     form = AddFactionForm(request.POST)
-    current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.faction_name, faction_type=form.faction_type)
-    if created:
-        messages.add_message(request, messages.SUCCESS, '<strong>{}</strong> was created!'.format(current_faction.faction_name))
+    if form.is_valid():
+        current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.cleaned_data['faction_name'], faction_type=form.cleaned_data['faction_type'])
+        if created:
+            messages.add_message(request, messages.SUCCESS, '<strong>{}</strong> was created!'.format(current_faction.faction_name))
+        else:
+            messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
     else:
-        messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
+        messages.add_message(request, messages.ERROR, 'Invalid form submission, please review.')
     return HttpResponseRedirect(game.get_absolute_url)
 
 
