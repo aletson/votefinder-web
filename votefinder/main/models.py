@@ -402,7 +402,7 @@ class AddPlayerForm(forms.Form):
 
 class AddFactionForm(forms.Form):
     choices = (
-        ('town', "Town"),
+        ('town', 'Town'),
         ('scum', 'Scum'),
         ('third', 'Third Party'),
         ('cult', 'Cult'),
