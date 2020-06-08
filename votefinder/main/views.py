@@ -334,7 +334,7 @@ def add_faction(request, gameid):
 @login_required
 def delete_faction(request, factionid):
     faction = get_object_or_404(GameFaction, id=factionid)
-    if request.method != 'POST' or not check_mod(request, faction.game):
+    if not check_mod(request, faction.game):
         return HttpResponseNotFound
     faction.delete()
     return HttpResponseRedirect(faction.game.get_absolute_url())
