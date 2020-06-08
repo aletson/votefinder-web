@@ -147,9 +147,12 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
-    if request.user.is_authenticated:
-        playerstate = PlayerState.objects.get(game=game, player=request.user.profile.player)
-    else:
+    try:
+        if request.user.is_authenticated:
+            playerstate = PlayerState.objects.get(game=game, player=request.user.profile.player)
+        else:
+            playerstate = False
+    except UserProfile.DoesNotExist:
         playerstate = False
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
