@@ -401,8 +401,14 @@ class AddPlayerForm(forms.Form):
 
 
 class AddFactionForm(forms.Form):
+    choices = (
+        ('town', "Town"),
+        ('scum', 'Scum'),
+        ('third', 'Third Party'),
+        ('cult', 'Cult'),
+    )
     faction_name = forms.CharField()
-    faction_type = forms.ChoiceField(choices=[(faction, faction.value) for faction in FactionType])
+    faction_type = forms.ChoiceField(choices=choices)
 
 
 class AddCommentForm(forms.Form):
