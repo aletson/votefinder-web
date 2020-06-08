@@ -11,7 +11,7 @@ function loadPage(x) {
 function dataReceived(data) {
     if (data.success) {
         curPage = parseInt(data.curPage);
-        maxPages = parseInt(data.max_pages);
+        maxPages = parseInt(data.maxPages);
         $('#readPages').html(curPage + ' / ' + maxPages);
 
         if (curPage < maxPages) {
