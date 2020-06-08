@@ -86,7 +86,7 @@ class PageParser:
     def search_line_for_actions(self, post, line):
         raise Exception("line was being parsed: {}".format(line))
         # Votes
-        pattern = re.compile(r'##\\s*unvote|##\\s*vote[:\\s+]([^<\\r\\n]+)', re.I)
+        pattern = re.compile(r'##\s*unvote|##\s*vote[:\s+]([^<\r\n]+)', re.I)
         pos = 0
         match = pattern.search(line, pos)
 
@@ -113,7 +113,7 @@ class PageParser:
         if post.game.is_player_mod(post.author):
             # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
             # pattern search for ##deadline and # of hours
-            pattern = re.compile(r'##\\s*deadline[:\\s+](\\d+)', re.I)
+            pattern = re.compile(r'##\s*deadline[:\s+](\d+)', re.I)
             pos = 0
             match = pattern.search(line, pos)
             while match:
@@ -270,7 +270,7 @@ class PageParser:
 
         author_string = node.find('dt', 'author').text
         author_string = re.sub(r'<.*?>', '', author_string)
-        author_string = re.sub(r'&\\w+?;', '', author_string).strip()
+        author_string = re.sub(r'&\w+?;', '', author_string).strip()
 
         matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.author_search)
         if matcher:
