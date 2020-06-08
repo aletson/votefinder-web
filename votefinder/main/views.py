@@ -839,12 +839,12 @@ def draw_wordwrap_text(draw, text, xpos, ypos, max_width, font):
 
 
 def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
-    votes_by_player = [voted_player for voted_player in vc.results if voted_player['count'] > 0]
+    votes_by_player = [voted_player for voted_player in vc.counted_votes if voted_player['count'] > 0]
     longest_name = 0
     divider_len_x, divider_len_y = draw.textsize(': ', font=font)
     max_x = 0
     if votes_by_player is None:  # No votes found
-        text = 'No votes found in vc.results~'
+        text = 'No votes found in vc.counted_votes~'
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
         (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
         return (x_size1, y_bottom1)
