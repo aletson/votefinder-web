@@ -627,7 +627,7 @@ $(document).ready(function () {
                     </table>
                 </form>
                 <hr/>
-                {% if game.factions %}
+                {% if game.factions.count > 0 %}
                 <table>
                     <thead>
                         <tr>
@@ -664,7 +664,7 @@ $(document).ready(function () {
                     page, and will prevent
                     anyone from refreshing the votecount.</p>
                 <form>
-                    {% if game.factions %}
+                    {% if game.factions.count > 0%}
                     <select name="winning_faction" id="close-game-faction-select" class="form-control">
                         {% for faction in game.factions.all %}
                         <option value="{{ faction.id }}">{{ faction.faction_name }}</option>
