@@ -253,8 +253,6 @@ class PageParser:
         for quote in post.bodySoup.findAll('div', 'bbc-block'):
             quote['class'] = 'quote well'
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="{}">Click to load image...</div>'.format(img['src'])) for img in post.bodySoup.find_all('img')]  # noqa: WPS428 false positive
-        for comments in post.bodySoup.find_all(text=lambda text: isinstance(text, Comment)):
-            comments.decompose()
         post.body = post.bodySoup.prettify(formatter=None)
         post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
         post_date_node = node.find('td', 'postdate')
