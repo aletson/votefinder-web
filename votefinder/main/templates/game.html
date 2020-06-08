@@ -663,7 +663,7 @@ $(document).ready(function () {
                 <p>Closing the game will move it out of the list of currently tracked games on the main
                     page, and will prevent
                     anyone from refreshing the votecount.</p>
-                <form>
+                <form id="closeGameForm" action="/close_game/{{ game.id }}" method="post">
                     {% if game.factions.count > 0 %}
                     <select name="winning_faction" id="close-game-faction-select" class="form-control">
                         {% for faction in game.factions.all %}
