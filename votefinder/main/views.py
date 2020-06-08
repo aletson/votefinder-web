@@ -147,20 +147,20 @@ def game(request, slug):
         deadline = timezone(game.timezone).localize(datetime.now() + timedelta(days=3))
         tzone = game.timezone
 
-    try:
-        if request.user.is_authenticated:
-            playerstate = PlayerState.objects.get(game=game, player=request.user.profile.player)
-    except UserProfile.DoesNotExist:
-        playerstate = False
-    except PlayerState.DoesNotExist:
-        playerstate = False
+    if request.user.is_authenticated:
+        try:
+            player_state = PlayerState.objects.get(game=game, player=request.user.profile.player)
+        except UserProfile.DoesNotExist:
+            player_state = False
+        except PlayerState.DoesNotExist:
+            player_state = False
 
     post_vc_button = bool(check_mod(request, game) and (game.last_vc_post is None or datetime.now() - game.last_vc_post >= timedelta(minutes=60) or (game.deadline and game.deadline - datetime.now() <= timedelta(minutes=60))))
     context = {'game': game, 'players': players, 'moderator': check_mod(request, game), 'form': form,
                'comment_form': comment_form, 'gameday': gameday, 'post_vc_button': post_vc_button,
                'nextDay': gameday.day_number + 1, 'deadline': deadline, 'templates': templates,
                'manual_votes': manual_votes, 'timezone': tzone, 'common_timezones': common_timezones,
-               'updates': updates, 'playerstate': playerstate, 'faction_form': faction_form}
+               'updates': updates, 'playerstate': player_state, 'faction_form': faction_form}
     return render(request, 'game.html', context)
 
 
