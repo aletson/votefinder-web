@@ -318,7 +318,7 @@ def add_faction(request, gameid):
     form = AddFactionForm(request.POST)
     current_faction, created = GameFaction.objects.get_or_create(game=game, faction_name=form.faction_name, faction_type=form.faction_type))
     faction.save()
-    if created: 
+    if created:
         messages.add_message(request, messages.SUCCESS, '<strong>{}</strong> was created!'.format(form.faction_name))
     else:
         messages.add_message(request, messages.ERROR, 'Something went wrong, and the faction could not be added.')
