@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^game_status/*$', feeds.GameStatusAtom()),
     url(r'^faq/*$', TemplateView.as_view(template_name='faq.html')),
     url(
-        r'^deadline/(?P<gameid>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<year>[\d]+)/(?P<hour>[\d]+)/(?P<min>[\d]+)/(?P<ampm>[\w]+)/(?P<tzname>.+)$',
+        r'^deadline/(?P<gameid>[\d]+)/(?P<month>[\d]+)/(?P<day>[\d]+)/(?P<year>[\d]+)/(?P<hour>[\d]+)/(?P<minute>[\d]+)/(?P<ampm>[\w]+)/(?P<tzname>.+)$',
         views.deadline),
     url(r'^close_game/(?P<gameid>\d+)/*$', views.close_game),
     url(r'^start_game/(?P<gameid>\d+)/(?P<day>\d+)/*$', views.start_game),
