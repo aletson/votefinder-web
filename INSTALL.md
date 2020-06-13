@@ -12,6 +12,7 @@ pip install -r requirements.txt
 ```
 Review all of the settings in `votefinder/settings.py` for accuracy in your environment.
 ```bash
+python manage.py migrate
 python -Wall manage.py runserver localhost:8080
 ```
 There must be a player with uid of -1 present in your database.
