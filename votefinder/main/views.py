@@ -1097,7 +1097,7 @@ def votechart_all(request, gameslug):
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': True, 'startDate': day.start_post.timestamp,
-                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'now': datetime.now(), 'toExecute': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'players': [player.player.name for player in game.living_players()],
                    'allPlayers': [player.player for player in game.living_players()]},
@@ -1116,7 +1116,7 @@ def votechart_player(request, gameslug, playerslug):
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.start_post.timestamp,
-                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'now': datetime.now(), 'toExecute': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'allPlayers': [player.player for player in game.living_players()],
                    'selectedPlayer': player.name,
