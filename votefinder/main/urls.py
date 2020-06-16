@@ -58,7 +58,7 @@ urlpatterns = [
     url(r'^delete_alias/(?P<id>\d+)$', views.delete_alias),
     url(r'^sendpms/(?P<slug>[\w-]+)$', views.sendpms),
     url(r'^post_histories/(?P<gameid>\d+)$', views.post_histories),
-    url(r'^post_lynches/(?P<gameid>\d+)/(?P<enabled>\w+)$', views.post_lynches),
+    url(r'^post_executions/(?P<gameid>\d+)/(?P<enabled>\w+)$', views.post_executions),
     url(r'^ecco_mode/(?P<gameid>\d+)/(?P<enabled>\w+)$', views.ecco_mode),
     url(r'^post_vc/(?P<gameid>\d+)$', views.post_vc),
     url(r'^votechart/(?P<gameslug>[\w-]+)$', views.votechart_all),

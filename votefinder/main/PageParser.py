@@ -98,7 +98,7 @@ class PageParser:
                 vote.unvote = False
 
                 if vote.target is None and vote.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
-                    vote.nolynch = True
+                    vote.no_execute = True
             try:
                 game = Game.objects.get(id=post.game.id)  # Is this line necessary? Can't we just use post.game?
                 player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()

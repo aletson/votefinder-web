@@ -519,14 +519,14 @@ $(document).ready(function () {
         </div>
         <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
             <div class="panel-body">
-                {% if game.post_lynches %}
+                {% if game.post_executions %}
                 Posting of executions is <b>enabled</b>.  Votefinder will post in the thread when it sees a majority-vote execution
                 happen.
-                <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
+                <a href="/post_executions/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
                 Posting of executions is <b>disabled</b>.  Votefinder will NOT post in the thread when it sees a
                 majority-vote execution happen.
-                <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
+                <a href="/post_executions/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
                 <br/><br/>
                 {% if game.ecco_mode %}
@@ -641,7 +641,7 @@ $(document).ready(function () {
                             <td>{{ faction.faction_type }}</td>
                             <td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td>
                         </tr>
-                        {% endfor %}
+                {% endfor %}
                     </tbody>
                 </table>
                 {% endif %}

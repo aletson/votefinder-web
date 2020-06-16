@@ -108,7 +108,7 @@ class Game(models.Model):
     template = models.ForeignKey(VotecountTemplate, null=True, blank=True, on_delete=models.SET_DEFAULT, default=2)
     added_by = models.ForeignKey(User, on_delete=models.SET(get_root_user))
     timezone = models.CharField(max_length=128, default='US/Eastern')
-    post_lynches = models.BooleanField(default=False)
+    post_executions = models.BooleanField(default=False)
     ecco_mode = models.BooleanField(default=False)
     last_vc_post = models.DateTimeField(null=True, blank=True)
     is_big = models.BooleanField(default=False)
@@ -310,7 +310,7 @@ class Vote(models.Model):
     unvote = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
     manual = models.BooleanField(default=False)
-    nolynch = models.BooleanField(default=False)
+    no_execute = models.BooleanField(default=False)
 
     def __str__(self):
         if self.unvote:

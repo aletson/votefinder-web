@@ -40,7 +40,7 @@ class VotecountFormatter:
             deadline = ''
             until_deadline = ''
 
-        self.tolynch = self.to_lynch(alive)
+        self.toexecute = self.to_execute(alive)
         detail_level = game_template.detail_level
         self.tick = game_template.full_tick
         self.empty_tick = game_template.empty_tick
@@ -72,13 +72,13 @@ class VotecountFormatter:
                     this_line = game_template.single_line.replace('{{target}}', str(votecount_by_player['target'].name)).replace(
                         '{{count}}', str(votecount_by_player['count'])).replace('{{votelist}}', ', '.join(votelist))
                     votecount_lines.append(
-                        this_line.replace('{{ticks}}', self.build_ticks(votecount_by_player['count'], self.tolynch)))
+                        this_line.replace('{{ticks}}', self.build_ticks(votecount_by_player['count'], self.toexecute)))
 
         self.not_voting_list = sorted(
             filter(lambda player: self.vc.currentVote[player] is None and player in living_players, self.vc.currentVote),
             key=lambda player: player.name.lower())
         temp_not_voting = game_template.single_line.replace('{{target}}', 'Not Voting').replace('{{count}}', str(
-            len(self.not_voting_list))).replace('{{ticks}}', self.build_ticks(0, self.tolynch))
+            len(self.not_voting_list))).replace('{{ticks}}', self.build_ticks(0, self.toexecute))
 
         temp_overall = game_template.overall.replace('{{votecount}}', '\n'.join(votecount_lines))
         temp_overall = temp_overall.replace('{{deadline}}', game_template.deadline_exists if self.game.deadline else game_template.deadline_not_set)
@@ -88,7 +88,7 @@ class VotecountFormatter:
         if comments:
             temp_overall += '\n \n' + '\n \n'.join([comment.comment for comment in comments])  # noqa: WPS336
 
-        self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}', until_deadline).replace('{{day}}', str(gameday.day_number)).replace('{{tolynch}}', str(self.tolynch)).replace('{{alive}}', str(alive))
+        self.bbcode_votecount = temp_overall.replace('{{deadline}}', str(deadline)).replace('{{timeuntildeadline}}', until_deadline).replace('{{day}}', str(gameday.day_number)).replace('{{tolynch}}', str(self.toexecute)).replace('{{alive}}', str(alive))
 
         self.html_votecount = self.convert_bbcode_to_html(self.bbcode_votecount)
 

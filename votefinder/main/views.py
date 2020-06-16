@@ -356,7 +356,7 @@ def delete_spectators(request, gameid):
 def votecount(request, gameid):
     game = get_object_or_404(Game, id=gameid)
     try:
-        votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+        votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, no_execute=False)
         if votes:
             players = sorted(game.all_players(), key=lambda player: player.player.name.lower())
             return render(request, 'unresolved.html',
@@ -384,7 +384,7 @@ def resolve(request, voteid, resolution):
         vote.ignored = True
         vote.save()
     elif resolution == '-2':
-        vote.nolynch = True
+        vote.no_execute = True
         vote.save()
     else:
         player = get_object_or_404(Player, id=int(resolution))
@@ -400,7 +400,7 @@ def resolve(request, voteid, resolution):
     cache.delete(key)
 
     new_votes = Vote.objects.filter(game=vote.game, target_string__iexact=vote.target_string, target=None, unvote=False,
-                                    ignored=False, nolynch=False)
+                                    ignored=False, no_execute=False)
 
     refresh = bool(len(votes) != 1 or not new_votes)
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
@@ -860,7 +860,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
             longest_name = this_size_x
 
     for line_again in votes_by_player:  # noqa: WPS426
-        pct = float(line_again['count']) / vc.tolynch
+        pct = float(line_again['count']) / vc.no_execute
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],
                        fill=(int(155 + (pct * 100)), 100, 100, int(pct * 255)))
@@ -900,7 +900,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
 
     (x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
 
-    votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+    votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, no_execute=False)
     if votes:
         ypos += header_y_size
         if len(votes) == 1:
@@ -1029,16 +1029,16 @@ def post_histories(request, gameid):
 
 
 @login_required
-def post_lynches(request, gameid, enabled):
+def post_executions(request, gameid, enabled):
     game = get_object_or_404(Game, id=gameid)
     if not check_mod(request, game):
         return HttpResponseForbidden
 
     if enabled == 'on':
-        game.post_lynches = True
+        game.post_executions = True
         messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now enabled!')
     else:
-        game.post_lynches = False
+        game.post_executions = False
         messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now disabled!')
 
     game.save()
