@@ -92,7 +92,7 @@ class VotecountFormatter:
 
         self.html_votecount = self.convert_bbcode_to_html(self.bbcode_votecount)
 
-    def to_lynch(self, count):
+    def to_execute(self, count):
         return int(math.floor(count / 2.0) + 1)
 
     def build_ticks(self, ticked, total):
