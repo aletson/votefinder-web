@@ -500,13 +500,17 @@ def close_game(request, gameid):
     game = get_object_or_404(Game, id=gameid)
     if request.method != 'POST' or not check_mod(request, game):
         return HttpResponseNotFound
+    faction = None
     if int(request.POST.get('winning_faction')) > 0:
         faction = GameFaction.objects.get(id=request.POST.get('winning_faction'))
         faction.winning = True
         faction.save()
     game.state = 'closed'
     game.save()
-    game.status_update('The game is over. {} has won.'.format(faction.faction_name))
+    if faction is not None:
+        game.status_update('The game is over. {} has won.'.format(faction.faction_name))
+    else:
+        game.status_update('The game is over.')
 
     messages.add_message(request, messages.SUCCESS,
                          'The game was <strong>closed</strong>!  Make sure to add it to the wiki!')
