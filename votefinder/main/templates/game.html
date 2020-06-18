@@ -641,6 +641,24 @@ $(document).ready(function () {
                             <td>{{ faction.faction_type }}</td>
                             <td><a class="btn btn-info" href="/delete_faction/{{ faction.id }}">Delete</a></td>
                         </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr/>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Player</th><th>Faction</th></tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for p in game.living_players %}
+                    <tr>
+                        <td>{{ p.player.name | safe }}</td><td><select class=""><option value="-1">---</option>{% for faction in game.factions.all %}<option {% if faction == p.playerstate.faction %}selected="selected" {% endif %}value="{{ faction.id }}">{{faction.faction_name}} ({{faction.faction_type}})</option>{% endfor %}</select></td>
+                    </tr>
+                {% endfor %}
+                {% for p in game.dead_players %}
+
                 {% endfor %}
                     </tbody>
                 </table>
