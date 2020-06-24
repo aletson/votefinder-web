@@ -3,7 +3,7 @@ import urllib
 
 from django import forms
 from django.contrib.auth.models import User
-from votefinder.main.ForumPageDownloader import ForumPageDownloader
+from votefinder.main.SAForumPageDownloader import SAForumPageDownloader
 from votefinder.main.models import Player, UserProfile
 
 
@@ -32,7 +32,7 @@ class CreateUserForm(forms.Form):
             pass  # noqa: WPS420
 
         if self.required_key:
-            downloader = ForumPageDownloader()
+            downloader = SAForumPageDownloader()
             page_data = downloader.download(
                 'https://forums.somethingawful.com/member.php?action=getinfo&username={}'.format(urllib.parse.quote_plus(login)))
 

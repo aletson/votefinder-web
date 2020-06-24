@@ -7,7 +7,7 @@ from django.conf import settings
 from votefinder.main.models import Game
 
 
-class ForumPageDownloader():
+class SAForumPageDownloader():
     def __init__(self):
         self.session = requests.Session()
         self.session.headers.update({'User-Agent': 'Mozilla/5.0'})
@@ -88,5 +88,5 @@ class ForumPageDownloader():
 
 
 if __name__ == '__main__':
-    dl = ForumPageDownloader()
+    dl = SAForumPageDownloader()
     result = dl.download('https://forums.somethingawful.com/showthread.php?threadid=3552086')  # noqa: WPS110

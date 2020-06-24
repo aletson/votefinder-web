@@ -6,10 +6,10 @@ from bs4 import BeautifulSoup
 from votefinder.main.models import (Game, GameDay, Player, PlayerState,
                                     Post)
 
-from votefinder.main import ForumPageDownloader, PostParser
+from votefinder.main import SAForumPageDownloader, PostParser
 
 
-class PageParser:
+class SAPageParser:
     def __init__(self):
         self.pageNumber = 0
         self.maxPages = 0
@@ -19,7 +19,7 @@ class PageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.downloader = ForumPageDownloader.ForumPageDownloader()
+        self.downloader = SAForumPageDownloader.SAForumPageDownloader()
 
     def add_game(self, threadid, state):
         self.new_game = True

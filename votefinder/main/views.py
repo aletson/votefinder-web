@@ -25,7 +25,7 @@ from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerFor
                                     PlayerState, Post, Theme, UserProfile, Vote,
                                     VotecountTemplate, VotecountTemplateForm)
 
-from votefinder.main import (ForumPageDownloader, GameListDownloader, PageParser,
+from votefinder.main import (SAForumPageDownloader, SAGameListDownloader, SAPageParser,
                              VoteCounter, VotecountFormatter)
 
 
@@ -72,7 +72,7 @@ def add_game(request):
                 game = Game.objects.get(thread_id=threadid)
                 return_status['url'] = game.get_absolute_url()
             except Game.DoesNotExist:
-                page_parser = PageParser.PageParser()
+                page_parser = SAPageParser.SAPageParser()
                 page_parser.user = request.user
                 game = page_parser.add_game(threadid, state)
                 if game:
@@ -116,7 +116,7 @@ def add_game(request):
 
 @login_required
 def game_list(request, page):
-    downloader = GameListDownloader.GameListDownloader()
+    downloader = SAGameListDownloader.SAGameListDownloader()
     downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
     return HttpResponse(simplejson.dumps(downloader.GameList), content_type='application/json')
 
@@ -174,7 +174,7 @@ def update(request, gameid):
     else:
         game.lock()
     try:
-        page_parser = PageParser.PageParser()
+        page_parser = SAPageParser.SAPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return HttpResponse(
@@ -926,7 +926,7 @@ def check_update_game(game):
         game.lock()
 
     try:
-        page_parser = PageParser.PageParser()
+        page_parser = SAPageParser.SAPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return new_game
@@ -1083,7 +1083,7 @@ def post_vc(request, gameid):
         vc_formatter = VotecountFormatter.VotecountFormatter(game)
         vc_formatter.go()
 
-        dl = ForumPageDownloader.ForumPageDownloader()
+        dl = SAForumPageDownloader.SAForumPageDownloader()
         dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 

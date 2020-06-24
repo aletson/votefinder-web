@@ -3,13 +3,13 @@ import re
 from bs4 import BeautifulSoup
 from votefinder.main.models import Game
 
-from votefinder.main import ForumPageDownloader
+from votefinder.main import SAForumPageDownloader
 
 
-class GameListDownloader():
+class SAGameListDownloader():
     def __init__(self):
         self.GameList = []
-        self.downloader = ForumPageDownloader.ForumPageDownloader()
+        self.downloader = SAForumPageDownloader.SAForumPageDownloader()
 
     def get_game_list(self, page):
         game_raw_html = self.download_list(page)
