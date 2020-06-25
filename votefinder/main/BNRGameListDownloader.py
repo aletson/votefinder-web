@@ -3,13 +3,13 @@ import re
 from bs4 import BeautifulSoup
 from votefinder.main.models import Game
 
-from votefinder.main import SAForumPageDownloader
+from votefinder.main import BNRForumPageDownloader
 
 
-class SAGameListDownloader():
+class BNRGameListDownloader():
     def __init__(self):
         self.GameList = []
-        self.downloader = SAForumPageDownloader.SAForumPageDownloader()
+        self.downloader = BNRForumPageDownloader.BNRForumPageDownloader()
 
     def get_game_list(self, page):
         game_raw_html = self.download_list(page)
@@ -23,20 +23,21 @@ class SAGameListDownloader():
 
     def download_list(self, page):
         return self.downloader.download(
-            'https://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
+            'https://breadnroses.net/forums/35/page-{}'.format(page))
 
     def parse_game_list(self, game_raw_html):
         soup = BeautifulSoup(game_raw_html, 'html.parser')
-
-        for thread in soup.find_all('a', 'thread_title'):
-            if thread.text.lower().find('mafia') != -1:
+        thread_titles = soup.find_all('div', 'structItem-title')
+        for thread_title in thread_titles:
+            thread = thread_title.find('a')
+            if thread.text.lower().find('mafia') != -1 or thread.text.lower().find('werewolf') != 1:
                 game = {'name': thread.text, 'url': thread['href'], 'tracked': self.is_game_tracked(thread['href'])}
                 self.GameList.append(game)
 
         return True
 
     def is_game_tracked(self, url):
-        matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
+        matcher = re.compile(r'threads/.*\.(?P<threadid>\d+)').search(url)
         if matcher:
             try:
                 Game.objects.all().get(thread_id=matcher.group('threadid'))
