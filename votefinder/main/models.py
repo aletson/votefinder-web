@@ -97,7 +97,7 @@ class VotecountTemplate(models.Model):
 
 class Game(models.Model):
     name = models.CharField(max_length=255)
-    thread_id = models.IntegerField(unique=True, db_index=True)
+    thread_id = models.IntegerField(db_index=True)
     moderator = models.ForeignKey(Player, related_name='moderatingGames', on_delete=models.SET(get_default_player))
     last_updated = models.DateTimeField(auto_now=True)
     max_pages = models.IntegerField()
@@ -117,6 +117,7 @@ class Game(models.Model):
     living_count = models.IntegerField(default=0)
     players_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True, blank=True)
+    home_forum = models.TextField(default='sa')
 
     def update_counts(self):
         self.players_count = self.count_players()
@@ -201,6 +202,9 @@ class Game(models.Model):
 
     def winning_faction(self):
         return self.factions.get(winning=True)
+
+    class Meta:
+        unique_together = ('thread_id', 'home_forum',)
 
 
 class FactionType(Enum):
