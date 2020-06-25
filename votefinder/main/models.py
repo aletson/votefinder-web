@@ -204,7 +204,7 @@ class Game(models.Model):
         return self.factions.get(winning=True)
 
     class Meta:
-        unique_together = ('thread_id', 'home_forum',)
+        unique_together = ('thread_id', 'home_forum')
 
 
 class FactionType(Enum):
