@@ -50,8 +50,8 @@ class PostParser:
                     post.game.deadline = new_deadline
                     post.game.save()
 
-    def read_votes(self, post, gamePlayers, players):
-        self.gamePlayers = gamePlayers
+    def read_votes(self, post, game_players, players):
+        self.gamePlayers = game_players
         self.players = players
         for quote in post.bodySoup.findAll('div', 'quote well'):
             quote.extract()
