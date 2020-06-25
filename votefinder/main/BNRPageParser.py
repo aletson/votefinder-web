@@ -1,15 +1,14 @@
 import re
-import time
 from datetime import datetime
 
 from bs4 import BeautifulSoup
 from votefinder.main.models import (Game, GameDay, Player, PlayerState,
                                     Post)
 
-from votefinder.main import SAForumPageDownloader, PostParser
+from votefinder.main import BNRForumPageDownloader, PostParser
 
 
-class SAPageParser:
+class BNRPageParser:
     def __init__(self):
         self.pageNumber = 0
         self.maxPages = 0
@@ -19,12 +18,12 @@ class SAPageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.downloader = SAForumPageDownloader.SAForumPageDownloader()
+        self.downloader = BNRForumPageDownloader.BNRForumPageDownloader()
 
     def add_game(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.download_and_update('https://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
+        return self.download_and_update('https://breadnroses.net/threads/{}'.format(threadid),
                                         threadid)
 
     def download_and_update(self, url, threadid):
@@ -45,7 +44,7 @@ class SAPageParser:
             page = game.current_page + 1
 
         return self.download_and_update(
-            'https://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.thread_id, page),
+            'https://breadnroses.net/threads/{}/page-{}'.format(game.thread_id, page),
             game.thread_id)
 
     def download_forum_page(self, url):
@@ -57,7 +56,7 @@ class SAPageParser:
         self.maxPages = self.find_max_pages(soup)
         self.gameName = re.compile(r'\[.*?\]').sub('', self.read_thread_title(soup)).strip()
 
-        posts = soup.find_all('table', 'post')
+        posts = soup.find_all('article', 'message--post')
         if not posts:
             return None
 
@@ -119,19 +118,18 @@ class SAPageParser:
         return game
 
     def find_page_number(self, soup):
-        pages = soup.find('div', 'pages')
+        pages = soup.find('div', 'pageNav-page--current')
         if pages:
-            current_page = pages.find(attrs={'selected': 'selected'})
+            current_page = int(pages.find('a').get_text())
             if current_page:
                 return current_page['value']
             return '1'
         return '1'
 
     def find_max_pages(self, soup):
-        pages = soup.find('div', 'pages')
+        pages = soup.find('div', 'pageNav-page')
         if pages:
-            option_tags = pages.find_all('option')
-            total_pages = len(option_tags)
+            total_pages = int(pages[-1].find('a').getText())
             if total_pages == 0:
                 return 1
             return total_pages
@@ -140,7 +138,7 @@ class SAPageParser:
     def read_thread_title(self, soup):
         title = soup.find('title')
         if title:
-            return title.text[:len(title.text) - 29]
+            return title.text[:len(title.text) - 18]  # " | Bread and Roses"
         return None
 
     def find_or_create_player(self, playername, playeruid):
@@ -154,7 +152,7 @@ class SAPageParser:
         return player
 
     def read_post_values(self, node):
-        post_id = node['id'][4:]
+        post_id = node['id'][8:]
         if post_id == '':
             return None
 
@@ -165,41 +163,27 @@ class SAPageParser:
             post = Post()
 
         post.post_id = post_id
-        title_node = node.find('dd', 'title')
+        title_node = node.find('div', 'message-avatar')
         if title_node:
             post.avatar = str(title_node.find('img'))
 
-        post.bodySoup = node.find('td', 'postbody')
-        for quote in post.bodySoup.findAll('div', 'bbc-block'):
+        post.bodySoup = node.find('div', 'bbWrapper')
+        for quote in post.bodySoup.findAll('div', 'bbCodeBlock--quote'):
             quote['class'] = 'quote well'
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="{}">Click to load image...</div>'.format(img['src'])) for img in post.bodySoup.find_all('img')]  # noqa: WPS428 false positive
         post.body = post.bodySoup.prettify(formatter=None)
-        post.body = re.sub(r'google_ad_section_(start|end)', '', post.body)
-        post_date_node = node.find('td', 'postdate')
+        post_date_node = node.find('time', 'u-dt').get('datetime')
 
         if post_date_node:
-            date_text = post_date_node.text.replace('#', '').replace('?', '').strip()
-            post.timestamp = datetime(*time.strptime(date_text, '%b %d, %Y %H:%M')[:6])
+            post.timestamp = post_date_node
         else:
             return None
 
-        anchor_list = post_date_node.findAll('a')
-        if anchor_list:
-            post.author_search = anchor_list[-1]['href']
-
-        author_string = node.find('dt', 'author').text
+        author_string = node.get('data-author')
         author_string = re.sub(r'<.*?>', '', author_string)
         author_string = re.sub(r'&\w+?;', '', author_string).strip()
+        author_uid = node.find('a', 'avatar').get('data-user-id')
 
-        matcher = re.compile(r'userid=(?P<uid>\d+)').search(post.author_search)
-        if matcher:
-            author_uid = matcher.group('uid')
-        else:
-            return None
-
-        if author_string == 'Adbot':
-            return None
-        else:
-            post.author = self.find_or_create_player(author_string, author_uid)
+        post.author = self.find_or_create_player(author_string, author_uid)
 
         return post
