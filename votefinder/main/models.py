@@ -117,7 +117,7 @@ class Game(models.Model):
     living_count = models.IntegerField(default=0)
     players_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True, blank=True)
-    home_forum = models.TextField(default='sa')
+    home_forum = models.CharField(max_length=10, default='sa')
 
     def update_counts(self):
         self.players_count = self.count_players()
