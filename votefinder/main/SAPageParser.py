@@ -144,7 +144,7 @@ class SAPageParser:
         return None
 
     def find_or_create_player(self, playername, playeruid):
-        player, created = Player.objects.get_or_create(uid=playeruid,
+        player, created = Player.objects.get_or_create(sa_uid=playeruid,
                                                        defaults={'name': playername})
 
         if player.name != playername:

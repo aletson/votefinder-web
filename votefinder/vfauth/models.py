@@ -46,7 +46,7 @@ class CreateUserForm(forms.Form):
                 if matcher:
                     self.userid = matcher.group('userid')
                     try:
-                        existing_player = Player.objects.all().get(uid=self.userid)
+                        existing_player = Player.objects.all().get(sa_uid=self.userid)
                         existing_userprofile = UserProfile.objects.all().get(player_id=existing_player.id)
                         existing_user = UserProfile.objects.all().get(id=existing_userprofile.user_id)
                         raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existing_user.username))

@@ -6,7 +6,7 @@
 
 {% block content %}
     <h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }} <small>{% if pronouns %}(pronouns: {{ pronouns }}){% endif %}</small></h1>
-    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.uid }}">jump to live
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}">jump to SA
     profile</a>)
     {% if user.is_authenticated %}
         (<a href="/players/common_games/{{user.profile.player.slug}}/{{player.slug}}">See games played with this player</a>)

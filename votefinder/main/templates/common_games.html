@@ -6,9 +6,9 @@
 
 {% block content %}
     <h1><a href="/">VoteFinder</a>: Common Games: {{ player_a.name | safe }} & {{ player_b.name | safe }}</h1>
-    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_a.uid }}">jump to live
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_a.sa_uid }}">jump to live
     profile for {{ player_a.name | safe }}</a>)<br>
-    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_b.uid }}">jump to live
+    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player_b.sa_uid }}">jump to live
     profile for {{ player_b.name | safe }}</a>)
     <hr>
 

@@ -97,7 +97,7 @@ class VoteCounter:
 
     def target_is_valid(self, vote):
         if vote.no_execute and self.no_execute_player is None:
-            self.no_execute_player = Player.objects.get(uid=-1)
+            self.no_execute_player = Player.objects.get(sa_uid=-1)
             self.results[self.no_execute_player] = {'count': 0, 'votes': []}
 
         return vote.unvote or vote.no_execute or (vote.target in self.livingPlayers)

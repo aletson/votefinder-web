@@ -50,7 +50,7 @@ def create_user(login, email, password, userid):
     user = User.objects.create_user(login, email, password)
     user.save()
 
-    player, created = Player.objects.get_or_create(uid=userid, defaults={'name': login})
+    player, created = Player.objects.get_or_create(sa_uid=userid, defaults={'name': login})
 
     profile = UserProfile(player=player, user=user)
     profile.save()
