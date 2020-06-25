@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='game',
             name='home_forum',
-            field=models.TextField(default='sa'),
+            field=models.CharField(max_length=10, default='sa'),
         ),
         migrations.AlterField(
             model_name='game',
