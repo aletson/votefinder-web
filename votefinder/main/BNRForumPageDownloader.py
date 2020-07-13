@@ -10,7 +10,8 @@ from votefinder.main.models import Game
 class BNRForumPageDownloader():
     def __init__(self):
         self.session = requests.Session()
-        self.session.headers.update({'User-Agent': 'Mozilla/5.0'})
+        self.api_key = settings.BNR_API_KEY
+        self.session.headers.update({'XF-API-Key': self.api_key})
         # review if necessary
 
     def download(self, page):
