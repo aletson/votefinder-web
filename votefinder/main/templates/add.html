@@ -10,13 +10,13 @@
             if (game.tracked == true) {
                 str = '<span class="grayed">' + game.name + '</span>';
             } else {
-                str = '<a href="' + game.url + '">' + game.name + '</a>';
+                str = '<a href="' + game.url + '" data-threadid="' + game.threadid + '" data-parentforum="' + game.parent_forum + '">' + game.name + '</a>';
             }
             $('#gameList ul').append('<li>' + str + '</li>');
         });
         $('#gameListContainer').show('slow');
         $('#gameList ul li a').click(function (event) {
-            doAddGame(event.target.getAttribute("href"));
+            doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-parentforum'));
             event.preventDefault();
         });
     }
@@ -44,15 +44,13 @@
         }
     });
     
-    function doAddGame(url) {
-        var thread = url.replace(/threadid=(\d+)/);
-        var result = RegExp.$1;
-        if (result) {
+    function doAddGame(threadid, parent_forum) {
+        if (threadid) {
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
             if(!$('#dialog').hasClass('in')) {
                 $('#dialog').modal('show');
             }
-            $.post('/add_game', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+            $.post('/add_game', {threadid: threadid, parent_forum: parent_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
                 if (data.success == true) {
                     location.href = data.url;
                 } else {

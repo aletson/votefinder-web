@@ -67,11 +67,12 @@ def add_game(request):
     if request.method == 'POST':
         threadid = request.POST.get('threadid')
         state = request.POST.get('addState')
+        parent_forum = request.POST.get('parent_forum')
         if state in {'started', 'pregame'}:
             try:
-                game = Game.objects.get(thread_id=threadid)
+                game = Game.objects.get(thread_id=threadid, parent_forum=parent_forum)
                 return_status['url'] = game.get_absolute_url()
-            except Game.DoesNotExist:
+            except Game.DoesNotExist:  # TODO case when parent_forum
                 page_parser = SAPageParser.SAPageParser()
                 page_parser.user = request.user
                 game = page_parser.add_game(threadid, state)
@@ -120,8 +121,8 @@ def game_list(request, page):
     downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
     bnr = BNRGameListDownloader.BNRGameListDownloader()
     bnr.get_game_list(page)
-    game_list = downloader.GameList.extend(bnr.GameList)
-    return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
+    downloader.GameList.extend(bnr.GameList)
+    return HttpResponse(simplejson.dumps(downloader.GameList), content_type='application/json')
 
 
 def game(request, slug):
