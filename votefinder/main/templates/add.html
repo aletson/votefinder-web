@@ -59,11 +59,11 @@
             }, 'json');
         } else {
             if (threadid.includes('somethingawful')) {
-                var thread = url.replace(/threadid=(\d+)/);
+                var thread = threadid.replace(/threadid=(\d+)/);
                 var result = RegExp.$1;
                 parent_forum = 'sa';
             } else if (threadid.includes('breadnroses.net')) {
-                var thread = url.replace(/threads/(.*)(\d+)\//);
+                var thread = threadid.replace(/threads/(.*)(\d+)\//);
                 var result = RegExp.$2;
                 parent_forum = 'bnr';
             }
