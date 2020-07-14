@@ -30,18 +30,18 @@ class SAGameListDownloader():
 
         for thread in soup.find_all('a', 'thread_title'):
             if thread.text.lower().find('mafia') != -1:
-                game = {'name': thread.text, 'url': thread['href'], 'tracked': self.is_game_tracked(thread['href'])}
+                matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(thread['href'])
+                thread_id = matcher.group('threadid')
+                game = {'name': thread.text, 'url': thread['href'], 'threadid': thread_id, 'parent_forum': 'sa', 'tracked': self.is_game_tracked(thread_id)}
                 self.GameList.append(game)
 
         return True
 
-    def is_game_tracked(self, url):
-        matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(url)
-        if matcher:
-            try:
-                Game.objects.all().get(thread_id=matcher.group('threadid'))
-                return True
-            except Game.DoesNotExist:
-                pass  # noqa: WPS420
+    def is_game_tracked(self, thread_id):
+        try:
+            Game.objects.all().get(thread_id=thread_id)
+            return True
+        except Game.DoesNotExist:
+            pass  # noqa: WPS420
 
         return False
