@@ -44,8 +44,8 @@
         }
     });
     
-    function doAddGame(threadid, parent_forum) {
-        if (threadid) {
+    function doAddGame(threadid, parent_forum = null) {
+        if (!isNaN(threadid)){
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
             if(!$('#dialog').hasClass('in')) {
                 $('#dialog').modal('show');
@@ -58,7 +58,24 @@
                 }
             }, 'json');
         } else {
-            alert("That doesn't look like a good thread URL.");
+            if(threadid.includes('somethingawful')) {
+                var thread = url.replace(/threadid=(\d+)/);
+                var result = RegExp.$1;
+                parent_forum = 'sa'
+            } elseif threadid.includes('breadnroses.net') {
+                var thread = url.replace(/threads/(.*)(\d+)\//);
+                var result = RegExp.$2;
+                parent_forum = 'bnr';
+            } else {
+              alert("That doesn't look like a good thread URL.");
+            }
+            $.post('/add_game', {threadid: result, parent_forum: parent_forum, }addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+                if (data.success == true) {
+                    location.href = data.url;
+                } else {
+                    $("#dialog-content").html(data.message);
+                }
+            }, 'json');
         }
     }
     
