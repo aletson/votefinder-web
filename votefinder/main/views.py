@@ -26,7 +26,8 @@ from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerFor
                                     VotecountTemplate, VotecountTemplateForm)
 
 from votefinder.main import (SAForumPageDownloader, SAGameListDownloader, SAPageParser,
-                             VoteCounter, VotecountFormatter, BNRGameListDownloader)
+                             VoteCounter, VotecountFormatter, BNRGameListDownloader,
+                             BNRPageParser)
 
 
 def check_mod(request, game):
@@ -73,7 +74,14 @@ def add_game(request):
                 game = Game.objects.get(thread_id=threadid, parent_forum=parent_forum)
                 return_status['url'] = game.get_absolute_url()
             except Game.DoesNotExist:  # TODO case when parent_forum
-                page_parser = SAPageParser.SAPageParser()
+                if parent_forum == 'bnr':
+                    page_parser = BNRPageParser.BNRPageParser()
+                elif parent_forum == 'sa':
+                    page_parser = SAPageParser.SAPageParser()
+                else:
+                    return_status['success'] = False
+                    return_status['message'] = "Couldn't determine the parent forum or unsupported parent forum. Sorry!"
+                    return HttpResponse(simplejson.dumps(return_status), content_type='application/json')
                 page_parser.user = request.user
                 game = page_parser.add_game(threadid, state)
                 if game:
