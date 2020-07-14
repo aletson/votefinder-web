@@ -118,7 +118,7 @@ def add_game(request):
 def game_list(request, page):
     downloader = SAGameListDownloader.SAGameListDownloader()
     downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
-    bnr = BNRGameListDownloader()
+    bnr = BNRGameListDownloader.BNRGameListDownloader()
     bnr.get_game_list(page)
     game_list = downloader.GameList.extend(BNRGameListDownloader.GameList)
     return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
