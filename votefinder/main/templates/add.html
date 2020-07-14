@@ -45,7 +45,7 @@
     });
     
     function doAddGame(threadid, parent_forum = null) {
-        if (!isNaN(threadid)){
+        if (!isNaN(threadid)) {
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
             if(!$('#dialog').hasClass('in')) {
                 $('#dialog').modal('show');
@@ -62,7 +62,7 @@
                 var thread = url.replace(/threadid=(\d+)/);
                 var result = RegExp.$1;
                 parent_forum = 'sa';
-            } elseif (threadid.includes('breadnroses.net')) {
+            } else if (threadid.includes('breadnroses.net')) {
                 var thread = url.replace(/threads/(.*)(\d+)\//);
                 var result = RegExp.$2;
                 parent_forum = 'bnr';
