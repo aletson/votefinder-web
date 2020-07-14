@@ -66,8 +66,6 @@
                 var thread = url.replace(/threads/(.*)(\d+)\//);
                 var result = RegExp.$2;
                 parent_forum = 'bnr';
-            } else {
-              alert("That doesn't look like a good thread URL.");
             }
             if (result) {
                 $.post('/add_game', {threadid: result, parent_forum: parent_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
@@ -77,6 +75,8 @@
                         $("#dialog-content").html(data.message);
                     }
                 }, 'json');
+            } else {
+                alert("That doesn't look like a good thread URL.");
             }
         }
     }
