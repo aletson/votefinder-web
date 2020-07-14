@@ -63,7 +63,7 @@
                 var result = RegExp.$1;
                 parent_forum = 'sa';
             } else if (threadid.includes('breadnroses.net')) {
-                var thread = threadid.replace(/threads\/.*\.(\d+)\//);
+                var thread = threadid.replace(/threads\/.*\.(\d+)\/?$/);
                 var result = RegExp.$1;
                 parent_forum = 'bnr';
             }
