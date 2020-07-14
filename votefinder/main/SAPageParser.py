@@ -159,7 +159,7 @@ class SAPageParser:
             return None
 
         try:
-            post = Post.objects.get(post_id=post_id)
+            post = Post.objects.get(post_id=post_id, game__home_forum='sa')
             return None
         except Post.DoesNotExist:
             post = Post()

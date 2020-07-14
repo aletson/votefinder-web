@@ -1,4 +1,5 @@
 import re
+import bbcode
 from datetime import datetime
 
 from bs4 import BeautifulSoup
@@ -18,20 +19,17 @@ class BNRPageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.downloader = BNRForumPageDownloader.BNRForumPageDownloader()
+        self.api = BNRForumPageDownloader.BNRForumPageDownloader()
 
     def add_game(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.download_and_update('https://breadnroses.net/threads/{}'.format(threadid),
-                                        threadid)
+        return self.download_and_update(threadid)
 
-    def download_and_update(self, url, threadid):
-        page_html = self.download_forum_page(url)
-        if not page_html:
-            return None
+    def download_and_update(self, threadid, page=1):
+        thread = self.api.get_thread(threadid, page)
 
-        game = self.parse_page(page_html, threadid)
+        game = self.parse_page(thread, threadid)
         if not game:
             return None
 
@@ -43,26 +41,23 @@ class BNRPageParser:
         if game.current_page < game.max_pages:
             page = game.current_page + 1
 
-        return self.download_and_update(
-            'https://breadnroses.net/threads/{}/page-{}'.format(game.thread_id, page),
-            game.thread_id)
+        return self.download_and_update(game.thread_id, page)
 
     def download_forum_page(self, url):
         return self.downloader.download(url)
 
-    def parse_page(self, page_html, threadid):
-        soup = BeautifulSoup(page_html, 'html5lib')
-        self.pageNumber = self.find_page_number(soup)
-        self.maxPages = self.find_max_pages(soup)
-        self.gameName = re.compile(r'\[.*?\]').sub('', self.read_thread_title(soup)).strip()
+    def parse_page(self, thread, threadid):
+        self.pageNumber = thread['pagination']['current_page']
+        self.maxPages = thread['pagination']['last_page']
+        self.gameName = re.compile(r'\[.*?\]').sub('', thread['title']).strip()
 
-        posts = soup.find_all('article', 'message--post')
+        posts = thread['posts']
         if not posts:
             return None
 
         mod = None
         for post_node in posts:
-            new_post = self.read_post_values(post_node)
+            new_post = self.read_post_values(post_node)  # TODO
             if new_post:
                 if not mod:
                     mod = new_post.author
@@ -117,30 +112,6 @@ class BNRPageParser:
         game.save()
         return game
 
-    def find_page_number(self, soup):
-        pages = soup.find('div', 'pageNav-page--current')
-        if pages:
-            current_page = int(pages.find('a').get_text())
-            if current_page:
-                return current_page['value']
-            return '1'
-        return '1'
-
-    def find_max_pages(self, soup):
-        pages = soup.find('div', 'pageNav-page')
-        if pages:
-            total_pages = int(pages[-1].find('a').getText())
-            if total_pages == 0:
-                return 1
-            return total_pages
-        return 1
-
-    def read_thread_title(self, soup):
-        title = soup.find('title')
-        if title:
-            return title.text[:len(title.text) - 18]  # " | Bread and Roses"
-        return None
-
     def find_or_create_player(self, playername, playeruid):
         player, created = Player.objects.get_or_create(bnr_uid=playeruid,
                                                        defaults={'name': playername})
@@ -152,37 +123,32 @@ class BNRPageParser:
         return player
 
     def read_post_values(self, node):
-        post_id = node['id'][8:]
+        post_id = node['post_id']
         if post_id == '':
             return None
 
         try:
-            post = Post.objects.get(post_id=post_id)
+            post = Post.objects.get(post_id=post_id, game__home_forum='bnr')
             return None
         except Post.DoesNotExist:
             post = Post()
 
         post.post_id = post_id
-        title_node = node.find('div', 'message-avatar')
-        if title_node:
-            post.avatar = str(title_node.find('img'))
+        post.avatar = node['User']['avatar_urls']['o']
 
-        post.bodySoup = node.find('div', 'bbWrapper')
-        for quote in post.bodySoup.findAll('div', 'bbCodeBlock--quote'):
+        body = node['message']
+        post.bodySoup = BeautifulSoup(bbcode.render_html[body])
+        for quote in post.bodySoup.findAll('blockquote'):
+            quote.name = 'div'
             quote['class'] = 'quote well'
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="{}">Click to load image...</div>'.format(img['src'])) for img in post.bodySoup.find_all('img')]  # noqa: WPS428 false positive
         post.body = post.bodySoup.prettify(formatter=None)
-        post_date_node = node.find('time', 'u-dt').get('datetime')
+        post.timestamp = node['post_date']
 
-        if post_date_node:
-            post.timestamp = post_date_node
-        else:
-            return None
-
-        author_string = node.get('data-author')
+        author_string = node['User']['username']
         author_string = re.sub(r'<.*?>', '', author_string)
         author_string = re.sub(r'&\w+?;', '', author_string).strip()
-        author_uid = node.find('a', 'avatar').get('data-user-id')
+        author_uid = node['User']['user_id']
 
         post.author = self.find_or_create_player(author_string, author_uid)
 
