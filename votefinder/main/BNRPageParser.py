@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 from votefinder.main.models import (Game, GameDay, Player, PlayerState,
                                     Post)
 
-from votefinder.main import BNRForumPageDownloader, PostParser
+from votefinder.main import BNRApi, PostParser
 
 
 class BNRPageParser:
@@ -19,7 +19,7 @@ class BNRPageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.api = BNRForumPageDownloader.BNRForumPageDownloader()
+        self.api = BNRApi.BNRApi()
 
     def add_game(self, threadid, state):
         self.new_game = True
@@ -42,9 +42,6 @@ class BNRPageParser:
             page = game.current_page + 1
 
         return self.download_and_update(game.thread_id, page)
-
-    def download_forum_page(self, url):
-        return self.downloader.download(url)
 
     def parse_page(self, thread, threadid):
         self.pageNumber = thread['pagination']['current_page']

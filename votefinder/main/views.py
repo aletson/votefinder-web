@@ -26,7 +26,7 @@ from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerFor
                                     VotecountTemplate, VotecountTemplateForm)
 
 from votefinder.main import (SAForumPageDownloader, SAGameListDownloader, SAPageParser,
-                             VoteCounter, VotecountFormatter)
+                             VoteCounter, VotecountFormatter, BNRApi)
 
 
 def check_mod(request, game):
@@ -118,7 +118,10 @@ def add_game(request):
 def game_list(request, page):
     downloader = SAGameListDownloader.SAGameListDownloader()
     downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
-    return HttpResponse(simplejson.dumps(downloader.GameList), content_type='application/json')
+    bnr = BNRApi.BNRApi()
+    bnr.get_game_list(page)
+    game_list = downloader.GameList.extend(BNRApi.GameList)
+    return HttpResponse(simplejson.dumps(game_list), content_type='application/json')
 
 
 def game(request, slug):
