@@ -58,24 +58,26 @@
                 }
             }, 'json');
         } else {
-            if(threadid.includes('somethingawful')) {
+            if (threadid.includes('somethingawful')) {
                 var thread = url.replace(/threadid=(\d+)/);
                 var result = RegExp.$1;
                 parent_forum = 'sa'
-            } elseif threadid.includes('breadnroses.net') {
+            } elseif (threadid.includes('breadnroses.net')) {
                 var thread = url.replace(/threads/(.*)(\d+)\//);
                 var result = RegExp.$2;
                 parent_forum = 'bnr';
             } else {
               alert("That doesn't look like a good thread URL.");
             }
-            $.post('/add_game', {threadid: result, parent_forum: parent_forum, }addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
-                if (data.success == true) {
-                    location.href = data.url;
-                } else {
-                    $("#dialog-content").html(data.message);
-                }
-            }, 'json');
+            if (result) {
+                $.post('/add_game', {threadid: result, parent_forum: parent_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+                    if (data.success == true) {
+                        location.href = data.url;
+                    } else {
+                        $("#dialog-content").html(data.message);
+                    }
+                }, 'json');
+            }
         }
     }
     
