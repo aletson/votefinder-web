@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^game_list/(?P<page>\d+)/*$', views.game_list),
     url(r'^game/(?P<slug>[\w-]+)$', views.game),
     url(r'^player/(?P<slug>[\w-]+)/*$', views.player),
+    url(r'^claim_player/(?P<playerid>\d+)/*$', views.claim_player),
     url(r'^p:(?P<playerid>\d+)/*$', views.player_id),
     url(r'^profile/*$', views.profile),
     url(r'^update/(?P<gameid>\d+)/*$', views.update),

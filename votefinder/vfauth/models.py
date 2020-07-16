@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth.models import User
 from votefinder.main.BNRApi import BNRApi
 from votefinder.main.SAForumPageDownloader import SAForumPageDownloader
-from votefinder.main.models import Player
+from votefinder.main.models import Player, UserProfile
 
 
 class CreateUserForm(forms.Form):
@@ -58,9 +58,12 @@ class LinkProfileForm(forms.Form):
                         self.userid = matcher.group('userid')
                         try:
                             existing_player = Player.objects.all().get(sa_uid=self.userid)
-                            raise forms.ValidationError('{} is already registered with that user ID. Has your forum name changed?'.format(existing_player.name))
+                            existing_userprofile = UserProfile.objects.all().get(player=existing_player)  # noqa: F841
+                            raise forms.ValidationError('{} is already registered to a user profile. Do you have another Votefinder account?'.format(existing_player.name))
                         except Player.DoesNotExist:
                             pass  # noqa: WPS420
+                        except UserProfile.DoesNotExist:
+                            raise forms.ValidationError('Votefinder is already aware of {} as an unclaimed player profile. Claim it from the <a href="/player/{}">profile page</a>.'.format(existing_player.name, existing_player.slug))
                         matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(page_data)
                         if matcher:
                             login = matcher.group('login')

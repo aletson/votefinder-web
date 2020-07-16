@@ -241,18 +241,84 @@ def player(request, slug):
         aliases = Alias.objects.filter(player=player)
         profile = UserProfile.objects.get(player=player)
         pronouns = profile.pronouns
+        show_claim = False
     except Alias.DoesNotExist:
         pass  # noqa: WPS420
     except UserProfile.DoesNotExist:
         pronouns = None
+        if (player.bnr_uid is not None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and request.user.profile.player.sa_uid is None):
+            show_claim = True
 
     show_delete = False
     if request.user.is_superuser or (request.user.is_authenticated and request.user.profile.player == player):
         show_delete = True
 
     return render(request, 'player.html',
-                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': pronouns})
+                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': pronouns, 'show_claim': show_claim})
 
+@login_required
+def claim_player(request, playerid): 
+    player = get_object_or_404(Player, id=playerid)
+    if ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)) and not UserProfile.objects.filter(player=player).exists():
+        # Eligible to claim!
+        if request_method != 'POST':
+            claim_key = random.randint(10000000, 99999999)  # noqa: S311
+            request.session['claimKey'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
+            return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
+
+        else:  # Attempt to claim, check profile
+            validated = False
+            csrf_resp = {}
+            csrf_resp.update(csrf(request))
+            if request.session['claim_key']:
+                if player.sa_uid is not None:
+                    downloader = SAForumPageDownloader()
+                    page_data = downloader.download(
+                        'https://forums.somethingawful.com/member.php?action=getinfo&userid={}'.format(player.sa_uid))
+
+                    if page_data is None:
+                        raise forms.ValidationError('There was a problem downloading the profile for the SA user {}.'.format(player.sa_uid))
+
+                if page_data.find(str(request.session['claim_key'])) == -1:
+                    raise forms.ValidationError("Unable to find the correct key ({}) in {}'s SA profile".format(request.session['claim_key'], login))
+                else:
+                    validated = True
+            elif home_forum == 'bnr':
+                api = BNRApi()
+                user_profile = api.get_user_by_id(player.bnr_uid)
+                if user_profile is None:
+                    raise forms.ValidationError('There was a problem downloading the profile for the BNR user {}.'.format(login))
+                if user_profile['location'] != str(request.session['claim_key']):
+                    raise forms.ValidationError("Unable to find the correct key ({}) in {}'s BNR profile".format(self.required_key, login))
+                else:
+                    validated = True
+            if validated:
+                # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
+                games = Game.objects.filter(moderator=player).in_bulk()
+                playerstates = PlayerState.objects.filter(player=player).in_bulk()
+                aliases = Alias.objects.filter(player=player).in_bulk()
+                posts = Post.objects.filter(player=player).in_bulk()
+                target_votes = Vote.objects.filter(target=player).in_bulk()
+                author_votes = Vote.objects.filter(author=player).in_bulk()
+                if games:
+                    Game.objects.bulk_update(games.values(), moderator=request.user.profile.player)
+                if playerstates:
+                    PlayerState.objects.bulk_update(playerstates.values(), player=request.user.profile.player)
+                if aliases:
+                    Alias.objects.bulk_update(aliases.values(), player=request.user.profile.player)
+                if posts:
+                    Post.objects.bulk_update(posts.values(), player=request.user.profile.player)
+                if target_votes:
+                    Vote.objects.bulk_update(target_votes.values(), target=request.user.profile.player)
+                if author_votes:
+                    Vote.objects.bulk_update(author_votes.values(), author=request.user.profile.player)
+                messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
+                return HttpResponseRedirect('/profile')
+            else:
+                return HttpResponseNotFound
+    } else {
+        return HttpResponseNotFound
+    }
 
 def player_id(request, playerid):
     player = get_object_or_404(Player, id=playerid)
