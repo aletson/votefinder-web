@@ -37,9 +37,13 @@ class LinkProfileForm(forms.Form):
     login = forms.CharField(label='Username', min_length=3)
     home_forum = forms.ChoiceField(choices=[('sa', 'Something Awful'), ('bnr', 'Bread & Roses')])
 
+    def clean_home_forum(self):
+        home_forum = self.cleaned_data['home_forum']
+        return home_forum
+
     def clean_login(self):
         login = self.cleaned_data['login']
-        home_forum = self.home_forum
+        home_forum = self.cleaned_data['home_forum']
 
         if self.required_key:
             if home_forum == 'sa':
