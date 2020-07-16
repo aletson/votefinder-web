@@ -39,7 +39,7 @@ class LinkProfileForm(forms.Form):
 
     def clean_login(self):
         login = self.cleaned_data['login']
-        home_forum = self.cleaned_data['home_forum']
+        home_forum = self.home_forum
 
         if self.required_key:
             if home_forum == 'sa':
