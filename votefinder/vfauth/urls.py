@@ -3,8 +3,10 @@ from django.contrib.auth import views as django_views
 from votefinder.vfauth import views as auth_views
 
 urlpatterns = [
-    url(r'^create/*$', auth_views.give_user_profile_key),
-    url(r'^create/2/*$', auth_views.get_votefinder_account_info),
+    url(r'^link_profile/*$', auth_views.give_user_profile_key),
+    url(r'^link_profile/2/*$', auth_views.link_profile),
+    url(r'^link_profile/done/*$', auth_views.link_user_to_profile),
+    url(r'^create/*$', auth_views.create_votefinder_account),
     url(r'^create/done/*$', auth_views.validate_and_create_user),
     url(r'^login/*$', django_views.LoginView.as_view(template_name='login.html')),
     url(r'^logout/*$', django_views.LogoutView.as_view(template_name='logged_out.html')),

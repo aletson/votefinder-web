@@ -40,6 +40,11 @@ class BNRApi():
 
         self.session.post(post_url, data=inputs)
 
+    def get_user_by_name(self, username):
+        user = self.session.get('https://breadnroses.net/api/users/find-name?username={}'.format(username))
+        users = json.loads(user.text)
+        return users['exact']
+
 
 if __name__ == '__main__':
     dl = BNRApi()

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}VoteFinder: Link Forums Profile{% endblock %}
+
+{% block onready %}
+    $('#submitButton').button().click(function(){
+    $('#submitButton').attr("disabled", "disabled");
+    $('#linkProfileForm').submit();
+    });
+{% endblock %}
+
+{% block content %}
+    <h1><a href="/">VoteFinder</a>: Link Forums Profile, Step 2</h1>
+    <hr>
+    <p>Now, enter your user name and home forum.</p>
+    <p>
+        <form id="linkProfileForm" action="/auth/link_profile/done/" method="post">{% csrf_token %}
+            <table border="0" cellpadding="3" cellspacing="2">
+                <tr class="fieldWrapper">
+                    <td><label for="id_login">Forum Username:</label></td>
+                    <td>{{ form.login }}</td>
+                    <td>{{ form.login.errors|safe }}</td>
+                </tr>
+                <tr class="fieldWrapper">
+                    <td><label for="id_home_forum">Home Forum:</label></td>
+                    <td>{{ form.home_forum }}</td>
+                    <td>{{ form.home_forum.errors }}</td>
+                </tr>
+            </table>
+    <p><input id="submitButton" type="Submit" value="Complete &raquo;"/></p>
+    </form>
+    </p>
+
+{% endblock %}
