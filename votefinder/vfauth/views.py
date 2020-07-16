@@ -73,9 +73,9 @@ def link_user_to_profile(request):
     if form.is_valid():
         player = request.user.profile.player
         if player is not None:
-            if form.home_forum == 'sa':
+            if form.cleaned_data['home_forum'] == 'sa':
                 player.sa_uid = form.userid
-            elif form.home_forum == 'bnr':
+            elif form.cleaned_data['home_forum'] == 'bnr':
                 player.bnr_uid = form.userid
             player.save()
         messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> Your forum profile was successfully linked.')
