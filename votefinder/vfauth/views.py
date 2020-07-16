@@ -51,6 +51,9 @@ def validate_and_create_user(request):
                            form.userid)
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
+        player, created = Player.objects.get_or_create(defaults={'name': request.user.name})
+        profile = UserProfile(player=player, user=request.user)
+        profile.save()
         messages.add_message(request, messages.SUCCESS,
                              '<strong>Done!</strong> Your account was created and you are now logged in.')
         return HttpResponseRedirect('/')
@@ -68,19 +71,13 @@ def link_user_to_profile(request):
     form = LinkProfileForm(request.POST)
     form.required_key = key
     if form.is_valid():
-        try:
-            player = request.user.profile.player
-            if player is not None:
-                if form.home_forum == 'sa':
-                    player.sa_uid = form.userid
-                elif form.home_forum == 'bnr':
-                    player.bnr_uid = form.userid
-                player.save()
-        except (UserProfile.DoesNotExist, Player.DoesNotExist):
+        player = request.user.profile.player
+        if player is not None:
             if form.home_forum == 'sa':
-                player, created = Player.objects.get_or_create(sa_uid=form.userid, defaults={'name': request.user.name})
+                player.sa_uid = form.userid
             elif form.home_forum == 'bnr':
-                player, created = Player.objects.get_or_create(bnr_uid=form.userid, defaults={'name': request.user.name})
-            profile = UserProfile(player=player, user=request.user)
-            profile.save()
+                player.bnr_uid = form.userid
+            player.save()
+        messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> Your forum profile was successfully linked.')
+        return HttpResponseRedirect('/profile')
     return render(request, 'link_profile_form.html', {'form': form})

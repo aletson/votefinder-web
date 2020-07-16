@@ -34,12 +34,25 @@
 
 {% block content %}
     <h1><a href="/">VoteFinder</a>: Profile: {{ player.name|safe }}</h1>
-    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}">jump to SA
+    {% if player.sa_uid is not None %}
+    (<a href="https://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}">jump to SA
     profile</a>)
+    {% endif %}
+    {% if player.bnr_uid is not None %}
+    (<a href="https://breadnroses.net/members/{{ player.bnr_uid }}">jump to SA
+        profile</a>)
+    {% endif %}
     <hr>
 
     <p>
     <table border="0" cellpadding="3" cellspacing="2">
+        {% if player.bnr_uid is None or player.sa_uid is None %}
+            <td>Link New Forums Profile: </td>
+            <td><a href="/auth/link_profile">Click here</a></td>
+        {% endif %}
+        <tr>
+
+        </tr>
         <tr>
             <td>Registered:</td>
             <td>{{ profile.registered }}</td>
