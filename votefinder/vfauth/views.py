@@ -47,7 +47,7 @@ def validate_and_create_user(request):
     form = CreateUserForm(request.POST)
 
     if form.is_valid():
-        user = create_user(form.cleaned_data['email'], form.cleaned_data['password'])
+        user = create_user(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'])
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
         player, created = Player.objects.get_or_create(defaults={'name': request.user.name})
