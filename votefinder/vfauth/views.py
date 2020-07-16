@@ -50,7 +50,7 @@ def validate_and_create_user(request):
         user = create_user(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'])
         user.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, user)
-        player, created = Player.objects.create(defaults={'name': request.user.username})
+        player, created = Player.objects.create(name=request.user.username)
         profile = UserProfile(player=player, user=request.user)
         profile.save()
         messages.add_message(request, messages.SUCCESS,
