@@ -233,7 +233,7 @@ def update_user_pronouns(request):
 
 def player(request, slug):
     try:
-        player = Player.objects.get(slug=slug)
+        player = get_object_or_404(Player, slug=slug)
         games = player.games.select_related().all()
     except Player.DoesNotExist:
         return HttpResponseNotFound
