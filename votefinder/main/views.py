@@ -247,7 +247,7 @@ def player(request, slug):
         pronouns = profile.pronouns
     except UserProfile.DoesNotExist:
         pronouns = None
-        if (player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None) and request.user.is_authenticated:
+        if request.user.is_authenticated and (player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None):
             show_claim = True
 
     show_delete = False
