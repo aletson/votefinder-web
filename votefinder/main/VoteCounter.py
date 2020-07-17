@@ -123,10 +123,14 @@ class VoteCounter:
             text = '{} votes {}'.format(author, target)
 
         self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': result_item['count'], 'text': text})
-
-        result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
-                                    'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
-                                        self.game.thread_id, page, postid)})
+        if self.game.home_forum == 'sa':
+            result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
+                                        'url': 'https://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
+                                         self.game.thread_id, page, postid)})
+        elif self.game.home_forum == 'bnr':
+            result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
+                                        'url': 'https://breadnroses.net/threads/{}/post-{}'.format(
+                                         self.game.thread_id, postid)})
 
     def handle_unvote(self, vote):
         current_vote = self.player_is_voting(vote.author)

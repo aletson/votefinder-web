@@ -331,7 +331,10 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            post_url = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].post_id)
+            if self.game.home_forum == 'sa':
+                post_url = 'https://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].post_id)
+            elif self.game.home_forum == 'bnr':
+                post_url = 'https://breadnroses.net/threads/{}/post-{}'.format(self.game.thread_id, self.game.posts.all().order_by('-id')[0].post_id)
             try:
                 if url is None:
                     self.url = post_url
