@@ -2,7 +2,7 @@
 {% block title %}VoteFinder: Claim Player{% endblock %}
 
 {% block onready %}
-$('#claim-profile').click(function()) {
+$('#claim-profile').click(function() {
   $(this).prop('disabled', true).text('Claiming profile (this may take some time)');
   $('#linkProfileForm').submit();
 });
