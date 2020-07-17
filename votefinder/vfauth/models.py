@@ -63,7 +63,7 @@ class LinkProfileForm(forms.Form):
                         except Player.DoesNotExist:
                             pass  # noqa: WPS420
                         except UserProfile.DoesNotExist:
-                            raise forms.ValidationError('Votefinder is already aware of {} as an unclaimed player profile. Claim it from the <a href="/player/{}">profile page</a>.'.format(existing_player.name, existing_player.slug))
+                            raise forms.ValidationError('Votefinder is already aware of {} as an unclaimed player profile. Claim it from their <a href="/player/{}">profile page</a>.'.format(existing_player.name, existing_player.slug))
                         matcher = re.compile(r'\<dt class="author"\>(?P<login>.+?)\</dt\>').search(page_data)
                         if matcher:
                             login = matcher.group('login')
