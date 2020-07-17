@@ -303,17 +303,29 @@ def claim_player(request, playerid):
                     target_votes = Vote.objects.filter(target=player).in_bulk()
                     author_votes = Vote.objects.filter(author=player).in_bulk()
                     if games:
-                        Game.objects.bulk_update(games.values(), moderator=request.user.profile.player)
+                        for game in games:
+                            game.moderator = request.user.profile.player
+                        Game.objects.bulk_update(games.values())
                     if playerstates:
-                        PlayerState.objects.bulk_update(playerstates.values(), player=request.user.profile.player)
+                        for playerstate in playerstates:
+                            playerstate.player = request.user.profile.player
+                        PlayerState.objects.bulk_update(playerstates.values())
                     if aliases:
-                        Alias.objects.bulk_update(aliases.values(), player=request.user.profile.player)
+                        for alias in aliases:
+                            alias.player = request.user.profile.player
+                        Alias.objects.bulk_update(aliases.values())
                     if posts:
-                        Post.objects.bulk_update(posts.values(), author=request.user.profile.player)
+                        for post in posts:
+                            post.author = request.user.profile.player
+                        Post.objects.bulk_update(posts.values())
                     if target_votes:
-                        Vote.objects.bulk_update(target_votes.values(), target=request.user.profile.player)
+                        for target_vote in target_votes:
+                            target_vote.target = request.user.profile.player
+                        Vote.objects.bulk_update(target_votes.values())
                     if author_votes:
-                        Vote.objects.bulk_update(author_votes.values(), author=request.user.profile.player)
+                        for author_vote in author_votes:
+                            author_vote.author = request.user.profile.player
+                        Vote.objects.bulk_update(author_votes.values())
                     if player.sa_uid is not None:
                         request.user.profile.player.sa_uid = player.sa_uid
                     elif player.bnr_uid is not None:
