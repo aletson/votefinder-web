@@ -4,7 +4,7 @@
 {% block onready %}
 $('#claim-profile').click(function() {
   $(this).prop('disabled', true).text('Claiming profile (this may take some time)');
-  $('#linkProfileForm').submit();
+  $('#claimProfileForm').submit();
 });
 {% endblock %}
 
@@ -19,5 +19,5 @@ $('#claim-profile').click(function() {
         Save your profile then press Next on this page to continue to step 2.</p>{% endif %}
     {% if player.bnr_uid %}<p>In the Location field, paste this value: <strong>{{ claim_key }}</strong></p>{% endif %}
 
-    <button id="claim-profile" class="btn">Claim Profile &raquo;</button><form id="claimProfileForm"  action="/claim_player/{{ player.id }}" method="post">{% csrf_token %}</form>
+    <button id="claim-profile" class="btn">Claim Profile &raquo;</button><form id="claimProfileForm" action="/claim_player/{{ player.id }}" method="post">{% csrf_token %}</form>
 {% endblock %}
