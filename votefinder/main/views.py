@@ -237,12 +237,11 @@ def player(request, slug):
         games = player.games.select_related().all()
     except Player.DoesNotExist:
         return HttpResponseNotFound
-
+    show_claim = False
     try:
         aliases = Alias.objects.filter(player=player)
         profile = UserProfile.objects.get(player=player)
         pronouns = profile.pronouns
-        show_claim = False
     except Alias.DoesNotExist:
         pass  # noqa: WPS420
     except UserProfile.DoesNotExist:
@@ -259,7 +258,7 @@ def player(request, slug):
 
 
 @login_required
-def claim_player(request, playerid): 
+def claim_player(request, playerid):
     player = get_object_or_404(Player, id=playerid)
     if ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)) and not UserProfile.objects.filter(player=player).exists():
         # Eligible to claim!
