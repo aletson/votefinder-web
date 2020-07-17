@@ -296,12 +296,12 @@ def claim_player(request, playerid):
                         validated = True
                 if validated:
                     # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
-                    games = Game.objects.filter(moderator=player).in_bulk()
-                    playerstates = PlayerState.objects.filter(player=player).in_bulk()
-                    aliases = Alias.objects.filter(player=player).in_bulk()
-                    posts = Post.objects.filter(author=player).in_bulk()
-                    target_votes = Vote.objects.filter(target=player).in_bulk()
-                    author_votes = Vote.objects.filter(author=player).in_bulk()
+                    games = Game.objects.filter(moderator=player)
+                    playerstates = PlayerState.objects.filter(player=player)
+                    aliases = Alias.objects.filter(player=player)
+                    posts = Post.objects.filter(author=player)
+                    target_votes = Vote.objects.filter(target=player)
+                    author_votes = Vote.objects.filter(author=player)
                     if games:
                         for game in games:
                             game.moderator = request.user.profile.player
