@@ -16,7 +16,7 @@
         });
         $('#gameListContainer').show('slow');
         $('#gameList ul li a').click(function (event) {
-            doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-parentforum'));
+            doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-homeforum'));
             event.preventDefault();
         });
     }
