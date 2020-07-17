@@ -284,7 +284,7 @@ class Alias(models.Model):
 
 
 class Post(models.Model):
-    post_id = models.IntegerField(unique=True, db_index=True)
+    post_id = models.IntegerField(db_index=True)
     timestamp = models.DateTimeField()
     author = models.ForeignKey(Player, related_name='posts', on_delete=models.SET(get_default_player))
     author_search = models.CharField(max_length=256)
