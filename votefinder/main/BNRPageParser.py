@@ -140,7 +140,7 @@ class BNRPageParser:
             quote['class'] = 'quote well'
         [img.replaceWith('<div class="embedded-image not-loaded" data-image="{}">Click to load image...</div>'.format(img['src'])) for img in post.bodySoup.find_all('img')]  # noqa: WPS428 false positive
         post.body = post.bodySoup.prettify(formatter=None)
-        post.timestamp = node['post_date']
+        post.timestamp = str(node['post_date'])
 
         author_string = node['User']['username']
         author_string = re.sub(r'<.*?>', '', author_string)
