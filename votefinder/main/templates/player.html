@@ -6,10 +6,15 @@
 
 {% block content %}
     <h1><a href="/">VoteFinder</a>: Player: {{ player.name|safe }} <small>{% if pronouns %}(pronouns: {{ pronouns }}){% endif %}</small></h1>
-    (<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}">jump to SA
-    profile</a>)
+    {% if player.sa_uid %}(<a href="http://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}" target="_blank">jump to SA
+    profile</a>){% endif %}
+    {% if player.bnr_uid %}(<a href="http://breadnroses.net/members/{{ player.bnr_uid }}" target="_blank">jump to BNR
+        profile</a>){% endif %}
     {% if user.is_authenticated %}
         (<a href="/players/common_games/{{user.profile.player.slug}}/{{player.slug}}">See games played with this player</a>)
+    {% endif %}
+    {% if show_claim %}
+    (<a href="/claim_profile/{{player.id}}">Claim this profile</a>)
     {% endif %}
     <hr>
 
