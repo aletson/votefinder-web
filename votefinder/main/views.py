@@ -240,10 +240,11 @@ def player(request, slug):
     show_claim = False
     try:
         aliases = Alias.objects.filter(player=player)
-        profile = UserProfile.objects.get(player=player)
-        pronouns = profile.pronouns
     except Alias.DoesNotExist:
         pass  # noqa: WPS420
+    try:
+        profile = UserProfile.objects.get(player=player)
+        pronouns = profile.pronouns
     except UserProfile.DoesNotExist:
         pronouns = None
         if (player.bnr_uid is not None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and request.user.profile.player.sa_uid is None):
