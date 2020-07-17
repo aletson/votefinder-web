@@ -265,7 +265,7 @@ def claim_player(request, playerid):
         # Eligible to claim!
         if request.method != 'POST':
             claim_key = random.randint(10000000, 99999999)  # noqa: S311
-            request.session['claimKey'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
+            request.session['claim_key'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
             return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
 
         else:  # Attempt to claim, check profile
