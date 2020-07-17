@@ -21,7 +21,7 @@ class PostParser:
             (target_string,) = match.groups()
             if target_string:
                 vote.target_string = target_string.strip()
-                vote.target = self.autoresolve_vote(vote.target_string)
+                vote.target = self.autoresolve_vote(vote.target_string, post.game)
                 vote.unvote = False
 
                 if vote.target is None and vote.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
@@ -60,9 +60,12 @@ class PostParser:
             for line in post_content.splitlines():
                 self.search_line_for_actions(post, line)
 
-    def autoresolve_vote(self, text):
+    def autoresolve_vote(self, text, game):
         try:
-            player = Player.objects.get(name__iexact=text)
+            if game.home_forum == 'bnr':
+                player = Player.objects.get(bnr_uid__isnull=False, name__iexact=text)
+            elif game.home_forum == 'sa':
+                player = Player.objects.get(sa_uid__isnull=False, name__iexact=text)
             if player in self.players or player in self.gamePlayers:
                 return player
         except Player.DoesNotExist:
