@@ -299,7 +299,7 @@ def claim_player(request, playerid):
                     games = Game.objects.filter(moderator=player).in_bulk()
                     playerstates = PlayerState.objects.filter(player=player).in_bulk()
                     aliases = Alias.objects.filter(player=player).in_bulk()
-                    posts = Post.objects.filter(player=player).in_bulk()
+                    posts = Post.objects.filter(author=player).in_bulk()
                     target_votes = Vote.objects.filter(target=player).in_bulk()
                     author_votes = Vote.objects.filter(author=player).in_bulk()
                     if games:
@@ -309,12 +309,17 @@ def claim_player(request, playerid):
                     if aliases:
                         Alias.objects.bulk_update(aliases.values(), player=request.user.profile.player)
                     if posts:
-                        Post.objects.bulk_update(posts.values(), player=request.user.profile.player)
+                        Post.objects.bulk_update(posts.values(), author=request.user.profile.player)
                     if target_votes:
                         Vote.objects.bulk_update(target_votes.values(), target=request.user.profile.player)
                     if author_votes:
                         Vote.objects.bulk_update(author_votes.values(), author=request.user.profile.player)
+                    if player.sa_uid is not None:
+                        request.user.profile.player.sa_uid = player.sa_uid
+                    elif player.bnr_uid is not None:
+                        request.user.profile.player.bnr_uid = player.bnr_uid
                     player.delete()
+                    request.user.profile.player.save()
                     messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
                     return HttpResponseRedirect('/profile')
                 else:
