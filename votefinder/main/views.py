@@ -296,36 +296,12 @@ def claim_player(request, playerid):
                         validated = True
                 if validated:
                     # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
-                    games = Game.objects.filter(moderator=player)
-                    playerstates = PlayerState.objects.filter(player=player)
-                    aliases = Alias.objects.filter(player=player)
-                    posts = Post.objects.filter(author=player)
-                    target_votes = Vote.objects.filter(target=player)
-                    author_votes = Vote.objects.filter(author=player)
-                    if games:
-                        for game in games:
-                            game.moderator = request.user.profile.player
-                        Game.objects.bulk_update(games.values(), ['moderator'])
-                    if playerstates:
-                        for playerstate in playerstates:
-                            playerstate.player = request.user.profile.player
-                        PlayerState.objects.bulk_update(playerstates.values(), ['player'])
-                    if aliases:
-                        for alias in aliases:
-                            alias.player = request.user.profile.player
-                        Alias.objects.bulk_update(aliases.values(), ['player'])
-                    if posts:
-                        for post in posts:
-                            post.author = request.user.profile.player
-                        Post.objects.bulk_update(posts.values(), ['author'])
-                    if target_votes:
-                        for target_vote in target_votes:
-                            target_vote.target = request.user.profile.player
-                        Vote.objects.bulk_update(target_votes.values(), ['target'])
-                    if author_votes:
-                        for author_vote in author_votes:
-                            author_vote.author = request.user.profile.player
-                        Vote.objects.bulk_update(author_votes.values(), ['author'])
+                    Game.objects.filter(moderator=player).update(moderator=request.user.profile.player)
+                    PlayerState.objects.filter(player=player).update(player=request.user.profile.player)
+                    Alias.objects.filter(player=player).update(player=request.user.profile.player)
+                    Post.objects.filter(author=player).update(author=request.user.profile.player)
+                    Vote.objects.filter(target=player).update(target=request.user.profile.player)
+                    Vote.objects.filter(author=player).update(author=request.user.profile.player)
                     if player.sa_uid is not None:
                         request.user.profile.player.sa_uid = player.sa_uid
                     elif player.bnr_uid is not None:
