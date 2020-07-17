@@ -274,7 +274,7 @@ def claim_player(request, playerid):
             csrf_resp.update(csrf(request))
             if request.session['claim_key']:
                 if player.sa_uid is not None:
-                    downloader = SAForumPageDownloader()
+                    downloader = SAForumPageDownloader.SAForumPageDownloader()
                     page_data = downloader.download(
                         'https://forums.somethingawful.com/member.php?action=getinfo&userid={}'.format(player.sa_uid))
 
@@ -286,7 +286,7 @@ def claim_player(request, playerid):
                     else:
                         validated = True
                 elif player.bnr_uid is not None:
-                    api = BNRApi()
+                    api = BNRApi.BNRApi()
                     user_profile = api.get_user_by_id(player.bnr_uid)
                     if user_profile is None:
                         messages.add_message(request, messages.ERROR, 'There was a problem downloading the profile for the BNR user {}.'.format(player.bnr_uid))
@@ -314,6 +314,7 @@ def claim_player(request, playerid):
                         Vote.objects.bulk_update(target_votes.values(), target=request.user.profile.player)
                     if author_votes:
                         Vote.objects.bulk_update(author_votes.values(), author=request.user.profile.player)
+                    player.delete()
                     messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
                     return HttpResponseRedirect('/profile')
                 else:
