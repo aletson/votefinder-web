@@ -20,7 +20,8 @@ class BNRApi():
 
     def get_thread(self, threadid, page=1):
         thread = self.session.get('https://breadnroses.net/api/threads/{}?with_posts=true&page={}'.format(threadid, page))
-        return json.loads(thread.text)
+        thread_obj = json.loads(thread.text)
+        return thread_obj["thread"]
 
     def get_games(self, page=1):
         games = self.session.get('https://breadnroses.net/api/forums/35?with_threads=true&page={}'.format(page))
