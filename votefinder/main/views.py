@@ -187,7 +187,10 @@ def update(request, gameid):
     else:
         game.lock()
     try:
-        page_parser = SAPageParser.SAPageParser()
+        if game.home_forum == 'bnr':
+            page_parser = BNRPageParser.BNRPageParser()
+        elif game.home_forum == 'sa':
+            page_parser = SAPageParser.SAPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return HttpResponse(
