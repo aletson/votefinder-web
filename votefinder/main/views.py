@@ -305,27 +305,27 @@ def claim_player(request, playerid):
                     if games:
                         for game in games:
                             game.moderator = request.user.profile.player
-                        Game.objects.bulk_update(games.values())
+                        Game.objects.bulk_update(games.values(), ['moderator'])
                     if playerstates:
                         for playerstate in playerstates:
                             playerstate.player = request.user.profile.player
-                        PlayerState.objects.bulk_update(playerstates.values())
+                        PlayerState.objects.bulk_update(playerstates.values(), ['player'])
                     if aliases:
                         for alias in aliases:
                             alias.player = request.user.profile.player
-                        Alias.objects.bulk_update(aliases.values())
+                        Alias.objects.bulk_update(aliases.values(), ['player'])
                     if posts:
                         for post in posts:
                             post.author = request.user.profile.player
-                        Post.objects.bulk_update(posts.values())
+                        Post.objects.bulk_update(posts.values(), ['author'])
                     if target_votes:
                         for target_vote in target_votes:
                             target_vote.target = request.user.profile.player
-                        Vote.objects.bulk_update(target_votes.values())
+                        Vote.objects.bulk_update(target_votes.values(), ['target'])
                     if author_votes:
                         for author_vote in author_votes:
                             author_vote.author = request.user.profile.player
-                        Vote.objects.bulk_update(author_votes.values())
+                        Vote.objects.bulk_update(author_votes.values(), ['author'])
                     if player.sa_uid is not None:
                         request.user.profile.player.sa_uid = player.sa_uid
                     elif player.bnr_uid is not None:
