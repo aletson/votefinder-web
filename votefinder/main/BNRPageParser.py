@@ -46,7 +46,7 @@ class BNRPageParser:
     def parse_page(self, thread, threadid):
         self.pageNumber = thread['pagination']['current_page']
         self.maxPages = thread['pagination']['last_page']
-        self.gameName = re.compile(r'\[.*?\]').sub('', thread['title']).strip()
+        self.gameName = re.compile(r'\[.*?\]').sub('', thread['thread']['title']).strip()
 
         posts = thread['posts']
         if not posts:
