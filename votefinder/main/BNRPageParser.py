@@ -81,11 +81,11 @@ class BNRPageParser:
         game.max_pages = self.maxPages
         game.current_page = self.pageNumber
         game.gameName = self.gameName
-
+        post_parser = PostParser.PostParser()
         for post in self.posts:
             post.game = game
             post.save()
-            PostParser.read_votes(post, self.gamePlayers, self.players)
+            post_parser.read_votes(post, self.gamePlayers, self.players)
             if post.author not in self.players:
                 self.players.append(post.author)
             cur_player = post.author
