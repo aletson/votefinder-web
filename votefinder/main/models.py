@@ -38,7 +38,7 @@ def slugify_uniquely(potential_slug, model, slugfield='slug'):
 
 
 class Player(models.Model):
-    name = models.CharField(max_length=255, unique=True, db_index=True)
+    name = models.CharField(max_length=255, db_index=True)
     sa_uid = models.IntegerField(unique=True, db_index=True, null=True)
     bnr_uid = models.IntegerField(unique=True, null=True, db_index=True)
     slug = models.SlugField()
