@@ -134,7 +134,7 @@ class BNRPageParser:
         post.avatar = node['User']['avatar_urls']['o']
 
         body = node['message']
-        post.bodySoup = BeautifulSoup(bbcode.render_html[body])
+        post.bodySoup = BeautifulSoup(bbcode.render_html(body))
         for quote in post.bodySoup.findAll('blockquote'):
             quote.name = 'div'
             quote['class'] = 'quote well'
