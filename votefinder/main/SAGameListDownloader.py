@@ -32,7 +32,7 @@ class SAGameListDownloader():
             if thread.text.lower().find('mafia') != -1:
                 matcher = re.compile(r'threadid=(?P<threadid>\d+)').search(thread['href'])
                 thread_id = matcher.group('threadid')
-                game = {'name': thread.text, 'url': thread['href'], 'threadid': thread_id, 'parent_forum': 'sa', 'tracked': self.is_game_tracked(thread_id)}
+                game = {'name': thread.text, 'url': thread['href'], 'threadid': thread_id, 'home_forum': 'sa', 'tracked': self.is_game_tracked(thread_id)}
                 self.GameList.append(game)
 
         return True

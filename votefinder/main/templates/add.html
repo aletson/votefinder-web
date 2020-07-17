@@ -10,7 +10,7 @@
             if (game.tracked == true) {
                 str = '<span class="grayed">' + game.name + '</span>';
             } else {
-                str = '<a href="' + game.url + '" data-threadid="' + game.threadid + '" data-parentforum="' + game.parent_forum + '">' + game.name + '</a>';
+                str = '<a href="' + game.url + '" data-threadid="' + game.threadid + '" data-homeforum="' + game.home_forum + '">' + game.name + '</a>';
             }
             $('#gameList ul').append('<li>' + str + '</li>');
         });
@@ -44,13 +44,13 @@
         }
     });
     
-    function doAddGame(threadid, parent_forum = null) {
+    function doAddGame(threadid, home_forum = null) {
         if (!isNaN(threadid)) {
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
             if(!$('#dialog').hasClass('in')) {
                 $('#dialog').modal('show');
             }
-            $.post('/add_game', {threadid: threadid, parent_forum: parent_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+            $.post('/add_game', {threadid: threadid, home_forum: home_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
                 if (data.success == true) {
                     location.href = data.url;
                 } else {
@@ -61,14 +61,14 @@
             if (threadid.includes('somethingawful')) {
                 var thread = threadid.replace(/threadid=(\d+)/);
                 var result = RegExp.$1;
-                parent_forum = 'sa';
+                home_forum = 'sa';
             } else if (threadid.includes('breadnroses.net')) {
                 var thread = threadid.replace(/threads\/.*\.(\d+)\/?$/);
                 var result = RegExp.$1;
-                parent_forum = 'bnr';
+                home_forum = 'bnr';
             }
             if (result) {
-                $.post('/add_game', {threadid: result, parent_forum: parent_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+                $.post('/add_game', {threadid: result, home_forum: home_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
                     if (data.success == true) {
                         location.href = data.url;
                     } else {

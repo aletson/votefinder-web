@@ -69,15 +69,15 @@ def add_game(request):
     if request.method == 'POST':
         threadid = request.POST.get('threadid')
         state = request.POST.get('addState')
-        parent_forum = request.POST.get('parent_forum')
+        home_forum = request.POST.get('home_forum')
         if state in {'started', 'pregame'}:
             try:
-                game = Game.objects.get(thread_id=threadid, parent_forum=parent_forum)
+                game = Game.objects.get(thread_id=threadid, home_forum=home_forum)
                 return_status['url'] = game.get_absolute_url()
-            except Game.DoesNotExist:  # TODO case when parent_forum
-                if parent_forum == 'bnr':
+            except Game.DoesNotExist:
+                if home_forum == 'bnr':
                     page_parser = BNRPageParser.BNRPageParser()
-                elif parent_forum == 'sa':
+                elif home_forum == 'sa':
                     page_parser = SAPageParser.SAPageParser()
                 else:
                     return_status['success'] = False
