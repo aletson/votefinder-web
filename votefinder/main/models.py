@@ -271,6 +271,9 @@ class PlayerState(models.Model):
     def __str__(self):
         return '{} [{}]'.format(self.player, self.state())
 
+    class Meta:
+        unique_together = ('game', 'player')
+
 
 class Alias(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
