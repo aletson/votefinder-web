@@ -47,7 +47,8 @@ class BNRApi():
 
     def get_user_by_id(self, uid):
         user = self.session.get('https://breadnroses.net/api/users/{}'.format(uid))
-        return json.loads(user.text)
+        user_json = json.loads(user.text)
+        return user_json['user']
 
 
 if __name__ == '__main__':
