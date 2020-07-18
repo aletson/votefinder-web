@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}VoteFinder: Register Account{% endblock %}
+{% block title %}Votefinder: Register Account{% endblock %}
 
 {% block onready %}
     $('#submitButton').button().click(function(){
@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Create Account</h1>
+    <h1><a href="/">Votefinder</a>: Create Account</h1>
     <hr>
-    <p>Enter the login information you'd like to use for the VoteFinder site.</p>
+    <p>Enter the login information you'd like to use for the Votefinder site.</p>
     <p>Your e-mail address will only be used if you forget your password.</p>
     <p>
         <form id="createUserForm" action="/auth/create/done/" method="post">{% csrf_token %}

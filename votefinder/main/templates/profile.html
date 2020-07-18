@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}VoteFinder: Your Profile{% endblock %}
+{% block title %}Votefinder: Your Profile{% endblock %}
 
 {% block onready %}
     $.ajaxSetup({
@@ -33,7 +33,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Profile: {{ player.name|safe }}</h1>
+    <h1><a href="/">Votefinder</a>: Profile: {{ player.name|safe }}</h1>
     {% if player.sa_uid is not None %}
     (<a href="https://forums.somethingawful.com/member.php?action=getinfo&userid={{ player.sa_uid }}">jump to SA
     profile</a>)
