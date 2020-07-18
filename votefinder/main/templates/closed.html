@@ -54,7 +54,7 @@
                 <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
                 <td>{{ game.players_count }}</td>
                 <td data-sort="{{ game.created_on|date:"U" }}">{{ game.created_on|date }}</td>
-                <td data-sort="{{ game.last_updated|date:"U" }}">{{ game.last_updated|date }}</td>
+                <td data-sort="{{ game.last_post|date:"U" }}">{{ game.last_post|date }}</td>
             </tr>
         {% endfor %}
         </tbody>
