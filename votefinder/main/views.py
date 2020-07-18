@@ -1063,7 +1063,7 @@ def players_page(request, page):
 
     total_players = Player.objects.all().count()
     total_pages = int(ceil(float(total_players) / items_per_page))
-    players = Player.objects.select_related().filter(sa_uid__gt='0').order_by('name').extra(select={
+    players = Player.objects.select_related().filter(Q(sa_uid__gt='0') | Q(bnr_uid__gt='0')).order_by('name').extra(select={
         'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
         'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
         'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
