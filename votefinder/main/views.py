@@ -1159,9 +1159,12 @@ def post_vc(request, gameid):
 
         vc_formatter = VotecountFormatter.VotecountFormatter(game)
         vc_formatter.go()
-
-        dl = SAForumPageDownloader.SAForumPageDownloader()
-        dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        if game.home_forum == 'sa':
+            dl = SAForumPageDownloader.SAForumPageDownloader()
+            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        elif game.home_forum == 'bnr':
+            dl = BNRApi.BNRApi()
+            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
