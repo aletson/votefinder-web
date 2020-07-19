@@ -12,7 +12,7 @@ class PostParser:
 
     def search_line_for_actions(self, post, line):
         # Votes
-        pattern = re.compile(r'##\s*unvote|##\s*vote[:\s+]([^<\r\n]+)', re.I)
+        pattern = re.compile(r'##\s*unvote|##\s*null|##\s*vote[:\s+]([^<\r\n]+)', re.I)
         pos = 0
         match = pattern.search(line, pos)
 
