@@ -1,5 +1,6 @@
 import json as simplejson
 import math
+import random
 import re
 import urllib
 from datetime import datetime, timedelta
@@ -25,8 +26,9 @@ from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerFor
                                     PlayerState, Post, Theme, UserProfile, Vote,
                                     VotecountTemplate, VotecountTemplateForm)
 
-from votefinder.main import (ForumPageDownloader, GameListDownloader, PageParser,
-                             VoteCounter, VotecountFormatter)
+from votefinder.main import (SAForumPageDownloader, SAGameListDownloader, SAPageParser,
+                             VoteCounter, VotecountFormatter, BNRGameListDownloader,
+                             BNRPageParser, BNRApi)
 
 
 def check_mod(request, game):
@@ -67,12 +69,20 @@ def add_game(request):
     if request.method == 'POST':
         threadid = request.POST.get('threadid')
         state = request.POST.get('addState')
+        home_forum = request.POST.get('home_forum')
         if state in {'started', 'pregame'}:
             try:
-                game = Game.objects.get(thread_id=threadid)
+                game = Game.objects.get(thread_id=threadid, home_forum=home_forum)
                 return_status['url'] = game.get_absolute_url()
             except Game.DoesNotExist:
-                page_parser = PageParser.PageParser()
+                if home_forum == 'bnr':
+                    page_parser = BNRPageParser.BNRPageParser()
+                elif home_forum == 'sa':
+                    page_parser = SAPageParser.SAPageParser()
+                else:
+                    return_status['success'] = False
+                    return_status['message'] = "Couldn't determine the parent forum or unsupported parent forum. Sorry!"
+                    return HttpResponse(simplejson.dumps(return_status), content_type='application/json')
                 page_parser.user = request.user
                 game = page_parser.add_game(threadid, state)
                 if game:
@@ -116,8 +126,11 @@ def add_game(request):
 
 @login_required
 def game_list(request, page):
-    downloader = GameListDownloader.GameListDownloader()
+    downloader = SAGameListDownloader.SAGameListDownloader()
     downloader.get_game_list('http://forums.somethingawful.com/forumdisplay.php?forumid=103&pagenumber={}'.format(page))
+    bnr = BNRGameListDownloader.BNRGameListDownloader()
+    bnr.get_game_list(page)
+    downloader.GameList.extend(bnr.GameList)
     return HttpResponse(simplejson.dumps(downloader.GameList), content_type='application/json')
 
 
@@ -174,7 +187,10 @@ def update(request, gameid):
     else:
         game.lock()
     try:
-        page_parser = PageParser.PageParser()
+        if game.home_forum == 'bnr':
+            page_parser = BNRPageParser.BNRPageParser()
+        elif game.home_forum == 'sa':
+            page_parser = SAPageParser.SAPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return HttpResponse(
@@ -220,26 +236,87 @@ def update_user_pronouns(request):
 
 def player(request, slug):
     try:
-        player = Player.objects.get(slug=slug)
+        player = get_object_or_404(Player, slug=slug)
         games = player.games.select_related().all()
     except Player.DoesNotExist:
         return HttpResponseNotFound
-
+    show_claim = False
     try:
         aliases = Alias.objects.filter(player=player)
-        profile = UserProfile.objects.get(player=player)
-        pronouns = profile.pronouns
     except Alias.DoesNotExist:
         pass  # noqa: WPS420
+    try:
+        profile = UserProfile.objects.get(player=player)
+        pronouns = profile.pronouns
     except UserProfile.DoesNotExist:
         pronouns = None
+        if request.user.is_authenticated and ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)):
+            show_claim = True
 
     show_delete = False
     if request.user.is_superuser or (request.user.is_authenticated and request.user.profile.player == player):
         show_delete = True
 
     return render(request, 'player.html',
-                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': pronouns})
+                  {'player': player, 'games': games, 'aliases': aliases, 'show_delete': show_delete, 'pronouns': pronouns, 'show_claim': show_claim})
+
+
+@login_required
+def claim_player(request, playerid):
+    player = get_object_or_404(Player, id=playerid)
+    if ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)) and not UserProfile.objects.filter(player=player).exists():
+        # Eligible to claim!
+        if request.method != 'POST':
+            claim_key = random.randint(10000000, 99999999)  # noqa: S311
+            request.session['claim_key'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
+            return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
+
+        else:  # Attempt to claim, check profile
+            validated = False
+            csrf_resp = {}
+            csrf_resp.update(csrf(request))
+            if request.session['claim_key']:
+                if player.sa_uid is not None:
+                    downloader = SAForumPageDownloader.SAForumPageDownloader()
+                    page_data = downloader.download(
+                        'https://forums.somethingawful.com/member.php?action=getinfo&userid={}'.format(player.sa_uid))
+
+                    if page_data is None:
+                        messages.add_message(request, messages.ERROR, 'There was a problem downloading the profile for the SA user {}.'.format(player.sa_uid))
+
+                    if page_data.find(str(request.session['claim_key'])) == -1:
+                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s SA profile".format(request.session['claim_key'], player.sa_uid))
+                    else:
+                        validated = True
+                elif player.bnr_uid is not None:
+                    api = BNRApi.BNRApi()
+                    user_profile = api.get_user_by_id(player.bnr_uid)
+                    if user_profile is None:
+                        messages.add_message(request, messages.ERROR, 'There was a problem downloading the profile for the BNR user {}.'.format(player.bnr_uid))
+                    if user_profile['location'] != str(request.session['claim_key']):
+                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s BNR profile".format(request.session['claim_key'], player.bnr_uid))
+                    else:
+                        validated = True
+                if validated:
+                    # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
+                    Game.objects.filter(moderator=player).update(moderator=request.user.profile.player)
+                    PlayerState.objects.filter(player=player).update(player=request.user.profile.player)
+                    Alias.objects.filter(player=player).update(player=request.user.profile.player)
+                    Post.objects.filter(author=player).update(author=request.user.profile.player)
+                    Vote.objects.filter(target=player).update(target=request.user.profile.player)
+                    Vote.objects.filter(author=player).update(author=request.user.profile.player)
+                    if player.sa_uid is not None:
+                        request.user.profile.player.sa_uid = player.sa_uid
+                    elif player.bnr_uid is not None:
+                        request.user.profile.player.bnr_uid = player.bnr_uid
+                    player.delete()
+                    request.user.profile.player.save()
+                    messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
+                    return HttpResponseRedirect('/profile')
+                else:
+                    return HttpResponseRedirect('/player/{}'.format(player.slug))
+            else:
+                return HttpResponseNotFound
 
 
 def player_id(request, playerid):
@@ -356,7 +433,7 @@ def delete_spectators(request, gameid):
 def votecount(request, gameid):
     game = get_object_or_404(Game, id=gameid)
     try:
-        votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+        votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, no_execute=False)
         if votes:
             players = sorted(game.all_players(), key=lambda player: player.player.name.lower())
             return render(request, 'unresolved.html',
@@ -384,7 +461,7 @@ def resolve(request, voteid, resolution):
         vote.ignored = True
         vote.save()
     elif resolution == '-2':
-        vote.nolynch = True
+        vote.no_execute = True
         vote.save()
     else:
         player = get_object_or_404(Player, id=int(resolution))
@@ -400,7 +477,7 @@ def resolve(request, voteid, resolution):
     cache.delete(key)
 
     new_votes = Vote.objects.filter(game=vote.game, target_string__iexact=vote.target_string, target=None, unvote=False,
-                                    ignored=False, nolynch=False)
+                                    ignored=False, no_execute=False)
 
     refresh = bool(len(votes) != 1 or not new_votes)
     return HttpResponse(simplejson.dumps({'success': True, 'refresh': refresh}))
@@ -769,7 +846,7 @@ def add_vote(request, gameid, player, votes, target):
     gameday = game.days.select_related().last()
     vote = Vote(manual=True, post=gameday.start_post, game=game)
     if player == '-1':
-        vote.author = Player.objects.get(uid=0)  # anonymous
+        vote.author = Player.objects.get(sa_uid=0)  # anonymous
     else:
         vote.author = get_object_or_404(Player, id=player)
 
@@ -793,7 +870,7 @@ def add_vote_global(request, gameid):
     playerlist = get_list_or_404(PlayerState, game=game)
     for indiv_player in playerlist:
         target = get_object_or_404(Player, id=indiv_player.player_id)
-        vote = Vote(manual=True, post=gameday.start_post, game=game, author=Player.objects.get(uid=0), target=target)
+        vote = Vote(manual=True, post=gameday.start_post, game=game, author=Player.objects.get(sa_uid=0), target=target)
         vote.save()
     messages.add_message(request, messages.SUCCESS, 'Success! A global hated vote has been added.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -864,7 +941,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
             longest_name = this_size_x
 
     for line_again in votes_by_player:  # noqa: WPS426
-        pct = float(line_again['count']) / vc.tolynch
+        pct = float(line_again['count']) / vc.no_execute
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],
                        fill=(int(155 + (pct * 100)), 100, 100, int(pct * 255)))
@@ -904,7 +981,7 @@ def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
 
     (x_size, ypos) = draw_wordwrap_text(draw, footer_text, 0, ypos, max_width, regular_font)
 
-    votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, nolynch=False)
+    votes = Vote.objects.select_related().filter(game=game, target=None, unvote=False, ignored=False, no_execute=False)
     if votes:
         ypos += header_y_size
         if len(votes) == 1:
@@ -926,7 +1003,7 @@ def check_update_game(game):
         game.lock()
 
     try:
-        page_parser = PageParser.PageParser()
+        page_parser = SAPageParser.SAPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return new_game
@@ -986,7 +1063,7 @@ def players_page(request, page):
 
     total_players = Player.objects.all().count()
     total_pages = int(ceil(float(total_players) / items_per_page))
-    players = Player.objects.select_related().filter(uid__gt='0').order_by('name').extra(select={
+    players = Player.objects.select_related().filter(Q(sa_uid__gt='0') | Q(bnr_uid__gt='0')).order_by('name').extra(select={
         'alive': 'select count(*) from main_playerstate join main_game on main_playerstate.game_id=main_game.id where main_playerstate.player_id=main_player.id and main_game.state = "started" and main_playerstate.alive=true',
         'total_games_played': 'select count(*) from main_playerstate where main_playerstate.player_id=main_player.id and main_playerstate.moderator=false and main_playerstate.spectator=false',
         'total_games_run': 'select count(*) from main_game where main_game.moderator_id=main_player.id'})[
@@ -1033,16 +1110,16 @@ def post_histories(request, gameid):
 
 
 @login_required
-def post_lynches(request, gameid, enabled):
+def post_executions(request, gameid, enabled):
     game = get_object_or_404(Game, id=gameid)
     if not check_mod(request, game):
         return HttpResponseForbidden
 
     if enabled == 'on':
-        game.post_lynches = True
+        game.post_executions = True
         messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now enabled!')
     else:
-        game.post_lynches = False
+        game.post_executions = False
         messages.add_message(request, messages.SUCCESS, 'Posting of voted executes for this game is now disabled!')
 
     game.save()
@@ -1082,9 +1159,12 @@ def post_vc(request, gameid):
 
         vc_formatter = VotecountFormatter.VotecountFormatter(game)
         vc_formatter.go()
-
-        dl = ForumPageDownloader.ForumPageDownloader()
-        dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        if game.home_forum == 'sa':
+            dl = SAForumPageDownloader.SAForumPageDownloader()
+            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        elif game.home_forum == 'bnr':
+            dl = BNRApi.BNRApi()
+            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
@@ -1101,7 +1181,7 @@ def votechart_all(request, gameslug):
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': True, 'startDate': day.start_post.timestamp,
-                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'now': datetime.now(), 'toExecute': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'players': [player.player.name for player in game.living_players()],
                    'allPlayers': [player.player for player in game.living_players()]},
@@ -1120,7 +1200,7 @@ def votechart_player(request, gameslug, playerslug):
 
     return render(request, 'votechart.html',
                   {'game': game, 'showAllPlayers': False, 'startDate': day.start_post.timestamp,
-                   'now': datetime.now(), 'toLynch': required_votes_to_execute,
+                   'now': datetime.now(), 'toExecute': required_votes_to_execute,
                    'votes': vote_log, 'numVotes': len(vote_log),
                    'allPlayers': [player.player for player in game.living_players()],
                    'selectedPlayer': player.name,

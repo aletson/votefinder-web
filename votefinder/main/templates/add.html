@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}VoteFinder: Add Game{% endblock %}
+{% block title %}Votefinder: Add Game{% endblock %}
 
 {% block onready %}
 
@@ -10,13 +10,13 @@
             if (game.tracked == true) {
                 str = '<span class="grayed">' + game.name + '</span>';
             } else {
-                str = '<a href="' + game.url + '">' + game.name + '</a>';
+                str = '<a href="' + game.url + '" data-threadid="' + game.threadid + '" data-homeforum="' + game.home_forum + '">' + game.name + '</a>';
             }
             $('#gameList ul').append('<li>' + str + '</li>');
         });
         $('#gameListContainer').show('slow');
         $('#gameList ul li a').click(function (event) {
-            doAddGame(event.target.getAttribute("href"));
+            doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-homeforum'));
             event.preventDefault();
         });
     }
@@ -44,15 +44,13 @@
         }
     });
     
-    function doAddGame(url) {
-        var thread = url.replace(/threadid=(\d+)/);
-        var result = RegExp.$1;
-        if (result) {
+    function doAddGame(threadid, home_forum = null) {
+        if (!isNaN(threadid)) {
             $("#dialog-content").html('<img src="/static/loading.gif" class="loadingImg">Downloading thread...');
             if(!$('#dialog').hasClass('in')) {
                 $('#dialog').modal('show');
             }
-            $.post('/add_game', {threadid: result, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+            $.post('/add_game', {threadid: threadid, home_forum: home_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
                 if (data.success == true) {
                     location.href = data.url;
                 } else {
@@ -60,14 +58,33 @@
                 }
             }, 'json');
         } else {
-            alert("That doesn't look like a good thread URL.");
+            if (threadid.includes('somethingawful')) {
+                var thread = threadid.replace(/threadid=(\d+)/);
+                var result = RegExp.$1;
+                home_forum = 'sa';
+            } else if (threadid.includes('breadnroses.net')) {
+                var thread = threadid.replace(/threads\/.*\.(\d+)\/?$/);
+                var result = RegExp.$1;
+                home_forum = 'bnr';
+            }
+            if (result) {
+                $.post('/add_game', {threadid: result, home_forum: home_forum, addState: ($('#isAlreadyStarted').is(':checked') ? 'started' : 'pregame')}, function(data) {
+                    if (data.success == true) {
+                        location.href = data.url;
+                    } else {
+                        $("#dialog-content").html(data.message);
+                    }
+                }, 'json');
+            } else {
+                alert("That doesn't look like a good thread URL.");
+            }
         }
     }
     
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Add a Game</h1>
+    <h1><a href="/">Votefinder</a>: Add a Game</h1>
     <hr>
 
     Enter the full url of the forum thread to be added:

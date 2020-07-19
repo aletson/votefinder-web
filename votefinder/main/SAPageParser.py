@@ -1,15 +1,15 @@
 import re
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from bs4 import BeautifulSoup
-from votefinder.main.models import (Alias, Game, GameDay, Player, PlayerState,
-                                    Post, Vote)
+from votefinder.main.models import (Game, GameDay, Player, PlayerState,
+                                    Post)
 
-from votefinder.main import ForumPageDownloader
+from votefinder.main import SAForumPageDownloader, PostParser
 
 
-class PageParser:
+class SAPageParser:
     def __init__(self):
         self.pageNumber = 0
         self.maxPages = 0
@@ -19,12 +19,12 @@ class PageParser:
         self.gamePlayers = []
         self.votes = []
         self.user = None
-        self.downloader = ForumPageDownloader.ForumPageDownloader()
+        self.downloader = SAForumPageDownloader.SAForumPageDownloader()
 
     def add_game(self, threadid, state):
         self.new_game = True
         self.state = state
-        return self.download_and_update('http://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
+        return self.download_and_update('https://forums.somethingawful.com/showthread.php?threadid={}'.format(threadid),
                                         threadid)
 
     def download_and_update(self, url, threadid):
@@ -45,91 +45,11 @@ class PageParser:
             page = game.current_page + 1
 
         return self.download_and_update(
-            'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.thread_id, page),
+            'https://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}'.format(game.thread_id, page),
             game.thread_id)
 
     def download_forum_page(self, url):
         return self.downloader.download(url)
-
-    def autoresolve_vote(self, text):
-        try:
-            player = Player.objects.get(name__iexact=text)
-            if player in self.players or player in self.gamePlayers:
-                return player
-        except Player.DoesNotExist:
-            pass  # noqa: WPS420
-
-        try:
-            aliases = Alias.objects.filter(alias__iexact=text, player__in=self.players)
-            if aliases:
-                return aliases[0].player
-        except Alias.DoesNotExist:
-            pass  # noqa: WPS420
-
-        try:
-            aliases = Alias.objects.filter(alias__iexact=text, player__in=self.gamePlayers)
-            if aliases:
-                return aliases[0].player
-        except Alias.DoesNotExist:
-            pass  # noqa: WPS420
-
-        try:
-            if len(text) > 4:
-                players = Player.objects.filter(name__icontains=text, name__in=[player.name for player in self.gamePlayers])
-                if len(players) == 1:
-                    return players[0]
-        except Player.DoesNotExist:
-            pass  # noqa: WPS420
-
-        return None
-
-    def search_line_for_actions(self, post, line):
-        # Votes
-        pattern = re.compile(r'##\s*unvote|##\s*vote[:\s+]([^<\r\n]+)', re.I)
-        pos = 0
-        match = pattern.search(line, pos)
-
-        while match:
-            vote = Vote(post=post, game=post.game, author=post.author, unvote=True)
-            (target_string,) = match.groups()
-            if target_string:
-                vote.target_string = target_string.strip()
-                vote.target = self.autoresolve_vote(vote.target_string)
-                vote.unvote = False
-
-                if vote.target is None and vote.target_string.lower() in {'nolynch', 'no lynch', 'no execute', 'no hang', 'no cuddle', 'no lunch'}:
-                    vote.nolynch = True
-            try:
-                game = Game.objects.get(id=post.game.id)  # Is this line necessary? Can't we just use post.game?
-                player_last_vote = Vote.objects.filter(game=post.game, author=post.author).last()
-                current_gameday = GameDay.objects.filter(game=post.game).last()
-                if game.ecco_mode is False or player_last_vote is None or player_last_vote.post_id < current_gameday.start_post.id or player_last_vote.unvote or vote.unvote or PlayerState.get(game=game, player_id=player_last_vote.target).alive is False:
-                    vote.save()
-            except Game.DoesNotExist:
-                vote.save()
-            match = pattern.search(line, match.end())
-
-        if post.game.is_player_mod(post.author):
-            # pattern search for ##move and 3 wildcards pattern = re.compile("##\\s*move[:\\s+]([^<\\r\\n]+)", re.I
-            # pattern search for ##deadline and # of hours
-            pattern = re.compile(r'##\s*deadline[:\s+](\d+)', re.I)
-            pos = 0
-            match = pattern.search(line, pos)
-            while match:
-                (num_hrs,) = match.groups()
-                if num_hrs and num_hrs > 0:  # Check if int - or modify regex
-                    num_hrs = int(num_hrs)
-                    new_deadline = post.timestamp + timedelta(hours=num_hrs)
-                    post.game.deadline = new_deadline
-                    post.game.save()
-
-    def read_votes(self, post):
-        for quote in post.bodySoup.findAll('div', 'quote well'):
-            quote.extract()
-        for bold in post.bodySoup.findAll('b'):
-            post_content = ''.join([str(bold_string) for bold_string in bold.contents])
-            for line in post_content.splitlines():
-                self.search_line_for_actions(post, line)
 
     def parse_page(self, page_html, threadid):
         soup = BeautifulSoup(page_html, 'html5lib')
@@ -159,7 +79,7 @@ class PageParser:
         game, game_created = Game.objects.get_or_create(thread_id=threadid,
                                                         defaults={'moderator': mod, 'name': self.gameName,
                                                                   'current_page': 1, 'max_pages': 1, 'state': self.state,
-                                                                  'added_by': self.user, 'current_day': day_number})
+                                                                  'added_by': self.user, 'current_day': day_number, 'home_forum': 'sa'})
 
         if game_created:
             player_state, created = PlayerState.objects.get_or_create(game=game, player=mod,
@@ -170,11 +90,11 @@ class PageParser:
         game.max_pages = self.maxPages
         game.current_page = self.pageNumber
         game.gameName = self.gameName
-
+        post_parser = PostParser.PostParser()
         for post in self.posts:
             post.game = game
             post.save()
-            self.read_votes(post)
+            post_parser.read_votes(post, self.gamePlayers, self.players)
             if post.author not in self.players:
                 self.players.append(post.author)
             cur_player = post.author
@@ -224,7 +144,7 @@ class PageParser:
         return None
 
     def find_or_create_player(self, playername, playeruid):
-        player, created = Player.objects.get_or_create(uid=playeruid,
+        player, created = Player.objects.get_or_create(sa_uid=playeruid,
                                                        defaults={'name': playername})
 
         if player.name != playername:
@@ -239,7 +159,7 @@ class PageParser:
             return None
 
         try:
-            post = Post.objects.get(post_id=post_id)
+            post = Post.objects.get(post_id=post_id, game__home_forum='sa')
             return None
         except Post.DoesNotExist:
             post = Post()

@@ -38,7 +38,7 @@
 
     var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));
     chart.draw(data, {displayAnnotations: true, legendPosition: 'newRow', highlightDot: 'last',
-    min: 0, max: {{ toLynch }}, displayZoomButtons: false, displayLegendDots: false,
+    min: 0, max: {{ toExecute }}, displayZoomButtons: false, displayLegendDots: false,
     displayLegendDots: false });
     }
 {% endblock %}

@@ -15,8 +15,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
-      - name: Lint
-        uses: wemake-services/wemake-python-styleguide@0.13.3
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:

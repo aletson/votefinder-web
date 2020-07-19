@@ -3,7 +3,7 @@ import random
 
 from votefinder.main.models import GameDay, ExecutionMessage, Player, Vote
 
-from votefinder.main import ForumPageDownloader, VotecountFormatter
+from votefinder.main import SAForumPageDownloader, VotecountFormatter
 
 
 class VoteCounter:
@@ -11,7 +11,7 @@ class VoteCounter:
         self.results = {}  # noqa: WPS110
         self.currentVote = {}
         self.votesFound = False
-        self.nolynch_player = None
+        self.no_execute_player = None
         self.voteLog = []
         self.show_only_active_votes = False
 
@@ -62,8 +62,8 @@ class VoteCounter:
         if gameday.notified:
             return
 
-        tolynch = int(math.floor(len(game.living_players()) / 2.0) + 1)
-        executed = filter(lambda key: self.results[key]['count'] >= tolynch, self.results)
+        to_execute = int(math.floor(len(game.living_players()) / 2.0) + 1)
+        executed = filter(lambda key: self.results[key]['count'] >= to_execute, self.results)
 
         if list(executed):
             gameday.notified = True
@@ -74,7 +74,7 @@ class VoteCounter:
                 self.post_execute_message(game, executed[0].name)
 
     def post_execute_message(self, game, name):
-        if not game.post_lynches:
+        if not game.post_executions:
             return
 
         message = random.choice(ExecutionMessage.objects.all()).text  # noqa: S311
@@ -83,7 +83,7 @@ class VoteCounter:
         message = '{}\n\n'.format(message)
         message += vc_formatter.bbcode_votecount
         message = ':redhammer: {}'.format(message)
-        dl = ForumPageDownloader()
+        dl = SAForumPageDownloader()
         dl.reply_to_thread(game.thread_id, message.format(name))
 
     def build_result_list(self):
@@ -96,18 +96,18 @@ class VoteCounter:
         return resultlist
 
     def target_is_valid(self, vote):
-        if vote.nolynch and self.nolynch_player is None:
-            self.nolynch_player = Player.objects.get(uid=-1)
-            self.results[self.nolynch_player] = {'count': 0, 'votes': []}
+        if vote.no_execute and self.no_execute_player is None:
+            self.no_execute_player = Player.objects.get(sa_uid=-1)
+            self.results[self.no_execute_player] = {'count': 0, 'votes': []}
 
-        return vote.unvote or vote.nolynch or (vote.target in self.livingPlayers)
+        return vote.unvote or vote.no_execute or (vote.target in self.livingPlayers)
 
     def handle_vote(self, vote):
         if not vote.manual and self.player_is_voting(vote.author):
             self.handle_unvote(vote)
 
-        if vote.nolynch:
-            vote.target = self.nolynch_player
+        if vote.no_execute:
+            vote.target = self.no_execute_player
 
         self.add_vote_to_player(vote.target, vote.author, False, vote.post.page_number, vote.post.post_id,  # noqa: WPS425
                                 vote.post.timestamp)
@@ -123,10 +123,14 @@ class VoteCounter:
             text = '{} votes {}'.format(author, target)
 
         self.voteLog.append({'timestamp': timestamp, 'player': target.name, 'count': result_item['count'], 'text': text})
-
-        result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
-                                    'url': 'http://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
-                                        self.game.thread_id, page, postid)})
+        if self.game.home_forum == 'sa':
+            result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
+                                        'url': 'https://forums.somethingawful.com/showthread.php?threadid={}&pagenumber={}#post{}'.format(
+                                         self.game.thread_id, page, postid)})
+        elif self.game.home_forum == 'bnr':
+            result_item['votes'].append({'unvote': unvote, 'enabled': True, 'author': author,
+                                        'url': 'https://breadnroses.net/threads/{}/post-{}'.format(
+                                         self.game.thread_id, postid)})
 
     def handle_unvote(self, vote):
         current_vote = self.player_is_voting(vote.author)

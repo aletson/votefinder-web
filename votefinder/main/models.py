@@ -38,8 +38,9 @@ def slugify_uniquely(potential_slug, model, slugfield='slug'):
 
 
 class Player(models.Model):
-    name = models.CharField(max_length=255, unique=True, db_index=True)
-    uid = models.IntegerField(unique=True, db_index=True)
+    name = models.CharField(max_length=255, db_index=True)
+    sa_uid = models.IntegerField(unique=True, db_index=True, null=True)
+    bnr_uid = models.IntegerField(unique=True, null=True, db_index=True)
     slug = models.SlugField()
     last_post = models.DateTimeField(null=True, blank=True)
     total_posts = models.IntegerField(default=0)
@@ -96,7 +97,7 @@ class VotecountTemplate(models.Model):
 
 class Game(models.Model):
     name = models.CharField(max_length=255)
-    thread_id = models.IntegerField(unique=True, db_index=True)
+    thread_id = models.IntegerField(db_index=True)
     moderator = models.ForeignKey(Player, related_name='moderatingGames', on_delete=models.SET(get_default_player))
     last_updated = models.DateTimeField(auto_now=True)
     max_pages = models.IntegerField()
@@ -108,7 +109,7 @@ class Game(models.Model):
     template = models.ForeignKey(VotecountTemplate, null=True, blank=True, on_delete=models.SET_DEFAULT, default=2)
     added_by = models.ForeignKey(User, on_delete=models.SET(get_root_user))
     timezone = models.CharField(max_length=128, default='US/Eastern')
-    post_lynches = models.BooleanField(default=False)
+    post_executions = models.BooleanField(default=False)
     ecco_mode = models.BooleanField(default=False)
     last_vc_post = models.DateTimeField(null=True, blank=True)
     is_big = models.BooleanField(default=False)
@@ -116,6 +117,7 @@ class Game(models.Model):
     living_count = models.IntegerField(default=0)
     players_count = models.IntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True, blank=True)
+    home_forum = models.CharField(max_length=10, default='sa')
 
     def update_counts(self):
         self.players_count = self.count_players()
@@ -201,6 +203,9 @@ class Game(models.Model):
     def winning_faction(self):
         return self.factions.get(winning=True)
 
+    class Meta:
+        unique_together = ('thread_id', 'home_forum')
+
 
 class FactionType(Enum):
     town = 'Town'
@@ -266,6 +271,9 @@ class PlayerState(models.Model):
     def __str__(self):
         return '{} [{}]'.format(self.player, self.state())
 
+    class Meta:
+        unique_together = ('game', 'player')
+
 
 class Alias(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
@@ -279,7 +287,7 @@ class Alias(models.Model):
 
 
 class Post(models.Model):
-    post_id = models.IntegerField(unique=True, db_index=True)
+    post_id = models.IntegerField(db_index=True)
     timestamp = models.DateTimeField()
     author = models.ForeignKey(Player, related_name='posts', on_delete=models.SET(get_default_player))
     author_search = models.CharField(max_length=256)
@@ -310,7 +318,7 @@ class Vote(models.Model):
     unvote = models.BooleanField(default=False)
     ignored = models.BooleanField(default=False)
     manual = models.BooleanField(default=False)
-    nolynch = models.BooleanField(default=False)
+    no_execute = models.BooleanField(default=False)
 
     def __str__(self):
         if self.unvote:
@@ -326,7 +334,10 @@ class GameStatusUpdate(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            post_url = 'http://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].post_id)
+            if self.game.home_forum == 'sa':
+                post_url = 'https://forums.somethingawful.com/showthread.php?goto=post&postid={}'.format(self.game.posts.all().order_by('-id')[0].post_id)
+            elif self.game.home_forum == 'bnr':
+                post_url = 'https://breadnroses.net/threads/{}/post-{}'.format(self.game.thread_id, self.game.posts.all().order_by('-id')[0].post_id)
             try:
                 if url is None:
                     self.url = post_url

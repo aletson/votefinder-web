@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-{% block title %}VoteFinder: Register Account, Step 1{% endblock %}
+{% block title %}Votefinder: Link Forum Profile, Step 1{% endblock %}
 
 {% block onready %}
-    $('#next').button().click(function(event) { location.href='/auth/create/2/'; });
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Create Account</h1>
+    <h1><a href="/">Votefinder</a>: Link Forum Profile, Step 1</h1>
     <hr>
 
-    <p>Open your <a href="http://forums.somethingawful.com/member.php?action=editprofile" target="_blank">SA Forums
-        Profile</a> (link opens a new window).</p>
+    <p>Open your <a href="https://forums.somethingawful.com/member.php?action=editprofile" target="_blank">SA Forums
+        Profile</a> or your <a href="https://breadnroses.net/account/account-details" target="_blank">Bread and Roses account details page</a> (link opens a new window).</p>
 
-    <p>In the Location, Interests, or Occupation field, paste this value: <strong>{{ profileKey }}</strong><br/>
+    <p><b>Something Awful users:</b> In the Location, Interests, or Occupation field, paste this value: <strong>{{ profileKey }}</strong><br/>
         Save your profile then press Next on this page to continue to step 2.</p>
+    <p><b>Bread and Roses users:</b> In the Location field, paste this value: <strong>{{ profileKey }}</strong></p>
 
-    <a href="/auth/create/2/" id="next">Step 2 &raquo;</a>
+    <a href="/auth/link_profile/2/">Continue &raquo;</a>
 {% endblock %}

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}VoteFinder: Closed Games{% endblock %}
+{% block title %}Votefinder: Closed Games{% endblock %}
 
 {% block header %}
     <script type="text/javascript" src="/static/jquery.datatables.js"></script>
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: Closed Games</h1>
+    <h1><a href="/">Votefinder</a>: Closed Games</h1>
     <hr>
 
     <p>There are currently <strong>{{ total }}</strong> closed game{{ total|pluralize }} that are not being tracked.
@@ -54,7 +54,7 @@
                 <td>{% if game.players_count > 15 %}Large{% else %}Mini{% endif %}</td>
                 <td>{{ game.players_count }}</td>
                 <td data-sort="{{ game.created_on|date:"U" }}">{{ game.created_on|date }}</td>
-                <td data-sort="{{ game.last_updated|date:"U" }}">{{ game.last_updated|date }}</td>
+                <td data-sort="{{ game.last_post|date:"U" }}">{{ game.last_post|date }}</td>
             </tr>
         {% endfor %}
         </tbody>

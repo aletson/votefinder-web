@@ -189,7 +189,7 @@ $(document).ready(function () {
     <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
     <div class="btn-group">
         <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
-           href="https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}" id="liveThread"><i class="fa fa-link"></i></a>
+           href="{% if game.home_forum == 'sa' %}https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}{% elif game.home_forum == 'bnr' %}https://breadnroses.net/threads/{{ game.thread_id }}{% endif %}" id="liveThread"><i class="fa fa-link"></i></a>
         {% if game.state != 'closed' %}
             <a title="Votecount Image" class="button btn btn-sm btn-default" id="voteImgButton"><i class="fa fa-image"></i></a>
             <a title="Update" href="#" id="updateButton" class="btn btn-sm btn-default"><i class="fa fa-refresh"></i></a>
@@ -211,7 +211,7 @@ $(document).ready(function () {
         <tr>
             <td>Game Day:</td>
             <td><a target="_blank"
-                   href="https://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.start_post.post_id }}">Day {{ gameday.day_number }}</a>
+                   href="{% if game.home_forum == 'sa' %}https://forums.somethingawful.com/showthread.php?goto=post&amp;postid={{ gameday.start_post.post_id }}{% elif game.home_forum == 'bnr' %}https://breadnroses.net/threads/{{ game.thread_id }}/post-{{ gameday.start_post.post_id }}{% endif %}">Day {{ gameday.day_number }}</a>
                 began {{ gameday.start_post.timestamp|timesince }} ago on {{ gameday.start_post.timestamp }}</td>
         </tr>
         {% if game.deadline %}
@@ -266,7 +266,7 @@ $(document).ready(function () {
                             Just edit in the winning team:</div>
 
                             <p><textarea rows="2"
-                                         cols="80">* [https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
+                                         cols="80">* {% if game.home_forum == 'sa' %}[https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}{% elif game.home_forum == 'bnr' %}https://breadnroses.net/threads/{{ game.thread_id }}{% endif %} {{ game.name }}] - (something) victory.  Hosted by {{ game.moderator.name }}.</textarea>
                             </p>
                         </div>
                     </div>
@@ -519,14 +519,14 @@ $(document).ready(function () {
         </div>
         <div id="moderator-game-options-collapse" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="moderator-game-options-heading">
             <div class="panel-body">
-                {% if game.post_lynches %}
+                {% if game.post_executions %}
                 Posting of executions is <b>enabled</b>.  Votefinder will post in the thread when it sees a majority-vote execution
                 happen.
-                <a href="/post_lynches/{{ game.id }}/off" class="btn btn-default">Disable</a>
+                <a href="/post_executions/{{ game.id }}/off" class="btn btn-default">Disable</a>
                 {% else %}
                 Posting of executions is <b>disabled</b>.  Votefinder will NOT post in the thread when it sees a
                 majority-vote execution happen.
-                <a href="/post_lynches/{{ game.id }}/on" class="btn btn-default">Enable</a>
+                <a href="/post_executions/{{ game.id }}/on" class="btn btn-default">Enable</a>
                 {% endif %}
                 <br/><br/>
                 {% if game.ecco_mode %}
@@ -644,6 +644,24 @@ $(document).ready(function () {
                         {% endfor %}
                     </tbody>
                 </table>
+                <hr/>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Player</th><th>Faction</th></tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                {% for p in game.living_players %}
+                    <tr>
+                        <td>{{ p.player.name | safe }}</td><td><select class=""><option value="-1">---</option>{% for faction in game.factions.all %}<option {% if faction == p.playerstate.faction %}selected="selected" {% endif %}value="{{ faction.id }}">{{faction.faction_name}} ({{faction.faction_type}})</option>{% endfor %}</select></td>
+                    </tr>
+                {% endfor %}
+                {% for p in game.dead_players %}
+
+                {% endfor %}
+                    </tbody>
+                </table>
                 {% endif %}
             </div>
         </div>
@@ -713,7 +731,7 @@ $(document).ready(function () {
 
     <div id="votecount" class="tab-pane fade{% if game.state != 'closed' or not moderator %} in active{% endif %}">
         {% if game.state == 'pregame' %}
-            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}">thread</a> if you'd like to sign up.</div>
+            <div id="message">The game has not yet started! You can visit the <a title="Open Thread" target="_blank" href="{% if game.home_forum == 'sa' %}https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}{% elif game.home_forum == 'bnr' %}https://breadnroses.net/threads/{{ game.thread_id }}{% endif %}">thread</a> if you'd like to sign up.</div>
         {% else %}
             <div id="votecount_contents"><img src="/static/loading.gif" class="loadingImg"/>Generating votecount...</div>
         {% endif %}
