@@ -1003,7 +1003,10 @@ def check_update_game(game):
         game.lock()
 
     try:
-        page_parser = SAPageParser.SAPageParser()
+        if game.home_forum == 'sa':
+            page_parser = SAPageParser.SAPageParser()
+        elif game.home_forum == 'bnr':
+            page_parser = BNRPageParser.BNRPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return new_game
@@ -1161,10 +1164,9 @@ def post_vc(request, gameid):
         vc_formatter.go()
         if game.home_forum == 'sa':
             dl = SAForumPageDownloader.SAForumPageDownloader()
-            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         elif game.home_forum == 'bnr':
             dl = BNRApi.BNRApi()
-            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())

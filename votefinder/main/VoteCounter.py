@@ -3,7 +3,7 @@ import random
 
 from votefinder.main.models import GameDay, ExecutionMessage, Player, Vote
 
-from votefinder.main import SAForumPageDownloader, VotecountFormatter
+from votefinder.main import SAForumPageDownloader, VotecountFormatter, BNRApi
 
 
 class VoteCounter:
@@ -83,7 +83,10 @@ class VoteCounter:
         message = '{}\n\n'.format(message)
         message += vc_formatter.bbcode_votecount
         message = ':redhammer: {}'.format(message)
-        dl = SAForumPageDownloader()
+        if game.home_forum == 'sa':
+            dl = SAForumPageDownloader.SAForumPageDownloader()
+        elif game.home_forum == 'bnr':
+            dl = BNRApi.BNRApi()
         dl.reply_to_thread(game.thread_id, message.format(name))
 
     def build_result_list(self):
