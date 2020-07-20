@@ -3,7 +3,7 @@
 
 {% block script %}
 function loadPage(x) {
-    $('#postList').load('/posts/{{ game.id }}/' + x, function () {
+    $('#posts').load('/posts/{{ game.id }}/' + x, function () {
     });
     $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page ' + x + '...');
 } /* function loadPage */
