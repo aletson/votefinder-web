@@ -186,7 +186,7 @@ $(document).ready(function () {
     });
 {% endblock %}
 {% block content %}
-    <h1><a href="/">VoteFinder</a>: {{ game.name|safe }}</h1>
+    <h1><a href="/">Votefinder</a>: {{ game.name|safe }}</h1>
     <div class="btn-group">
         <a class="btn btn-sm btn-default" title="Open Thread" target="_blank"
            href="{% if game.home_forum == 'sa' %}https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}{% elif game.home_forum == 'bnr' %}https://breadnroses.net/threads/{{ game.thread_id }}{% endif %}" id="liveThread"><i class="fa fa-link"></i></a>
@@ -354,7 +354,7 @@ $(document).ready(function () {
             <div class="panel-body">
                 <p>To start a new day beginning right now, just press the button below. This will cause the
                     most
-                    recent post that VoteFinder knows about to be marked as the start of a new day.</p>
+                    recent post that Votefinder knows about to be marked as the start of a new day.</p>
 
                 <label for="day_number">Day number:
                     <input type="text" id="day_number" maxlength="2" size="2" value="{{ nextDay }}">

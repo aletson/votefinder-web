@@ -6,11 +6,11 @@ from votefinder.main.models import BlogPost, Game, GameStatusUpdate
 
 
 class LatestRss(Feed):
-    title = 'VoteFinder Updates'
+    title = 'Votefinder Updates'
     link = 'https://{}/'.format(settings.PRIMARY_DOMAIN)
     author_name = 'Alli'
     feed_url = '{}rss'.format(link)
-    description = 'Changes and updates to the VoteFinder site.'
+    description = 'Changes and updates to the Votefinder site.'
     guid = '/'
 
     def items(self):  # noqa: WPS110
@@ -35,11 +35,11 @@ class LatestAtom(LatestRss):
 
 
 class GameStatusRss(Feed):
-    title = 'VoteFinder Game Status Updates'
+    title = 'Votefinder Game Status Updates'
     link = 'https://{}/'.format(settings.PRIMARY_DOMAIN)
     author_name = 'Alli'
     feed_url = '{}game_status'.format(link)
-    description = 'Game status updates for games tracked by VoteFinder.'
+    description = 'Game status updates for games tracked by Votefinder.'
     guid = '/'
 
     def items(self):  # noqa: WPS110
@@ -66,11 +66,11 @@ class GameStatusAtom(GameStatusRss):
 
 
 class SpecificGameStatusRss(Feed):
-    title = 'VoteFinder Game Status Updates'
+    title = 'Votefinder Game Status Updates'
     link = 'https://{}/'.format(settings.PRIMARY_DOMAIN)
     author_name = 'Alli'
     feed_url = '{}game_status'.format(link)
-    description = 'Game status updates for games tracked by VoteFinder.'
+    description = 'Game status updates for games tracked by Votefinder.'
     guid = '/'
     game = None
 

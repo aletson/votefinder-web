@@ -1012,6 +1012,8 @@ def check_update_game(game):
         if new_game:
             return new_game
         game.save()
+        vc_formatter = VotecountFormatter.VotecountFormatter(game)
+        vc_formatter.go()
         return game
     except BaseException:
         return game
