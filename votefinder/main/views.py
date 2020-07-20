@@ -89,29 +89,30 @@ def add_game(request):
                     return_status['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
-                    sqs = boto3.client('sqs')
-                    queue_url = settings.SQS_QUEUE_URL
-                    sqs.send_message(
-                        QueueUrl=queue_url,
-                        DelaySeconds=10,
-                        MessageAttributes={
-                            'GameTitle': {
-                                'DataType': 'String',
-                                'StringValue': game.name,
+                    if game.home_forum == 'sa':
+                        sqs = boto3.client('sqs')
+                        queue_url = settings.SQS_QUEUE_URL
+                        sqs.send_message(
+                            QueueUrl=queue_url,
+                            DelaySeconds=10,
+                            MessageAttributes={
+                                'GameTitle': {
+                                    'DataType': 'String',
+                                    'StringValue': game.name,
+                                },
+                                'Moderator': {
+                                    'DataType': 'String',
+                                    'StringValue': game.moderator.name,
+                                },
+                                'threadId': {
+                                    'DataType': 'Number',
+                                    'StringValue': game.thread_id,
+                                },
                             },
-                            'Moderator': {
-                                'DataType': 'String',
-                                'StringValue': game.moderator.name,
-                            },
-                            'threadId': {
-                                'DataType': 'Number',
-                                'StringValue': game.thread_id,
-                            },
-                        },
-                        MessageBody=(
-                            'New game announcement'
-                        ),
-                    )
+                            MessageBody=(
+                                'New game announcement'
+                            ),
+                        )
                 else:
                     return_status['success'] = False
                     return_status['message'] = "Couldn't download or parse the forum thread.  Sorry!"
