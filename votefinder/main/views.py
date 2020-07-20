@@ -89,29 +89,30 @@ def add_game(request):
                     return_status['url'] = game.get_absolute_url()
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
-                    sqs = boto3.client('sqs')
-                    queue_url = settings.SQS_QUEUE_URL
-                    sqs.send_message(
-                        QueueUrl=queue_url,
-                        DelaySeconds=10,
-                        MessageAttributes={
-                            'GameTitle': {
-                                'DataType': 'String',
-                                'StringValue': game.name,
+                    if game.home_forum == 'sa':
+                        sqs = boto3.client('sqs')
+                        queue_url = settings.SQS_QUEUE_URL
+                        sqs.send_message(
+                            QueueUrl=queue_url,
+                            DelaySeconds=10,
+                            MessageAttributes={
+                                'GameTitle': {
+                                    'DataType': 'String',
+                                    'StringValue': game.name,
+                                },
+                                'Moderator': {
+                                    'DataType': 'String',
+                                    'StringValue': game.moderator.name,
+                                },
+                                'threadId': {
+                                    'DataType': 'Number',
+                                    'StringValue': game.thread_id,
+                                },
                             },
-                            'Moderator': {
-                                'DataType': 'String',
-                                'StringValue': game.moderator.name,
-                            },
-                            'threadId': {
-                                'DataType': 'Number',
-                                'StringValue': game.thread_id,
-                            },
-                        },
-                        MessageBody=(
-                            'New game announcement'
-                        ),
-                    )
+                            MessageBody=(
+                                'New game announcement'
+                            ),
+                        )
                 else:
                     return_status['success'] = False
                     return_status['message'] = "Couldn't download or parse the forum thread.  Sorry!"
@@ -1003,11 +1004,16 @@ def check_update_game(game):
         game.lock()
 
     try:
-        page_parser = SAPageParser.SAPageParser()
+        if game.home_forum == 'sa':
+            page_parser = SAPageParser.SAPageParser()
+        elif game.home_forum == 'bnr':
+            page_parser = BNRPageParser.BNRPageParser()
         new_game = page_parser.update(game)
         if new_game:
             return new_game
         game.save()
+        vc_formatter = VotecountFormatter.VotecountFormatter(game)
+        vc_formatter.go()
         return game
     except BaseException:
         return game
@@ -1161,10 +1167,9 @@ def post_vc(request, gameid):
         vc_formatter.go()
         if game.home_forum == 'sa':
             dl = SAForumPageDownloader.SAForumPageDownloader()
-            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         elif game.home_forum == 'bnr':
             dl = BNRApi.BNRApi()
-            dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
+        dl.reply_to_thread(game.thread_id, vc_formatter.bbcode_votecount)
         messages.add_message(request, messages.SUCCESS, 'Votecount posted.')
 
     return HttpResponseRedirect(game.get_absolute_url())
