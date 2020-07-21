@@ -21,7 +21,7 @@
         {% for game in big_games %}
             <div class="game big">
                 <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
-                <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a> | <img src="/static/images/home_forum/{{ game.home_forum }}.png" width="32" /></span>
+                <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a> | <img src="/static/images/forum_icons/{{ game.home_forum }}.png" width="32" /></span>
                 <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
             </div>
         {% endfor %}
