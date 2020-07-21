@@ -31,10 +31,6 @@ body {
     text-transform: uppercase;
 }
 
-.dark-icon {
-    filter: invert(1);
-}
-
 .dropdown-submenu .dropdown-submenu-right {
     position: relative;
 }
