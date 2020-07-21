@@ -136,6 +136,7 @@ class BNRPageParser:
         body = node['message']
         bbcode_parser = bbcode.Parser()
         bbcode_parser.add_simple_formatter('user', '%(value)s')
+        bbcode_parser.add_simple_formatter('img', '<img src="%(value)s" />')
         post.bodySoup = BeautifulSoup(bbcode_parser.render_html(body))
         for quote in post.bodySoup.findAll('blockquote'):
             quote.name = 'div'
