@@ -942,7 +942,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
             longest_name = this_size_x
 
     for line_again in votes_by_player:  # noqa: WPS426
-        pct = float(line_again['count']) / vc.no_execute
+        pct = float(line_again['count']) / vc.toexecute
         box_width = min(pct * longest_name, longest_name)
         draw.rectangle([longest_name - box_width, ypos, longest_name, this_size_y + ypos],
                        fill=(int(155 + (pct * 100)), 100, 100, int(pct * 255)))
