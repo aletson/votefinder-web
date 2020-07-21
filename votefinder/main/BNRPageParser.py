@@ -80,7 +80,7 @@ class BNRPageParser:
 
         game.max_pages = self.maxPages
         game.current_page = self.pageNumber
-        game.gameName = self.gameName
+        game.name = self.gameName
         post_parser = PostParser.PostParser()
         for post in self.posts:
             post.game = game
