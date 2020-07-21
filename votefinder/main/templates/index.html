@@ -40,7 +40,7 @@
         <div class="pregame-games">
         {% for game in pregame_games %}
 	        <div class="game pregame">
-                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><span class="pull-right"><img src="/static/images/forum_icons/{{ game.home_forum }}.png" height="25" /></span><br>
+                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><span class="pull-right"><img{% if game.home_forum == 'sa' %} class="dark-icon"{% endif %} src="/static/images/forum_icons/{{ game.home_forum }}.png" height="25" /></span><br>
                 <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
                 <span class="second-line">This game has not yet started. Visit the thread to sign up!</span>
             </div>
