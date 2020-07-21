@@ -3,7 +3,7 @@
 
 {% block script %}
 function loadPage(x) {
-    $('#postList').load('/posts/{{ game.id }}/' + x, function () {
+    $('#posts').load('/posts/{{ game.id }}/' + x, function () {
     });
     $('#postList').html('<img src="/static/loading.gif" class="loadingImg"/>Loading page ' + x + '...');
 } /* function loadPage */
@@ -354,7 +354,7 @@ $(document).ready(function () {
             <div class="panel-body">
                 <p>To start a new day beginning right now, just press the button below. This will cause the
                     most
-                    recent post that Votefinder knows about to be marked as the start of a new day.</p>
+                    recent post that Votefinder knows about to be marked as the start of a new day. <b>This will remove active votecount deadlines.</b></p>
 
                 <label for="day_number">Day number:
                     <input type="text" id="day_number" maxlength="2" size="2" value="{{ nextDay }}">

@@ -80,7 +80,7 @@ class BNRPageParser:
 
         game.max_pages = self.maxPages
         game.current_page = self.pageNumber
-        game.gameName = self.gameName
+        game.name = self.gameName
         post_parser = PostParser.PostParser()
         for post in self.posts:
             post.game = game
@@ -134,7 +134,10 @@ class BNRPageParser:
         post.avatar = node['User']['avatar_urls']['o']
 
         body = node['message']
-        post.bodySoup = BeautifulSoup(bbcode.render_html(body))
+        bbcode_parser = bbcode.Parser()
+        bbcode_parser.add_simple_formatter('user', '%(value)s')
+        bbcode_parser.add_simple_formatter('img', '<img src="%(value)s" />', replace_links=False)
+        post.bodySoup = BeautifulSoup(bbcode_parser.format(body))
         for quote in post.bodySoup.findAll('blockquote'):
             quote.name = 'div'
             quote['class'] = 'quote well'

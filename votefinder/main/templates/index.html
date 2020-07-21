@@ -20,7 +20,7 @@
 	    <div class="active-games">
         {% for game in big_games %}
             <div class="game big">
-                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><span class="pull-right"><small>{{ game.home_forum|upper }}</small></span><br>
                 <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
                 <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
             </div>
@@ -28,7 +28,7 @@
         
         {% for game in mini_games %}
             <div class="game mini">
-                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><span class="pull-right"><small>{{ game.home_forum|upper }}</small></span><br>
                 <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
                 <span class="second-line">Day {{ game.current_day }} with {{ game.living_count }} alive</span>
             </div>
@@ -40,7 +40,7 @@
         <div class="pregame-games">
         {% for game in pregame_games %}
 	        <div class="game pregame">
-                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><br>
+                <a class="game-title" href="{{ game.get_absolute_url }}#votecount">{{ game.name|safe }}</a><span class="pull-right"><small>{{ game.home_forum|upper }}</small></span><br>
                 <span class="game-mod">Mod: <a href="{{ game.moderator.get_absolute_url }}">{{ game.moderator.name }}</a></span>
                 <span class="second-line">This game has not yet started. Visit the thread to sign up!</span>
             </div>
