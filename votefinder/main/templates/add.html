@@ -15,10 +15,6 @@
             $('#gameList ul').append('<li>' + str + '</li>');
         });
         $('#gameListContainer').show('slow');
-        $('#gameList ul li a').click(function (event) {
-            doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-homeforum'));
-            event.preventDefault();
-        });
     }
 
     $('#addButton').button();
@@ -27,7 +23,10 @@
     $.getJSON('/game_list/1', dataReceived);
     $.getJSON('/game_list/2', dataReceived);
     $('#addButton').click(function() { doAddGame($('#textUrl').val()); });
-    
+    $('#gameList').on('click', 'a', function (event) {
+        doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-homeforum'));
+        event.preventDefault();
+    });
     /* CSRF setup for Django */
     var csrftoken = $("[name=csrfmiddlewaretoken]").val();
     

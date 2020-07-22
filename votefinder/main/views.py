@@ -198,6 +198,8 @@ def update(request, gameid):
                 simplejson.dumps({'success': True, 'curPage': new_game.current_page, 'maxPages': new_game.max_pages}),
                 content_type='application/json')
         game.save()
+        vc_formatter = VotecountFormatter.VotecountFormatter(game)
+        vc_formatter.go()
         return HttpResponse(simplejson.dumps({'success': False, 'message': 'There was a problem either downloading or parsing the forum page.  Please try again later.'}),
                             content_type='application/json')
     except BaseException:
