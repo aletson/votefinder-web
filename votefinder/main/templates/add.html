@@ -4,6 +4,7 @@
 {% block onready %}
 
     function dataReceived(data) {
+        $('#gameList ul li').off("a");
         $('#loading').hide();
         var str = "";
         $.each(data, function(i, game) {
@@ -15,7 +16,7 @@
             $('#gameList ul').append('<li>' + str + '</li>');
         });
         $('#gameListContainer').show('slow');
-        $('#gameList ul li a').click(function (event) {
+        $('#gameList ul li').on('click', 'a', function (event) {
             doAddGame(event.target.getAttribute('data-threadid'), event.target.getAttribute('data-homeforum'));
             event.preventDefault();
         });
