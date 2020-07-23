@@ -1,3 +1,3 @@
 [list=1]{% for p in game.living_players %}
-[*]{% if game.home_forum == 'sa' %}[url=https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}&userid={{ p.player.uid }}]{% endif %}{{ p.player.name }}{% if game.home_forum == 'sa' %}[/url]{% endif %}{% if p.player.pronouns %} ({{ p.player.pronouns }}){% endif %}{% endfor %}[/list=1]
+[*]{% if game.home_forum == 'sa' %}[url=https://forums.somethingawful.com/showthread.php?threadid={{ game.thread_id }}&userid={{ p.player.sa_uid }}]{% endif %}{{ p.player.name }}{% if game.home_forum == 'sa' %}[/url]{% endif %}{% if p.player.pronouns %} ({{ p.player.pronouns }}){% endif %}{% endfor %}[/list=1]
 
