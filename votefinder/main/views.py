@@ -90,7 +90,7 @@ def add_game(request):
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
                     if game.home_forum == 'sa':
-                        message_data = {"content": "{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}".format(game.name, game.moderator.name, game.thread_id), "username": "Votefinder Game Announcement"}
+                        message_data = {"content": "{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}".format(game.moderator.name, game.name, game.thread_id), "username": "Votefinder Game Announcement"}
                         session = requests.Session()
                         session.post('https://discordapp.com/api/webhooks/{}/{}'.format(settings.SA_DISCORD_CHANNEL, settings.SA_DISCORD_WEBHOOK), data=message_data)  # TODO issue 198
                 else:
