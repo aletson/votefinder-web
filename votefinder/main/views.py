@@ -2,11 +2,11 @@ import json as simplejson
 import math
 import random
 import re
+import requests
 import urllib
 from datetime import datetime, timedelta
 from math import ceil
 
-import boto3
 from pytz import common_timezones, timezone
 
 from django.conf import settings
@@ -90,29 +90,9 @@ def add_game(request):
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
                     if game.home_forum == 'sa':
-                        sqs = boto3.client('sqs')
-                        queue_url = settings.SQS_QUEUE_URL
-                        sqs.send_message(
-                            QueueUrl=queue_url,
-                            DelaySeconds=10,
-                            MessageAttributes={
-                                'GameTitle': {
-                                    'DataType': 'String',
-                                    'StringValue': game.name,
-                                },
-                                'Moderator': {
-                                    'DataType': 'String',
-                                    'StringValue': game.moderator.name,
-                                },
-                                'threadId': {
-                                    'DataType': 'Number',
-                                    'StringValue': game.thread_id,
-                                },
-                            },
-                            MessageBody=(
-                                'New game announcement'
-                            ),
-                        )
+                        message_data = {"content": "{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}".format(game.name, game.moderator.name, game.thread_id), "username": "Votefinder Game Announcement"}
+                        session = requests.Session()
+                        session.post('https://discordapp.com/api/webhooks/{}/{}'.format(settings.SA_DISCORD_CHANNEL, settings.SA_DISCORD_WEBHOOK), data=message_data)  # TODO issue 198
                 else:
                     return_status['success'] = False
                     return_status['message'] = "Couldn't download or parse the forum thread.  Sorry!"

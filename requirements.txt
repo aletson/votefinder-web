@@ -1,5 +1,4 @@
 beautifulsoup4==4.9.1
-boto3==1.14.26
 Django==3.0.8
 html5lib==1.0.1
 mysqlclient==1.4.6
