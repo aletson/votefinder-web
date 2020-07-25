@@ -18,7 +18,8 @@ VF_ADMIN_NAME = os.environ.get('VF_ADMIN_NAME') or 'Your Name'
 VF_ADMIN_EMAIL = os.environ.get('VF_ADMIN_EMAIL') or 'you@yourname.com'
 BNR_API_KEY = os.environ.get('BNR_API_KEY') or 'Insert your API key here'
 VF_DEBUG_STR = os.environ.get('VF_DEBUG_STR') or False
-SQS_QUEUE_URL = os.environ.get('SQS_QUEUE_URL') or ''
+SA_DISCORD_WEBHOOK = os.environ.get('SA_DISCORD_WEBHOOK') or ''
+SA_DISCORD_CHANNEL = os.environ.get('SA_DISCORD_CHANNEL') or ''
 SECRET_KEY = os.environ.get('SECRET_KEY') or 'Insert your secret key here'
 PRIMARY_DOMAIN = VF_DOMAINS.split(' ', 1)[0]
 
@@ -148,7 +149,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
-    'django_comments',
     'votefinder.main',
     'votefinder.vfauth',
 )
