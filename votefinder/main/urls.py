@@ -56,7 +56,7 @@ urlpatterns = [
     url(r'^autoupdate$', views.autoupdate),
     url(r'^players$', views.players),
     url(r'^players/(?P<page>\d+)$', views.players_page),
-    url(r'^delete_alias/(?P<id>\d+)$', views.delete_alias),
+    url(r'^delete_alias/(?P<aliasid>\d+)$', views.delete_alias),
     url(r'^sendpms/(?P<slug>[\w-]+)$', views.sendpms),
     url(r'^post_histories/(?P<gameid>\d+)$', views.post_histories),
     url(r'^post_executions/(?P<gameid>\d+)/(?P<enabled>\w+)$', views.post_executions),
