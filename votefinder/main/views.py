@@ -538,7 +538,7 @@ def deadline(request, gameid, month, day, year, hour, minute, ampm, tzname):
     hour = int(hour)
     if ampm == 'AM' and hour == 12:
         hour = hour - 12
-    if ampm == 'PM' and hour != 12:
+    if ampm == 'PM' and hour < 12:
         hour = hour + 12
 
     prev_deadline = game.deadline
