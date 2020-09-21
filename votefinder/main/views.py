@@ -609,7 +609,7 @@ def replace(request, gameid, clear, outgoing, incoming):
 
     player_out = get_object_or_404(Player, id=outgoing)
     try:
-        player_in = Player.objects.get(name__iexact=urllib.unquote(incoming))
+        player_in = Player.objects.get(name__iexact=urllib.parse.unquote(incoming))
     except Player.DoesNotExist:
         messages.add_message(request, messages.ERROR, 'No player by the name <strong>{}</strong> was found!'.format(incoming))
         return HttpResponseRedirect(game.get_absolute_url())
