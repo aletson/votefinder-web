@@ -292,7 +292,7 @@ class Post(models.Model):
     author = models.ForeignKey(Player, related_name='posts', on_delete=models.SET(get_default_player))
     author_search = models.CharField(max_length=256)
     body = models.TextField()
-    avatar = models.CharField(max_length=256)
+    avatar = models.CharField(max_length=256, null=True)
     page_number = models.IntegerField()
     game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
