@@ -75,9 +75,7 @@ class LinkProfileForm(forms.Form):
                 user_profile = api.get_user_by_name(urllib.parse.quote_plus(login))
                 if user_profile is None:
                     raise forms.ValidationError('There was a problem downloading the profile for the BNR user {}.'.format(login))
-                if user_profile['location'] != str(self.required_key):
-                    raise forms.ValidationError("Unable to find the correct key ({}) in {}'s BNR profile".format(self.required_key, login))
-                else:
+                if user_profile['location'] == str(self.required_key):
                     if user_profile['user_id']:
                         self.userid = user_profile['user_id']
                         try:
@@ -89,5 +87,7 @@ class LinkProfileForm(forms.Form):
                     else:
                         raise forms.ValidationError(
                             'Unable to find the userID of {}.  Please talk to the site admin.'.format(login))
+                else:
+                    raise forms.ValidationError("Unable to find the correct key ({}) in {}'s BNR profile".format(self.required_key, login))
 
         return login

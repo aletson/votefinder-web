@@ -110,4 +110,4 @@ class VotecountFormatter:
         html_votecount = re.compile(r'\[img\](.*?)\[/img\]', re.I | re.S).sub(r'<img src="\1">', html_votecount)
         html_votecount = re.compile(r'\[url=(.*?)\](.*?)\[/url\]', re.I | re.S).sub(r'<u><a href="\1">\2</a></u>', html_votecount)
 
-        return html_votecount
+        return html_votecount  # noqa: WPS331 more confusing without the variable, promise

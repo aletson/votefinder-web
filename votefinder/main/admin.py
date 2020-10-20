@@ -1,8 +1,8 @@
 from django.contrib import admin
-from votefinder.main.models import (Alias, BlogPost, Comment, CookieStore,
+from votefinder.main.models import (Alias, BlogPost, Comment, CookieStore,  # noqa: WPS235
                                     Game, GameDay, ExecutionMessage, Player,
                                     PlayerState, Post, UserProfile, Vote,
-                                    VotecountTemplate)  # noqa: WPS235
+                                    VotecountTemplate)
 
 admin.site.register(Game)
 admin.site.register(Player)
