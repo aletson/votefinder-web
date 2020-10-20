@@ -1,4 +1,4 @@
-from django.conf.urls import path, re_path
+from django.urls import path, re_path
 from django.contrib.auth import views as django_views
 from votefinder.vfauth import views as auth_views
 

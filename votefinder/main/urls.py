@@ -1,4 +1,4 @@
-from django.conf.urls import path, re_path
+from django.urls import path, re_path
 from django.views.generic.base import TemplateView
 
 from votefinder.main import feeds, views
