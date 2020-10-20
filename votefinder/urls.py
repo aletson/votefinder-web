@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import url, include
+from django.conf.urls import include, path, re_path
 from django.contrib import admin
 from django.views import static
 from votefinder.main import urls as main_urls
@@ -8,12 +8,12 @@ from votefinder.vfauth import urls as auth_urls
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^auth/', include(auth_urls)),
-    url(r'^admin/', admin.site.urls),
-    url(r'', include(main_urls)),
+    path('auth/', include(auth_urls)),
+    path('admin/', admin.site.urls),
+    path('', include(main_urls)),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        url(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}),
+        re_path(r'^static/(?P<path>.*)$', static.serve, {'document_root': settings.STATIC_ROOT}),
     ]
