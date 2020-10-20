@@ -4,7 +4,7 @@ from django.views.generic.base import TemplateView
 from votefinder.main import feeds, views
 
 urlpatterns = [
-    path('/', views.index),
+    path('', views.index),
     path('add/', views.add),
     path('add_game/', views.add_game),
     re_path(r'^game_list/(?P<page>\d+)/*$', views.game_list),
