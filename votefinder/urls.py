@@ -10,7 +10,7 @@ admin.autodiscover()
 urlpatterns = [
     path('auth/', include(auth_urls)),
     path('admin/', admin.site.urls),
-    path('', include(main_urls)),
+    path('/', include(main_urls)),
 ]
 
 if settings.DEBUG:
