@@ -115,7 +115,7 @@ jobs:
             STATUS=1
           fi
           sleep 1
-          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/closed)
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/closed/)
           if [ "$response" != "200" ]; then
             echo "Closed games page failed"
             STATUS=1
