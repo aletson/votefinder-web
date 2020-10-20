@@ -24,7 +24,7 @@ from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerFor
                                     Alias, BlogPost, Comment, Game, GameDay,
                                     GameFaction, GameStatusUpdate, Player,
                                     PlayerState, Post, Theme, UserProfile, Vote,
-                                    VotecountTemplate, VotecountTemplateForm)
+                                    VotecountTemplate, VotecountTemplateForm)  # noqa: WPS235
 
 from votefinder.main import (SAForumPageDownloader, SAGameListDownloader, SAPageParser,
                              VoteCounter, VotecountFormatter, BNRGameListDownloader,
@@ -90,7 +90,7 @@ def add_game(request):
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
                     if game.home_forum == 'sa':
-                        message_data = {"content": "{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}".format(game.moderator.name, game.name, game.thread_id), "username": "Votefinder Game Announcement"}
+                        message_data = {'content': '{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}'.format(game.moderator.name, game.name, game.thread_id), 'username': 'Votefinder Game Announcement'}
                         session = requests.Session()
                         session.post('https://discordapp.com/api/webhooks/{}/{}'.format(settings.SA_DISCORD_CHANNEL, settings.SA_DISCORD_WEBHOOK), data=message_data)  # TODO issue 198
                 else:
@@ -249,7 +249,7 @@ def claim_player(request, playerid):
     player = get_object_or_404(Player, id=playerid)
     if ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)) and not UserProfile.objects.filter(player=player).exists():
         # Eligible to claim!
-        if request.method != 'POST':
+        if request.method != 'POST':  # noqa: WPS504
             claim_key = random.randint(10000000, 99999999)  # noqa: S311
             request.session['claim_key'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
             return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
@@ -276,10 +276,10 @@ def claim_player(request, playerid):
                     user_profile = api.get_user_by_id(player.bnr_uid)
                     if user_profile is None:
                         messages.add_message(request, messages.ERROR, 'There was a problem downloading the profile for the BNR user {}.'.format(player.bnr_uid))
-                    if user_profile['location'] != str(request.session['claim_key']):
-                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s BNR profile".format(request.session['claim_key'], player.bnr_uid))
-                    else:
+                    if user_profile['location'] == str(request.session['claim_key']):
                         validated = True
+                    else:
+                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s BNR profile".format(request.session['claim_key'], player.bnr_uid))
                 if validated:
                     # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
                     Game.objects.filter(moderator=player).update(moderator=request.user.profile.player)
@@ -296,10 +296,8 @@ def claim_player(request, playerid):
                     request.user.profile.player.save()
                     messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
                     return HttpResponseRedirect('/profile')
-                else:
-                    return HttpResponseRedirect('/player/{}'.format(player.slug))
-            else:
-                return HttpResponseNotFound
+                return HttpResponseRedirect('/player/{}'.format(player.slug))
+            return HttpResponseNotFound
 
 
 def player_id(request, playerid):

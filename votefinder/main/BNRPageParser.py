@@ -135,8 +135,8 @@ class BNRPageParser:
 
         body = node['message']
         bbcode_parser = bbcode.Parser()
-        bbcode_parser.add_simple_formatter('user', '%(value)s')
-        bbcode_parser.add_simple_formatter('img', '<img src="%(value)s" />', replace_links=False)
+        bbcode_parser.add_simple_formatter('user', '%(value)s')  # noqa: WPS323 this is as per the bbcode_parser docs
+        bbcode_parser.add_simple_formatter('img', '<img src="%(value)s" />', replace_links=False)  # noqa: WPS323 this is as per the bbcode_parser docs
         post.bodySoup = BeautifulSoup(bbcode_parser.format(body))
         for quote in post.bodySoup.findAll('blockquote'):
             quote.name = 'div'
