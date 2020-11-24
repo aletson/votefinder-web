@@ -69,14 +69,11 @@ class VoteCounter:
             gameday.notified = True
             gameday.save()
 
-            if len(list_executed) == 1:
+            if len(list_executed) == 1 && game.post_executions:
                 game.status_update('{} was executed on day {}!'.format(executed[0].name, gameday.day_number))
                 self.post_execute_message(game, executed[0].name)
 
     def post_execute_message(self, game, name):
-        if not game.post_executions:
-            return
-
         message = random.choice(ExecutionMessage.objects.all()).text  # noqa: S311
         vc_formatter = VotecountFormatter.VotecountFormatter(game)
         vc_formatter.go()
