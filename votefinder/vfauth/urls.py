@@ -14,10 +14,10 @@ urlpatterns = [
     path('password_change/done/', django_views.PasswordChangeDoneView.as_view(template_name='password_change_done.html')),
     path('password_reset/',
          django_views.PasswordResetView.as_view(success_url='done/', template_name='password_reset_form.html')),
-    path('^password_reset/done/',
+    path('password_reset/done/',
          django_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html')),
     re_path(r'^password_reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
             django_views.PasswordResetConfirmView.as_view(success_url='/auth/password_reset/complete/', template_name='password_reset_confirm.html'), name='password_reset_confirm'),
-    path('^password_reset/complete/',
+    path('password_reset/complete/',
          django_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html')),
 ]
