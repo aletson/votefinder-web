@@ -20,7 +20,7 @@ from django.http import (HttpResponse, HttpResponseForbidden,
 from django.shortcuts import get_list_or_404, get_object_or_404, render
 from django.template.context_processors import csrf
 from PIL import Image, ImageDraw, ImageFont
-from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerForm,
+from votefinder.main.models import (AddCommentForm, AddFactionForm, AddPlayerForm,  # noqa: WPS235
                                     Alias, BlogPost, Comment, Game, GameDay,
                                     GameFaction, GameStatusUpdate, Player,
                                     PlayerState, Post, Theme, UserProfile, Vote,
@@ -90,7 +90,7 @@ def add_game(request):
                     game.status_update('A new game was created by {}!'.format(game.moderator.name))
 
                     if game.home_forum == 'sa':
-                        message_data = {"content": "{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}".format(game.moderator.name, game.name, game.thread_id), "username": "Votefinder Game Announcement"}
+                        message_data = {'content': '{} has opened {}. Thread link: https://forums.somethingawful.com/showthread.php?threadid={}'.format(game.moderator.name, game.name, game.thread_id), 'username': 'Votefinder Game Announcement'}
                         session = requests.Session()
                         session.post('https://discordapp.com/api/webhooks/{}/{}'.format(settings.SA_DISCORD_CHANNEL, settings.SA_DISCORD_WEBHOOK), data=message_data)  # TODO issue 198
                 else:
@@ -249,12 +249,7 @@ def claim_player(request, playerid):
     player = get_object_or_404(Player, id=playerid)
     if ((player.bnr_uid is not None and player.sa_uid is None and request.user.profile.player.bnr_uid is None) or (player.sa_uid is not None and player.bnr_uid is None and request.user.profile.player.sa_uid is None)) and not UserProfile.objects.filter(player=player).exists():
         # Eligible to claim!
-        if request.method != 'POST':
-            claim_key = random.randint(10000000, 99999999)  # noqa: S311
-            request.session['claim_key'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
-            return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
-
-        else:  # Attempt to claim, check profile
+        if request.method == 'POST':
             validated = False
             csrf_resp = {}
             csrf_resp.update(csrf(request))
@@ -276,10 +271,10 @@ def claim_player(request, playerid):
                     user_profile = api.get_user_by_id(player.bnr_uid)
                     if user_profile is None:
                         messages.add_message(request, messages.ERROR, 'There was a problem downloading the profile for the BNR user {}.'.format(player.bnr_uid))
-                    if user_profile['location'] != str(request.session['claim_key']):
-                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s BNR profile".format(request.session['claim_key'], player.bnr_uid))
-                    else:
+                    if user_profile['location'] == str(request.session['claim_key']):
                         validated = True
+                    else:
+                        messages.add_message(request, messages.ERROR, "Unable to find the correct key ({}) in {}'s BNR profile".format(request.session['claim_key'], player.bnr_uid))
                 if validated:
                     # TODO make this into a queued job via Rabbit or Celery or something - https://buildwithdjango.com/blog/post/celery-progress-bars/ - I don't need progress bars but a come back later'd be nice
                     Game.objects.filter(moderator=player).update(moderator=request.user.profile.player)
@@ -296,10 +291,11 @@ def claim_player(request, playerid):
                     request.user.profile.player.save()
                     messages.add_message(request, messages.SUCCESS, '<strong>Done!</strong> You have successfully claimed {}.'.format(player.name))
                     return HttpResponseRedirect('/profile')
-                else:
-                    return HttpResponseRedirect('/player/{}'.format(player.slug))
-            else:
-                return HttpResponseNotFound
+                return HttpResponseRedirect('/player/{}'.format(player.slug))
+            return HttpResponseNotFound
+        claim_key = random.randint(10000000, 99999999)  # noqa: S311
+        request.session['claim_key'] = claim_key  # see auth/views.py. yes, i'm stealing it, just without a form afterwards
+        return render(request, 'claim_player.html', {'player': player, 'claim_key': claim_key})
 
 
 def player_id(request, playerid):
@@ -549,7 +545,7 @@ def deadline(request, gameid, month, day, year, hour, minute, ampm, tzname):
 
     if not prev_deadline:
         game.status_update_noncritical(
-            'A deadline has been set for {}.'.format(dl.strftime('%A, %B %d at %I:%M %p ') + dl.tzname()))
+            'A deadline has been set for {}.'.format(dl.strftime('%A, %B %d at %I:%M %p ') + dl.tzname()))  # noqa: WPS323 time formatting
 
     messages.add_message(request, messages.SUCCESS, 'The deadline was set successfully.')
     return HttpResponseRedirect(game.get_absolute_url())
@@ -726,7 +722,7 @@ def edit_template(request, templateid):
     form = VotecountTemplateForm(request.POST)
     if form.is_valid():
         new_temp = form.save(commit=False)
-        new_temp.id = old_temp.id
+        new_temp.id = old_temp.id  # noqa: WPS125
         new_temp.creator = old_temp.creator
         new_temp.system_default = old_temp.system_default
         new_temp.save()
@@ -914,8 +910,7 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
     if votes_by_player is None:  # No votes found
         text = 'No votes found in vc.counted_votes~'
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
-        (x_size1, y_bottom1) = draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
-        return (x_size1, y_bottom1)
+        return draw_wordwrap_text(draw, text, 0, ypos, max_width, bold_font)
     for line in votes_by_player:
         text = '{} ({})'.format(line['target'].name, line['count'])
         this_size_x, this_size_y = draw.textsize(text, font=bold_font)
@@ -939,9 +934,9 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)
-        ypos = max(y_bottom1, y_bottom2, y_bottom3)
+        max_y = max(y_bottom1, y_bottom2, y_bottom3)
 
-    return (max_x, ypos)
+    return (max_x, max_y)
 
 
 def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):

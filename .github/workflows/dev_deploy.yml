@@ -10,13 +10,15 @@ jobs:
     steps:
       - name: Get Public IP
         id: ip
-        uses: haythem/public-ip@v1
+        uses: haythem/public-ip@v1.2
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install Python 3.7
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
+      - name: Lint
+        uses: wemake-services/wemake-python-styleguide@0.14.1
       - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -122,6 +124,12 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/game/a-game-of-chess)
           if [ "$response" != "200" ]; then
             echo "Single game page failed"
+            STATUS=1
+          fi
+          sleep 1
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/auth/login)
+          if [ "$response" != "200" ]; then
+            echo "Login page failed"
             STATUS=1
           fi
           exit $STATUS

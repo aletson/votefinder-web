@@ -179,7 +179,7 @@ class SAPageParser:
 
         if post_date_node:
             date_text = post_date_node.text.replace('#', '').replace('?', '').strip()
-            post.timestamp = datetime(*time.strptime(date_text, '%b %d, %Y %H:%M')[:6])
+            post.timestamp = datetime(*time.strptime(date_text, '%b %d, %Y %H:%M')[:6])  # noqa: WPS323 this is strptime
         else:
             return None
 

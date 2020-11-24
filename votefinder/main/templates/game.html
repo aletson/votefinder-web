@@ -745,6 +745,7 @@ $(document).ready(function () {
             <form id="addPlayerForm" action="/add_player/{{ game.id }}" method="post">{% csrf_token %}
                 <label for="addPlayer">Add Player:</label>
                 {{ form.name }}
+                <input type="hidden" name="forum" value="{{ game.home_forum }}"/>
                 <input id="submitAddPlayer" type="submit" class="btn btn-primary" value="Add"/>
             </form>
             {% endif %}

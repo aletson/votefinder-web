@@ -399,8 +399,12 @@ class AddPlayerForm(forms.Form):
 
     def clean_name(self):
         name = self.cleaned_data['name']
+        forum = self.cleaned_data['forum']
         try:
-            self.player = Player.objects.get(name=name)
+            if forum == 'sa':
+                self.player = Player.objects.filter(sa_uid__isnull=False).get(name=name)
+            elif forum == 'bnr':
+                self.player = Player.objects.filter(bnr_uid__isnull=False).get(name=name)
         except Player.DoesNotExist:
             raise forms.ValidationError('No player by that name.')
 
