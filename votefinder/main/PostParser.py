@@ -56,7 +56,7 @@ class PostParser:
         for quote in post.bodySoup.findAll('div', 'quote well'):
             quote.extract()
         for bold in post.bodySoup.findAll(['b', 'strong']):
-            post_content = ''.join([str(bold_string) for bold_string in bold.contents])
+            post_content = ''.join([str(bold_string.get_text()) for bold_string in bold.contents])
             for line in post_content.splitlines():
                 self.search_line_for_actions(post, line)
 
