@@ -934,9 +934,9 @@ def draw_votecount_text(draw, vc, xpos, ypos, max_width, font, bold_font):
         (x_size3, y_bottom3) = draw_wordwrap_text(draw, text, x_size2 + divider_len_x, ypos, max_width, font)
 
         max_x = max(max_x, x_size3)
-        max_y = max(y_bottom1, y_bottom2, y_bottom3)
+        ypos = max(y_bottom1, y_bottom2, y_bottom3)
 
-    return (max_x, max_y)
+    return (max_x, ypos)
 
 
 def votecount_to_image(img, game, xpos=0, ypos=0, max_width=600):
