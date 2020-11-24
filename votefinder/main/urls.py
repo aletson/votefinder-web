@@ -6,7 +6,7 @@ from votefinder.main import feeds, views
 urlpatterns = [
     path('', views.index),
     path('add/', views.add),
-    path('add_game/', views.add_game),
+    path('add_game', views.add_game),
     re_path(r'^game_list/(?P<page>\d+)/*$', views.game_list),
     re_path(r'^game/(?P<slug>[\w-]+)$', views.game),
     re_path(r'^player/(?P<slug>[\w-]+)/*$', views.player),
@@ -45,7 +45,7 @@ urlpatterns = [
     path('active_games/', views.active_games),
     path('active_games/json/', views.active_games_json),
     re_path(r'^active_games/(?P<style>.+)', views.active_games_style),
-    path('closed/', views.closed_games),
+    path('closed', views.closed_games),
     re_path(r'^add_vote/(?P<gameid>\d+)/(?P<player>[\d-]+)/(?P<votes>\w+)/(?P<target>\d+)$',
             views.add_vote),
     re_path(r'^add_vote_global/(?P<gameid>\d+)$', views.add_vote_global),
@@ -65,7 +65,7 @@ urlpatterns = [
     re_path(r'^votechart/(?P<gameslug>[\w-]+)$', views.votechart_all),
     re_path(r'^votechart/(?P<gameslug>[\w-]+)/(?P<playerslug>[\w-]+)$', views.votechart_player),
     path('gamechart/', views.gamechart),
-    path('update_user_theme/', views.update_user_theme),
-    path('update_user_pronouns/', views.update_user_pronouns),
+    path('update_user_theme', views.update_user_theme),
+    path('update_user_pronouns', views.update_user_pronouns),
     re_path(r'^players/common_games/(?P<slug_a>[\w-]+)/(?P<slug_b>[\w-]+)', views.common_games),
 ]

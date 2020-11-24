@@ -123,5 +123,11 @@ jobs:
             echo "Single game page failed"
             STATUS=1
           fi
+          sleep 1
+          response=$(curl -s -o /dev/null -w "%{http_code}\n" https://beta.votefinder.org/auth/login)
+          if [ "$response" != "200" ]; then
+            echo "Login page failed"
+            STATUS=1
+          fi
           exit $STATUS
           response
