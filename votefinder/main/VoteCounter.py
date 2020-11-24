@@ -69,7 +69,7 @@ class VoteCounter:
             gameday.notified = True
             gameday.save()
 
-            if len(list_executed) == 1 && game.post_executions:
+            if len(list_executed) == 1 and game.post_executions:
                 game.status_update('{} was executed on day {}!'.format(executed[0].name, gameday.day_number))
                 self.post_execute_message(game, executed[0].name)
 
