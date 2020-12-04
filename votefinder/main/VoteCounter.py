@@ -66,11 +66,12 @@ class VoteCounter:
         executed = filter(lambda key: self.results[key]['count'] >= to_execute, self.results)
         list_executed = list(executed)  # exhausts iterator - py3
         if len(list_executed) == 1:
+            executee = list_executed[0]
             gameday.notified = True
             gameday.save()
             if game.post_executions:
-                game.status_update('{} was executed on day {}!'.format(executed[0].name, gameday.day_number))
-                self.post_execute_message(game, executed[0].name)
+                game.status_update('{} was executed on day {}!'.format(executee.name, gameday.day_number))
+                self.post_execute_message(game, executee.name)
 
     def post_execute_message(self, game, name):
         message = random.choice(ExecutionMessage.objects.all()).text  # noqa: S311
