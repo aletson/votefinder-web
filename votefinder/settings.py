@@ -125,7 +125,7 @@ TEMPLATES = [
 if DEBUG:
     LOGGING = {
         'version': 1,
-        'disable_existing_loggers': 'false',
+        'disable_existing_loggers': False,
         'handlers': {
             'file': {
                 'level': 'DEBUG',
