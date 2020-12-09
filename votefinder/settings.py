@@ -122,15 +122,15 @@ TEMPLATES = [
     },
 ]
 
-if settings.DEBUG:
+if DEBUG:
     LOGGING = {
         'version': 1,
-        'disable_existing_loggers': false,
+        'disable_existing_loggers': 'false',
         'handlers': {
             'file': {
                 'level': 'DEBUG',
                 'class': 'logging.FileHandler',
-                'filename': '/tmp/vf_debug.log',
+                'filename': '/var/log/votefinder/vf_debug.log',
             },
         },
         'loggers': {
