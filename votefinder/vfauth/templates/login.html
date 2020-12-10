@@ -20,7 +20,7 @@
         </p>
     {% endif %}
 
-    <form action="/auth/login{% if next %}?next={{ next }}{% endif %}" method="post">{% csrf_token %}
+    <form action="/auth/login{% if next and next != '/auth/logout' %}?next={{ next }}{% endif %}" method="post">{% csrf_token %}
         <table border="0" cellpadding="3" cellspacing="2">
             <tr>
                 <td>Username:</td>
