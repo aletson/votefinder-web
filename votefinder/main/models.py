@@ -296,6 +296,11 @@ class Post(models.Model):
     page_number = models.IntegerField()
     game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['post_id', 'game'], name='unique_postid_game')
+        ]
+
     def __str__(self):
         return '{} at {}'.format(self.author.name, self.timestamp)
 
