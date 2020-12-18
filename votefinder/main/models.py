@@ -298,7 +298,7 @@ class Post(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['post_id', 'game'], name='unique_postid_game')
+            models.UniqueConstraint(fields=['post_id', 'game'], name='unique_postid_game'),
         ]
 
     def __str__(self):
