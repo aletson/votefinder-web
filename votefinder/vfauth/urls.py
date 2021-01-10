@@ -4,10 +4,10 @@ from votefinder.vfauth import views as auth_views
 
 urlpatterns = [
     path('link_profile', auth_views.give_user_profile_key),
-    path('link_profile/2', auth_views.link_profile),
-    path('link_profile/done', auth_views.link_user_to_profile),
+    re_path(r'link_profile/2/*$', auth_views.link_profile),
+    re_path(r'link_profile/done/*$', auth_views.link_user_to_profile),
     path('create', auth_views.create_votefinder_account),
-    path('create/done', auth_views.validate_and_create_user),
+    re_path(r'create/done/*$', auth_views.validate_and_create_user),
     path('login', django_views.LoginView.as_view(template_name='login.html')),
     path('logout', django_views.LogoutView.as_view(template_name='logged_out.html')),
     path('password_change', django_views.PasswordChangeView.as_view(template_name='password_change_form.html', success_url='done/')),
