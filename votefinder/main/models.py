@@ -296,6 +296,11 @@ class Post(models.Model):
     page_number = models.IntegerField()
     game = models.ForeignKey(Game, related_name='posts', on_delete=models.CASCADE)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['post_id', 'game'], name='unique_postid_game'),
+        ]
+
     def __str__(self):
         return '{} at {}'.format(self.author.name, self.timestamp)
 
@@ -396,6 +401,7 @@ class CookieStore(models.Model):
 
 class AddPlayerForm(forms.Form):
     name = forms.CharField()
+    forum = forms.CharField()
 
     def clean_name(self):
         name = self.cleaned_data['name']
