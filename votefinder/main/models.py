@@ -401,6 +401,7 @@ class CookieStore(models.Model):
 
 class AddPlayerForm(forms.Form):
     name = forms.CharField()
+    forum = forms.CharField()
 
     def clean_name(self):
         name = self.cleaned_data['name']
