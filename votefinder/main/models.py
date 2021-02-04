@@ -405,7 +405,7 @@ class AddPlayerForm(forms.Form):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        forum = self.cleaned_data['forum']
+        forum = self.data.get('forum')
         try:
             if forum == 'sa':
                 self.player = Player.objects.filter(sa_uid__isnull=False).get(name=name)
