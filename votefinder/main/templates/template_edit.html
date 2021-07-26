@@ -22,7 +22,7 @@
 
     <p><a href="#" id="instructionsButton">(Show Instructions)</a></p>
 
-    <form action="{% if edit %}/template/{{ template.id }}{% else %}/create_template{% endif %}"
+    <form action="{% if edit %}/template/{{ template.id }}{% else %}/create_template/{% endif %}"
           method="post">{% csrf_token %}
 
         <table class="template-form">
