@@ -52,6 +52,7 @@ jobs:
             NGINX_CONFIG=`sudo nginx -c /etc/nginx/nginx.conf -t 2>&1`
             if [[ "$NGINX_CONFIG" =~ "syntax is ok" ]]; then
               sudo systemctl reload nginx
+              sudo systemctl restart uwsgi
             else
               exit 1
             fi
