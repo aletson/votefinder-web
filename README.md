@@ -1,5 +1,7 @@
 # votefinder-web
 
+**This repository is unmaintained. Please find an actively maintained fork or fork your own copy. I will not provide support.**
+
 Web-based vote parser with multi-forum support.
 
 ## Usage
